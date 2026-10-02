@@ -1,0 +1,11 @@
+.presentacion {
+  min-height: 36vh;
+  padding-block: var(--espacio-seccion);
+}
+.presentacion h1 {
+  margin-bottom: var(--espacio-base);
+  color: var(--color-primary-dark);
+  font: var(--font-title-huge);
+  letter-spacing: var(--tracking-huge);
+}
+.presentacion p { max-width: 64ch; }
