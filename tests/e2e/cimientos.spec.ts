@@ -5,7 +5,7 @@ test("cabecera, pie y menú funcionan con teclado", async ({ page }) => {
   page.on("pageerror", (error) => errores.push(error.message));
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
-  await expect(page.getByRole("heading", { name: "LabUNAM", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Encuentra el laboratorio que necesitas", exact: true })).toBeVisible();
   await expect(page.getByRole("contentinfo")).toContainText("Coordinación de la Investigación Científica");
   const medidas = await page.evaluate(() => ({ ancho: innerWidth, contenido: document.documentElement.scrollWidth }));
   expect(medidas.contenido).toBeLessThanOrEqual(medidas.ancho);

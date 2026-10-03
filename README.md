@@ -4,17 +4,16 @@ Reconstrucción en Next.js del portal público de laboratorios de la UNAM para l
 Coordinación de la Investigación Científica. La referencia visual y funcional es
 `../labunam2`, rama `propuesta-raul-2`. Ese repositorio se consulta sin modificarlo.
 
-## Estado: Hito 1
+## Estado: Hito 2
 
-Hitos 0 y 1 implementados. La base incluye cabecera y pie reales, menú por teclado,
-Inter local y tokens. La capa de datos consulta MySQL mediante un único pool,
-normaliza el catálogo, lo guarda en memoria durante 600 segundos y sirve la copia
-anterior si falla la base. El buscador combina siete criterios y cuenta las facetas.
+Hitos 0, 1 y 2 implementados. Portada y catálogo consultan MySQL con un único pool
+y una caché en memoria de 600 segundos, con copia anterior ante fallos de la base.
+El catálogo combina siete criterios en la URL, muestra las facetas y abre una ficha
+bajo demanda. La portada presenta las tres redes, cuatro incorporaciones recientes,
+diez áreas, noticias de ejemplo y los textos institucionales del sitio publicado.
 
-Storybook reúne los átomos y moléculas del Hito 1. La portada aún muestra sólo la
-identidad institucional: los organismos completos, el buscador y las páginas con
-datos se integran en el Hito 2. Las redirecciones ya existen; el catálogo, la ficha
-y contacto tendrán su página en los hitos correspondientes.
+Storybook reúne átomos, moléculas y organismos. Siguen pendientes del Hito 3 el
+generador de fotos, la ficha con URL propia, contacto y las mediciones de Lighthouse.
 
 ## Arranque
 
@@ -28,7 +27,7 @@ npm run dev
 ```
 
 Abrir <http://localhost:3000>. Para producción: `npm run build` y `npm start`.
-La portada inicial y las pruebas unitarias funcionan sin base. Raúl configura las
+La portada y el catálogo requieren base; Storybook y las pruebas unitarias no. Raúl configura las
 variables tomando `.env.example` como guía. Los agentes no leen, copian ni imprimen
 archivos de credenciales.
 
@@ -43,7 +42,7 @@ archivos de credenciales.
 - Ningún componente supera 150 líneas. Las props se tipan en la firma de la función.
   Nombres de dominio en español; `props`, `children`, `onClose` conservan el vocabulario React.
 - Componentes de servidor por omisión. Sólo se agrega `"use client"` si se necesita
-  interacción; en este hito sólo la cabecera lo necesita.
+  interacción: Cabecera, Buscador, ModalFiltros y Ficha.
 - CSS Modules colocados. El único CSS global es `app/globals.css`: tokens, reset,
   tipografía y retícula, menos de 300 líneas. Los valores vienen de `tokens.css` del
   PHP; el alias `--sombra-alta` usa `--sombra` para cumplir la decisión de una sola sombra.
@@ -207,3 +206,50 @@ opción elegida aunque su conteo sea cero.
 - Lint, TypeScript, build de Next, build de Storybook y las 6 pruebas de navegador
   de los cimientos pasan. Siguen los avisos de empaquetado de Storybook ya
   documentados para el Hito 0.
+
+## Páginas y organismos del Hito 2
+
+Portada y catálogo se renderizan en el servidor en cada petición; reutilizan la
+caché del catálogo y no consultan la base durante el build. El navegador recibe
+las sugerencias y facetas, pero no el catálogo completo de servicios y equipos.
+`GET /api/filtros` recalcula las cinco facetas conservando consulta y red; cancela
+la petición anterior al cambiar rápidamente una selección. El formulario GET
+mantiene enlaces compartibles y funciona también mediante navegación nativa.
+
+`GET /api/laboratorios/[id]` devuelve sólo campos públicos y fotos; responde 400,
+404 o 503 según corresponda, sin detalles de conexión. Hay un solo diálogo Ficha
+por página. Conserva las promesas de las fichas solicitadas durante el montaje,
+evita respuestas tardías y permite reintentar una petición fallida. Escape restaura
+el foco y las cuatro pestañas admiten flechas, Inicio y Fin.
+
+El carrusel conserva los estilos de Carlos con desplazamiento nativo y ajuste de
+posición, flechas, paginación, arrastre y avance circular cada siete segundos.
+`public/js/carrusel.js`, cargado mediante `next/script`, mejora el HTML de servidor
+sin añadir otro organismo React cliente. Su observador desmonta eventos y temporizador
+al navegar; pausa con foco, puntero, pestaña oculta o movimiento reducido, y ofrece
+un botón de pausa. El retorno desde la última noticia usa desplazamiento al inicio.
+
+Las noticias están marcadas como ejemplos pendientes de validación editorial.
+¿Qué es LabUNAM?, Misión y Visión reproducen los textos de
+[la portada publicada](https://labunam.unam.mx/), consultada el 2 de octubre de 2026.
+Las fotos generadas de la copia PHP se reutilizaron localmente en `public/fotos`
+para la comparación. Esa carpeta sigue ignorada por Git; el generador del Hito 3
+hará reproducible su construcción. Si falta el manifiesto se usan fotos de respaldo.
+
+## Verificación del Hito 2 — 2 de octubre de 2026
+
+- 609 tarjetas reales; `?q=microscopia&tipo=nacionales` devuelve **7**.
+- **48 pruebas unitarias** y **24 pruebas Playwright** pasan. Cubren los tres anchos
+  (375, 1024 y 1400), teclado, sugerencias, recientes, filtros, opciones desactivadas,
+  estado vacío, ficha pedida una vez, recuperación de fallo, carrusel y API pública.
+- Portada y catálogo revisados en esos tres anchos, sin desbordamiento horizontal,
+  imágenes rotas ni errores JavaScript. Catálogo contrastado con el PHP local:
+  misma retícula, imágenes y contenido para la búsqueda de aceptación. El orden
+  general usa la comparación alfabética española validada en el Hito 1.
+- Ocho historias nuevas revisadas en los tres anchos (24 comprobaciones), incluyendo
+  diálogos abiertos y error de ficha. Axe sólo señala el contraste blanco/naranja
+  de Buscar y Ver laboratorios, excepción explícita de §3.4 del plan. La regla se
+  mantiene activa. Los conteos de portada usan `--color-brand-ink` para texto legible.
+- Lint, TypeScript, build de Next y build de Storybook pasan. El build de Next no
+  da advertencias; Storybook conserva los avisos de empaquetado descritos en Hito 0.
+- Cuatro organismos con `use client`; ninguno supera 150 líneas; CSS global: 145 líneas.

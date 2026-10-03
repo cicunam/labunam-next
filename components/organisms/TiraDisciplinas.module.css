@@ -1,0 +1,122 @@
+.tira-marco {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tira-pista {
+
+  display: flex;
+  gap: var(--espacio-lg);
+
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+}
+
+.tira-categoria {
+
+  position: relative;
+  flex: 0 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  padding: var(--espacio-md) var(--espacio-xs) var(--espacio-md);
+
+  border-bottom: 2px solid transparent;
+  color: var(--color-neutral-dark);
+  font: var(--font-small-semibold);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: color .2s ease, border-color .2s ease, opacity .2s ease;
+
+  & > svg { opacity: .8; }
+
+  &:hover {
+    color: var(--color-black);
+    border-bottom-color: var(--filete);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radio-xs);
+  }
+
+  &[aria-current="page"] {
+    color: var(--color-black);
+    border-bottom-color: var(--color-black);
+
+    & > svg { opacity: 1; }
+  }
+
+}
+
+.tira-flecha {
+
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  translate: 0 -50%;
+
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  border: 1px solid var(--filete-suave);
+  border-radius: var(--radio-full);
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  color: var(--color-black);
+  cursor: pointer;
+
+  &[hidden] { display: none; }
+
+  &:hover { scale: 1.06; }
+
+  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+}
+
+.tira-flecha-antes   { left: 0; }
+.tira-flecha-despues { right: 0; }
+
+.tira-marco::before,
+.tira-marco::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 2px;
+  z-index: 2;
+  width: 56px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.tira-marco::before {
+  left: 0;
+  background: linear-gradient(to right, var(--superficie) 40%, transparent);
+}
+
+.tira-marco::after {
+  right: 0;
+  background: linear-gradient(to left, var(--superficie) 40%, transparent);
+}
+
+.tira-marco:has(.tira-flecha-antes:not([hidden]))::before,
+.tira-marco:has(.tira-flecha-despues:not([hidden]))::after { opacity: 1; }
+
+
+@media (max-width: 743px) { .tira-flecha { display: none; } .tira-categoria { font: var(--font-tiny-semibold); } }
+.tira-flecha { font-size: 24px; }

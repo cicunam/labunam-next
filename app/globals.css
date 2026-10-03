@@ -139,3 +139,7 @@ body {
 @media (min-width: 1128px) {
   .contenido { padding-inline: var(--espacio-xl); }
 }
+
+.banda-titulo { margin: 0; font: var(--font-title-large); letter-spacing: var(--tracking-large); }
+.banda-entrada { margin-block: 12px 24px; color: var(--color-neutral-dark); }
+@media (min-width: 744px) { .banda-titulo { font: var(--font-title-huge); letter-spacing: var(--tracking-huge); } }

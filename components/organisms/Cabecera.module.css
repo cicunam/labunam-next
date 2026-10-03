@@ -285,3 +285,8 @@
   .encabezado-barra { padding-inline: var(--espacio-xl); }
   .encabezado .logo-unam > img { height: 36px; }
 }
+.pildora { display: none; align-items: center; gap: var(--espacio-md); height: 44px; padding: 4px 4px 4px 24px; border: 1px solid var(--filete-suave); border-radius: var(--radio-full); background: var(--superficie); color: var(--color-black); box-shadow: var(--sombra); font: var(--font-medium-regular); cursor: pointer; visibility: hidden; }
+.pildora[data-visible] { visibility: visible; }
+.pildora span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--radio-full); background: var(--color-brand); color: var(--color-white); font-size: 24px; }
+.pildora:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (min-width: 744px) { .pildora { display: inline-flex; } }

@@ -18,6 +18,7 @@ const redes = [
 
 export function Cabecera() {
   const ruta = usePathname();
+  const [compacto, setCompacto] = useState(false);
   const [abierto, setAbierto] = useState(false);
   const boton = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLElement>(null);
@@ -53,6 +54,21 @@ export function Cabecera() {
     };
   }, [abierto]);
 
+  useEffect(() => {
+    let actual: Element | null | undefined;
+    const observer = new IntersectionObserver(([entrada]) => setCompacto(!entrada.isIntersecting));
+    function observar() {
+      const elemento = document.querySelector("[data-buscador]");
+      if (actual === elemento) return;
+      observer.disconnect(); actual = elemento;
+      if (elemento) observer.observe(elemento);
+      else setCompacto(false);
+    }
+    const cambios = new MutationObserver(observar);
+    cambios.observe(document.body, { childList: true, subtree: true }); observar();
+    return () => { observer.disconnect(); cambios.disconnect(); };
+  }, [ruta]);
+
   function activo(href: string) {
     return ruta === href || (href !== "/" && ruta.startsWith(`${href}/`));
   }
@@ -67,6 +83,10 @@ export function Cabecera() {
         <Link href="/" className={styles.logo}>
           <img src="/assets/logos/labunam.png" alt="LabUNAM" />
         </Link>
+        <button type="button" className={styles.pildora} data-visible={compacto || undefined} aria-label="Abrir el buscador" onClick={() => {
+          document.querySelector<HTMLInputElement>("#busqueda-q")?.focus({ preventScroll: true });
+          window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+        }}>Buscar laboratorios <span aria-hidden="true">⌕</span></button>
         <div className={styles["encabezado-acciones"]}>
           <nav className={styles["menu-directo"]} aria-label="Principal">
             {enlaces.map(({ href, texto }) => (
