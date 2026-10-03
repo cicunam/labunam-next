@@ -1,0 +1,7 @@
+.pestana {
+  flex: 0 0 auto; padding: var(--espacio-md) 0; border: 0; border-bottom: 2px solid transparent;
+  background: transparent; color: var(--color-neutral-dark); font: var(--font-medium-semibold); white-space: nowrap; cursor: pointer;
+}
+.pestana:hover { color: var(--color-black); }
+.pestana:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+.pestana[aria-selected="true"] { color: var(--color-black); border-bottom-color: var(--color-black); }

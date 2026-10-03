@@ -1,0 +1,10 @@
+.galeria {
+  display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(2, 1fr);
+  gap: var(--espacio-xxs); aspect-ratio: 5 / 2; max-height: min(300px, 34vh);
+  border-radius: var(--radio-md) var(--radio-md) 0 0; overflow: hidden;
+}
+.foto { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; background: var(--superficie-fuerte); }
+.foto:first-child { grid-row: span 2; }
+.galeria[data-cantidad="1"] { grid-template-columns: 1fr; }
+.galeria[data-cantidad="2"] .foto { grid-row: span 2; }
+.vacia { padding: var(--espacio-lg); color: var(--color-neutral-dark); }

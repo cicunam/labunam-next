@@ -1,0 +1,11 @@
+.pildora {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-xs);
+  padding: var(--espacio-sm) var(--espacio-base);
+  border: 1px solid var(--filete);
+  border-radius: var(--radio-full);
+  color: var(--color-black);
+  font: var(--font-medium-regular);
+}
+.pildora[data-activa] { background: var(--color-black); color: var(--color-white); border-color: var(--color-black); }

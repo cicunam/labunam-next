@@ -4,14 +4,17 @@ Reconstrucción en Next.js del portal público de laboratorios de la UNAM para l
 Coordinación de la Investigación Científica. La referencia visual y funcional es
 `../labunam2`, rama `propuesta-raul-2`. Ese repositorio se consulta sin modificarlo.
 
-## Estado: Hito 0
+## Estado: Hito 1
 
-Base con App Router, TypeScript, ESLint, cabecera y pie reales, menú accesible por
-teclado, tokens, Inter local, Storybook y utilidades de texto probadas. La portada
-muestra la identidad institucional; sus secciones con datos y el buscador se
-construyen en el Hito 2. El catálogo, la ficha y contacto todavía no tienen página.
-Las redirecciones heredadas ya están configuradas; sus destinos estarán disponibles
-cuando se implementen esas rutas.
+Hitos 0 y 1 implementados. La base incluye cabecera y pie reales, menú por teclado,
+Inter local y tokens. La capa de datos consulta MySQL mediante un único pool,
+normaliza el catálogo, lo guarda en memoria durante 600 segundos y sirve la copia
+anterior si falla la base. El buscador combina siete criterios y cuenta las facetas.
+
+Storybook reúne los átomos y moléculas del Hito 1. La portada aún muestra sólo la
+identidad institucional: los organismos completos, el buscador y las páginas con
+datos se integran en el Hito 2. Las redirecciones ya existen; el catálogo, la ficha
+y contacto tendrán su página en los hitos correspondientes.
 
 ## Arranque
 
@@ -25,7 +28,7 @@ npm run dev
 ```
 
 Abrir <http://localhost:3000>. Para producción: `npm run build` y `npm start`.
-No hace falta conexión a la base para este hito. Raúl configura manualmente las
+La portada inicial y las pruebas unitarias funcionan sin base. Raúl configura las
 variables tomando `.env.example` como guía. Los agentes no leen, copian ni imprimen
 archivos de credenciales.
 
@@ -62,7 +65,7 @@ Se usan rutas por carpetas, componentes de servidor, `searchParams`, Route Handl
 Dependencias permitidas: `mysql2`, `sharp` (sólo para el script de fotos), Vitest,
 Playwright y Storybook con `@storybook/nextjs-vite` y accesibilidad. Las dependencias
 de base de Next/React/TypeScript/ESLint y las transitivas de esas herramientas son
-parte del andamiaje. MySQL y el procesado de fotos se instalarán en sus hitos.
+parte del andamiaje. MySQL ya está instalado; el procesado de fotos se añade en el Hito 3.
 
 No usamos Redux, Zustand, Jotai, Tailwind, CSS-in-JS, styled-components, archivos
 barril `index.ts`, HOCs, `any` ni configuración personalizada de webpack.
@@ -71,8 +74,9 @@ ISR ni APIs `unstable_*` sin una razón escrita aquí. No se añadió ninguna ex
 
 Las fotos se servirán con `<img srcset sizes loading="lazy">`. Por esa decisión
 explícita se desactiva únicamente `@next/next/no-img-element` en ESLint.
-La caché del catálogo será un objeto en memoria durante 600 segundos, con la copia
-anterior como respaldo si falla MySQL; no usará caché propia de Next.
+La caché del catálogo es un objeto en memoria durante 600 segundos, con la copia
+anterior como respaldo si falla MySQL. Las peticiones concurrentes comparten una
+carga; no usa caché propia de Next.
 
 `next.config.ts` devuelve **301** explícitos para `/nacionales`, `/universitarios`,
 `/unidades`, `/internacionales` y `/buscar`, conservando los parámetros de búsqueda.
@@ -133,8 +137,9 @@ Lighthouse y su resultado se anotarán aquí en el Hito 3; todavía no hay catá
 para medir. Objetivo Lighthouse móvil: rendimiento ≥ 90.
 
 Las [preguntas para quien administra el servidor](docs/preguntas-servidor.md)
-necesitan respuesta antes del Hito 2. Node debe mantenerse vivo y Apache hacer proxy
-inverso. Si no es viable, Raúl debe decidir el cambio a exportación estática antes de
+registran las respuestas disponibles. Raúl se encarga de la configuración del
+servidor y autoriza continuar el desarrollo. Node debe mantenerse vivo y Apache
+hacer proxy inverso. Si no es viable, Raúl debe decidir el cambio a exportación estática antes de
 construir las páginas.
 
 ## Forma de trabajo
@@ -155,3 +160,50 @@ sin que lo pida. Temporales en el scratchpad de la sesión, nunca en `/tmp`.
   directivas `use client` y chunks grandes del entorno de Storybook; no son errores
   de ejecución ni advertencias de la compilación de Next.
 - Preguntas del servidor entregadas en `docs/preguntas-servidor.md`; respuestas pendientes.
+
+## Capa de datos del Hito 1
+
+`lib/db.ts` crea un solo pool al consultar por primera vez. `lib/catalogo.ts` hace
+seis consultas de sólo lectura; `normalizarCatalogo.ts` transforma sus filas en el
+tipo público `Laboratorio`. Las filas de MySQL se tipan aparte en `tiposBase.ts`.
+La interfaz no recibe campos de personas ni detalles de errores de conexión.
+
+`cargarCatalogo()` entrega `{ laboratorios, sedes, disciplinas, sugerencias }`.
+Sedes y especialidades son listas de `{ clave, etiqueta, total }`, sin claves
+repetidas y ordenadas por conteo. Las sugerencias incluyen las 38 disciplinas y
+hasta 60 equipos presentes en tres o más laboratorios. `grupos.ts` conserva la
+asignación de las 38 disciplinas a las diez áreas.
+
+`filtrar()` normaliza la consulta, combina todas sus palabras y prioriza nombre o
+siglas, luego capacidades coincidentes y nombre. Los criterios inexistentes se
+ignoran; los criterios válidos incompatibles sí devuelven cero. `contarEje()`
+conserva los demás criterios y cuenta cada pertenencia una sola vez.
+
+Aclaración del criterio del plan: la suma de facetas no siempre es mayor o igual
+que el total. Un laboratorio puede no tener reconocimiento, perfil o disciplina.
+Las pruebas comparan la suma contra las pertenencias reales; tipo y sede
+(incluyendo la sede vacía) sí suman exactamente el total.
+
+Las moléculas reciben texto, opciones, imágenes y callbacks; no importan el
+catálogo ni tipos de laboratorio. La selección y navegación por teclado de un
+grupo de pestañas pertenecen al organismo que las reúna; la historia de `Pestana`
+lo demuestra con flechas, Inicio y Fin. `OpcionFiltro` conserva habilitada una
+opción elegida aunque su conteo sea cero.
+
+## Verificación del Hito 1 — 2 de octubre de 2026
+
+- Base real: **609 laboratorios en 172–177 ms**, 43 nacionales, 111 universitarios,
+  452 unidades y 3 internacionales. «microscopia»: **38 resultados**, **7 nacionales**.
+- 14 sedes, 38 disciplinas, 92 sugerencias; claves de sede y especialidad únicas.
+  Conteo de los seis ejes: 2.3–3.9 ms en esta máquina.
+- La comprobación usó una ruta local temporal ejecutada por Next, con salida
+  limitada a cifras y tiempos. La ruta se retiró al terminar; los scripts y
+  resultados se conservaron en el scratchpad de la sesión.
+- 42 pruebas unitarias: texto, normalización, búsqueda, facetas, pool y caché,
+  incluyendo concurrencia, caducidad y respaldo cuando falla la base.
+- 27 historias nuevas revisadas a **375, 1024 y 1400 px**: 81 comprobaciones sin
+  errores de JavaScript, desbordamientos ni infracciones WCAG A/AA detectadas por
+  axe. Se comprobaron además selección de radios y teclado en pestañas.
+- Lint, TypeScript, build de Next, build de Storybook y las 6 pruebas de navegador
+  de los cimientos pasan. Siguen los avisos de empaquetado de Storybook ya
+  documentados para el Hito 0.
