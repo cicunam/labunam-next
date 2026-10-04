@@ -1,4 +1,5 @@
 .galeria {
+  width: 100%;
   display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(2, 1fr);
   gap: var(--espacio-xxs); aspect-ratio: 5 / 2; max-height: min(300px, 34vh);
   border-radius: var(--radio-md) var(--radio-md) 0 0; overflow: hidden;

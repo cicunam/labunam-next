@@ -3,11 +3,11 @@ import type { Laboratorio } from "@/lib/tipos";
 import { redes } from "@/lib/presentacion";
 import styles from "./Tarjeta.module.css";
 
-export function Tarjeta({ laboratorio: lab, foto }: { laboratorio: Pick<Laboratorio, "idLab" | "nombre" | "tipo" | "entidad" | "sedeNombre"> & { servicios: number; equipos: number }; foto: Foto }) {
+export function Tarjeta({ laboratorio: lab, foto, prioritaria = false }: { laboratorio: Pick<Laboratorio, "idLab" | "nombre" | "tipo" | "entidad" | "sedeNombre"> & { servicios: number; equipos: number }; foto: Foto; prioritaria?: boolean }) {
   return (
     <article className={styles.tarjeta}>
       <div className={styles["tarjeta-foto"]}>
-        <img className={styles["tarjeta-imagen"]} src={foto.src} srcSet={foto.srcSet} sizes="(min-width: 1128px) 25vw, (min-width: 992px) 33vw, (min-width: 744px) 50vw, 100vw" alt="" loading="lazy" decoding="async" />
+        <img className={styles["tarjeta-imagen"]} src={foto.src} srcSet={foto.srcSet} sizes="(min-width: 1128px) 25vw, (min-width: 992px) 33vw, (min-width: 744px) 50vw, 100vw" alt="" loading={prioritaria ? "eager" : "lazy"} fetchPriority={prioritaria ? "high" : "auto"} decoding="async" />
         <span className={styles["tarjeta-insignia"]} data-tipo={lab.tipo}>{redes[lab.tipo].singular}</span>
       </div>
       <div className={styles["tarjeta-meta"]}>

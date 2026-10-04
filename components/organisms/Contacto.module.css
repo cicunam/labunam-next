@@ -1,0 +1,17 @@
+.contacto { padding-block: 40px 64px; }
+.cabecera { max-width: 650px; margin-bottom: 40px; }
+.cabecera h1 { font: var(--font-title-huge); color: var(--color-primary-dark); letter-spacing: var(--tracking-huge); }
+.cabecera p { margin-top: 12px; color: var(--color-neutral-dark); }
+.columnas { display: grid; gap: 40px; }
+.informacion, .formulario { min-width: 0; }
+.columnas h2 { font: var(--font-title-medium); margin-bottom: 16px; }
+.informacion p, .informacion address { margin-bottom: 16px; color: var(--color-neutral-dark); font-style: normal; }
+.informacion h2:not(:first-child) { margin-top: 40px; }
+.informacion a { color: var(--color-primary-dark); text-underline-offset: 4px; }
+.formulario { border: 1px solid var(--filete-suave); border-radius: var(--radio-md); padding: 24px; }
+.formulario > p { margin-bottom: 24px; color: var(--color-neutral-dark); }
+.formulario fieldset { border: 0; display: grid; gap: 20px; }
+.formulario label { display: grid; gap: 8px; font: var(--font-medium-semibold); }
+.formulario textarea { resize: vertical; min-width: 0; border: 1px solid var(--filete); border-radius: var(--radio-sm); padding: 12px; font: var(--font-large-regular); background: var(--superficie-suave); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (min-width: 744px) { .columnas { grid-template-columns: 1fr 1fr; gap: 64px; } }

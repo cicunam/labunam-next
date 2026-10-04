@@ -78,10 +78,10 @@ export function Cabecera() {
       <a className={styles.saltar} href="#contenido">Saltar al contenido</a>
       <div className={styles["encabezado-barra"]}>
         <a href="https://www.unam.mx/" className={`${styles.logo} ${styles["logo-unam"]}`} target="_blank" rel="noopener">
-          <img src="/assets/logos/unam.png" alt="Universidad Nacional Autónoma de México" />
+          <img src="/assets/logos/unam.webp" width={320} height={85} alt="Universidad Nacional Autónoma de México" />
         </a>
         <Link href="/" className={styles.logo}>
-          <img src="/assets/logos/labunam.png" alt="LabUNAM" />
+          <img src="/assets/logos/labunam.webp" width={170} height={50} alt="LabUNAM" />
         </Link>
         <button type="button" className={styles.pildora} data-visible={compacto || undefined} aria-label="Abrir el buscador" onClick={() => {
           document.querySelector<HTMLInputElement>("#busqueda-q")?.focus({ preventScroll: true });

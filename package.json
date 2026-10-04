@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006 --disable-telemetry",
     "build-storybook": "storybook build --disable-telemetry",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "fotos": "node --env-file-if-exists=.env scripts/fotos.ts"
   },
   "dependencies": {
     "mysql2": "^3.24.5",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "sharp": "^0.35.5",
     "storybook": "^10.6.1",
     "typescript": "^5",
     "vitest": "^5.0.3"

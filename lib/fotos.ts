@@ -6,12 +6,20 @@ type Manifiesto = Record<string, { src: string; srcset?: string }[]>;
 const respaldo = ["laboratorio-abc.jpeg", "mision.png", "vision.png"];
 
 export async function leerFotos(): Promise<Manifiesto> {
-  try { return JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto.json"), "utf8")) as Manifiesto; }
+  try {
+    const manifiesto = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto.json"), "utf8")) as Manifiesto;
+    manifiesto.respaldo = JSON.parse(await readFile(join(process.cwd(), "public/fotos/respaldo.json"), "utf8").catch(() => "[]"));
+    return manifiesto;
+  }
   catch { return {}; }
 }
 
 export function fotosDe(id: number, manifiesto: Manifiesto): Foto[] {
   const fotos = manifiesto[String(id)];
   if (Array.isArray(fotos) && fotos.length) return fotos.slice(0, 3).map((foto) => ({ src: foto.src, srcSet: foto.srcset, alt: "" }));
-  return [0, 1, 2].map((n) => ({ src: `/assets/images/${respaldo[(id + n) % 3]}`, alt: "" }));
+  return [0, 1, 2].map((n) => {
+    const posicion = (id + n) % 3;
+    const foto = manifiesto.respaldo?.[posicion];
+    return foto ? { src: foto.src, srcSet: foto.srcset, alt: "" } : { src: `/assets/images/${respaldo[posicion]}`, alt: "" };
+  });
 }

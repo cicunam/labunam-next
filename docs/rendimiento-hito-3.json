@@ -1,0 +1,108 @@
+{
+  "fecha": "2026-10-04",
+  "lighthouse": "12.8.2",
+  "modo": "mobile",
+  "throttling": {
+    "rttMs": 150,
+    "throughputKbps": 1638.4,
+    "requestLatencyMs": 562.5,
+    "downloadThroughputKbps": 1474.5600000000002,
+    "uploadThroughputKbps": 675,
+    "cpuSlowdownMultiplier": 4
+  },
+  "puntuacion": 96,
+  "metricas": {
+    "first-contentful-paint": 1812.1019999999999,
+    "largest-contentful-paint": 2637.1020000000003,
+    "total-blocking-time": 23,
+    "cumulative-layout-shift": 0
+  },
+  "gzip": {
+    "js": 144279,
+    "css": 10306,
+    "total": 154585
+  },
+  "archivos": [
+    {
+      "archivo": "/_next/static/chunks/26t3tt4wrovnr.css",
+      "bytes": 12898,
+      "gzip": 2840
+    },
+    {
+      "archivo": "/_next/static/chunks/3syr_f_kauwjf.css",
+      "bytes": 32098,
+      "gzip": 5133
+    },
+    {
+      "archivo": "/_next/static/chunks/2w_il3u14iw86.css",
+      "bytes": 2875,
+      "gzip": 876
+    },
+    {
+      "archivo": "/_next/static/chunks/3qunp-568wbep.css",
+      "bytes": 6162,
+      "gzip": 1457
+    },
+    {
+      "archivo": "/_next/static/chunks/0jvhpaew_uadu.js",
+      "bytes": 6557,
+      "gzip": 2351
+    },
+    {
+      "archivo": "/_next/static/chunks/19mx3mg6lkumu.js",
+      "bytes": 28907,
+      "gzip": 7614
+    },
+    {
+      "archivo": "/_next/static/chunks/2lm6ee1ot3_cu.js",
+      "bytes": 227963,
+      "gzip": 71334
+    },
+    {
+      "archivo": "/_next/static/chunks/2z-e6jheq0ftu.js",
+      "bytes": 165979,
+      "gzip": 45185
+    },
+    {
+      "archivo": "/_next/static/chunks/turbopack-3p2q1qlgss65t.js",
+      "bytes": 9721,
+      "gzip": 3845
+    },
+    {
+      "archivo": "/_next/static/chunks/3b1t5pronauhx.js",
+      "bytes": 27984,
+      "gzip": 8271
+    },
+    {
+      "archivo": "/_next/static/chunks/3ryq5cuc7bcst.js",
+      "bytes": 16987,
+      "gzip": 5679
+    }
+  ],
+  "baseNextSinComponentesPropios": {
+    "experimento": "Next 16.3.8 App Router; sólo layout html/body y página h1; ningún componente cliente propio",
+    "archivos": [
+      {
+        "url": "/_next/static/chunks/33vy6fi_v3dd1.js",
+        "gzip": 48528
+      },
+      {
+        "url": "/_next/static/chunks/452__4cacpufa.js",
+        "gzip": 71625
+      },
+      {
+        "url": "/_next/static/chunks/turbopack-1u5wcmscugyws.js",
+        "gzip": 3837
+      },
+      {
+        "url": "/_next/static/chunks/3t2jjvas6zipv.js",
+        "gzip": 3656
+      },
+      {
+        "url": "/_next/static/chunks/36wskv6ibfqzu.js",
+        "gzip": 5883
+      }
+    ],
+    "total": 133529
+  }
+}

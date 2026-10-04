@@ -8,12 +8,12 @@ export function Pie() {
       <div className={styles["footer-contenido"]}>
 
         <div className={styles["footer-marca"]}>
-          <Link href="/" className={styles["footer-logo"]}><img src="/assets/logos/labunam.png" alt="LabUNAM" /></Link>
+          <Link href="/" className={styles["footer-logo"]}><img src="/assets/logos/labunam.webp" width={170} height={50} alt="LabUNAM" /></Link>
           <p className={styles["footer-lema"]}>
             Sistema de Enlace de los Laboratorios Nacionales, Universitarios y Unidades de Apoyo de la UNAM.
           </p>
           <a href="https://www.unam.mx/" className={styles["footer-logo"] + " " + styles["footer-logo-unam"]} target="_blank" rel="noopener">
-            <img src="/assets/logos/unam.png" alt="Universidad Nacional Autónoma de México" />
+            <img src="/assets/logos/unam.webp" width={320} height={85} alt="Universidad Nacional Autónoma de México" />
           </a>
         </div>
 

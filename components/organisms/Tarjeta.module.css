@@ -1,6 +1,8 @@
 .tarjeta {
 
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 430px;
   display: flex;
   flex-direction: column;
 

@@ -4,16 +4,18 @@ Reconstrucción en Next.js del portal público de laboratorios de la UNAM para l
 Coordinación de la Investigación Científica. La referencia visual y funcional es
 `../labunam2`, rama `propuesta-raul-2`. Ese repositorio se consulta sin modificarlo.
 
-## Estado: Hito 2
+## Estado: Hito 3 — funcionalidad verificada; presupuesto de peso pendiente
 
-Hitos 0, 1 y 2 implementados. Portada y catálogo consultan MySQL con un único pool
-y una caché en memoria de 600 segundos, con copia anterior ante fallos de la base.
-El catálogo combina siete criterios en la URL, muestra las facetas y abre una ficha
-bajo demanda. La portada presenta las tres redes, cuatro incorporaciones recientes,
-diez áreas, noticias de ejemplo y los textos institucionales del sitio publicado.
+Portada, catálogo, fichas con URL propia y contacto están implementados. El generador
+produce fotos para 62 laboratorios activos. Las pruebas y compilaciones pasan;
+Lighthouse móvil alcanza 93–96/100 en producción local.
 
-Storybook reúne átomos, moléculas y organismos. Siguen pendientes del Hito 3 el
-generador de fotos, la ficha con URL propia, contacto y las mediciones de Lighthouse.
+El presupuesto de 120 KB gzip de JS+CSS **no se alcanzó**: quedan 154.6 KB. Una
+compilación mínima con la misma versión de Next, sin componentes cliente propios,
+ya carga 133.5 KB gzip de JavaScript. Este criterio requiere revisar el presupuesto
+o la arquitectura antes de darlo por cumplido; los detalles están al final.
+
+El Hito 4 (servidor de la UNAM y revisión institucional) sigue pendiente.
 
 ## Arranque
 
@@ -50,7 +52,7 @@ archivos de credenciales.
 - Comentarios en español que expliquen motivos, no que repitan el código.
 - Historias y pruebas sin datos personales reales.
 
-Inter se sirve desde `public/assets/fonts` con su licencia OFL. Es la misma fuente
+Inter se sirve desde `public/assets/fonts` con su licencia OFL; la interfaz usa el subconjunto `Inter-latino.woff2`. Es la misma fuente
 en Next y Storybook, sin pedirla a Google al compilar o visitar la página. El favicon
 original está vacío; `app/icon.png` se deriva del logotipo real de LabUNAM.
 Los assets estáticos del PHP se conservan; sus fotos generadas se excluyen de la copia y de Git; `ilustracion-inicio.png` no se utiliza.
@@ -253,3 +255,99 @@ hará reproducible su construcción. Si falta el manifiesto se usan fotos de res
 - Lint, TypeScript, build de Next y build de Storybook pasan. El build de Next no
   da advertencias; Storybook conserva los avisos de empaquetado descritos en Hito 0.
 - Cuatro organismos con `use client`; ninguno supera 150 líneas; CSS global: 145 líneas.
+
+## Fotografías — Hito 3
+
+Con Node 24 y las dependencias instaladas mediante `npm ci`:
+
+```sh
+npm run fotos
+# O bien, una carpeta explícita; no modifica los originales:
+npm run fotos -- --origen=/ruta/a/micrositio/img
+# Regenera sólo los IDs indicados y conserva el resto del manifiesto:
+npm run fotos -- --origen=/ruta/a/micrositio/img --solo=18,100
+```
+
+El comando carga `.env` mediante Node y usa `LABUNAM_FOTOS_ORIGEN` cuando no se pasa
+`--origen`. `sharp` es dependencia declarada para los scripts; no se importa en
+componentes ni rutas web. Se priorizan Carrusel1/2/3, fondo, infraestructura y
+antecedentes; las marcas de tiempo resuelven duplicados del carrusel. Corrige EXIF,
+genera WebP calidad 80 a 480/960/1440 sin agrandar y publica el manifiesto con un
+renombrado atómico. Cada `srcset` usa el ancho real, también para originales pequeños.
+Una corrida completa reconstruye el manifiesto; una parcial conserva los otros IDs.
+Los errores de una imagen se cuentan y permiten seguir; el comando devuelve código 2
+si alguna falla, o 1 si no puede iniciar/publicar. Cada ejecución regenera su selección.
+
+La copia local produjo **65 carpetas con fotos, 195 fotos, cero fallos**; al cruzarlas
+con los **609 IDs activos**, **62 laboratorios** tienen foto real. Las otras tres
+carpetas no pertenecen al catálogo activo. Se probaron además una imagen EXIF 6,
+un original de 200×100 y una ejecución parcial que conserva los IDs anteriores.
+
+El mismo comando crea versiones WebP responsivas de las tres imágenes de respaldo
+en `public/fotos/respaldo`, con índice independiente `respaldo.json`. Si no se han
+generado, la interfaz sigue usando los originales. Todo `public/fotos` continúa
+ignorado por Git; hay que ejecutar el comando al desplegar.
+
+## Fichas y contacto — Hito 3
+
+`/laboratorios/[id]` incluye título «nombre | LabUNAM» y descripción con entidad y
+sede; un ID inválido o ausente devuelve 404. El modal enlaza a esa URL. Ambas vistas
+usan `DetalleFicha`, que se carga mediante `React.lazy` bajo la frontera cliente
+existente de `Ficha`. Así se difieren el código y los estilos del detalle hasta
+abrirlo, manteniendo el HTML de la ficha individual renderizado por el servidor.
+Contacto reutiliza Campo, Boton y Enlace; explica que el envío está deshabilitado
+y dirige al catálogo o a los canales de la CIC. No recoge ni transmite mensajes.
+
+## Rendimiento y verificación — 4 de octubre de 2026
+
+- **53 pruebas unitarias** y **42 Playwright** pasan; las de navegador se ejecutaron
+  contra `next start` a 375, 1024 y 1400 px. Cubren también metadatos, 404, quitar
+  chips, filtro de sede, incorporaciones, contacto y las fichas directa/modal.
+- Portada, catálogo, ficha y contacto revisados en los tres anchos: sin errores
+  JavaScript, imágenes rotas ni desbordamiento. Axe no señala incidencias en las
+  páginas nuevas; persiste sólo la excepción de contraste de marca en Buscar.
+- Ocho historias afectadas revisadas en tres anchos: 24 comprobaciones sin fallos
+  de accesibilidad, JavaScript o desbordamiento. Storybook inicia y compila.
+- `npm run lint`, `npm run typecheck` y `npm run build` pasan; el build de Next no
+  da advertencias. Storybook conserva sus avisos de empaquetado ya documentados.
+- Bajo las pruebas concurrentes, `next start` emitió avisos `MaxListenersExceededWarning`
+  sobre `Gzip`; las respuestas y pruebas terminaron correctamente. No se silenciaron
+  esos avisos; conviene repetir la prueba con el proxy y la compresión del servidor
+  de desarrollo en el Hito 4.
+
+Lighthouse **12.8.2**, preset móvil con throttling simulado predeterminado, catálogo
+completo en producción local (`npm run build` + `npm start -- --port 3002`). Dos
+mediciones después de optimizar dieron **93 y 96**; última: **FCP 1.81 s, LCP 2.64 s,
+TBT 23 ms, CLS 0**. Son mediciones locales; no sustituyen la comprobación en la UNAM.
+
+Se optimizaron respaldos y logos, se priorizó la primera foto, se difirió el detalle
+de ficha y se usa `content-visibility` en tarjetas fuera de pantalla. Inter conserva
+sus ejes variables y los caracteres españoles en un subconjunto de 66 KB, frente
+a los 344 KB originales. Los originales y la licencia se conservan. Para regenerar
+los logos: `node scripts/recursos.ts`; para la fuente: `sh scripts/fuente.sh` con
+fonttools 4.66.1 y brotli 1.2.0 disponibles. Estas herramientas de fuente no forman
+parte de la aplicación ni son necesarias para compilar los recursos ya guardados.
+
+**Desviación del presupuesto:** JavaScript **144,279 bytes gzip**, CSS **10,306**;
+total **154,585 bytes** (154.6 KB decimales / 151.0 KiB), superior a los 120 KB del
+plan. Se sumaron los recursos JS/CSS descargados por Lighthouse, recomprimidos con
+`gzipSync` sin cabeceras HTTP; no se incluyen imágenes, fuentes ni HTML. Se redujo
+la carga inicial difiriendo `DetalleFicha`, pero no se declara satisfecho el límite.
+
+Como control, una aplicación mínima Next **16.3.8**, React **19.2.8**, App Router y
+Turbopack, con sólo `html/body` y un `h1` (sin componentes cliente propios ni CSS),
+produjo **133,529 bytes gzip de scripts modernos**. El runtime por sí solo supera
+el presupuesto. Alcanzar 120 KB requiere revisar esa restricción o la arquitectura;
+no se cambiaron las versiones ni las decisiones del plan para ocultar el exceso.
+La medición y los archivos contabilizados están en
+[docs/rendimiento-hito-3.json](docs/rendimiento-hito-3.json).
+
+Para repetir las pruebas sobre una instancia de producción ya iniciada:
+
+```sh
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3002 npm run test:e2e
+npx lighthouse http://127.0.0.1:3002/laboratorios --only-categories=performance --chrome-flags=--headless
+```
+
+Los informes completos y capturas de esta sesión quedaron en el scratchpad
+`hito-3`; no contienen credenciales y no se incorporan al repositorio.
