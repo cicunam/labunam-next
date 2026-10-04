@@ -291,12 +291,18 @@ ignorado por Git; hay que ejecutar el comando al desplegar.
 ## Fichas y contacto — Hito 3
 
 `/laboratorios/[id]` incluye título «nombre | LabUNAM» y descripción con entidad y
-sede; un ID inválido o ausente devuelve 404. El modal enlaza a esa URL. Ambas vistas
+sede; un ID inválido o ausente devuelve 404. Abrir el modal actualiza la URL mediante
+History API; cerrarlo o usar Atrás recupera filtros y posición, y Adelante lo reabre.
+Recargar o compartir la dirección abre la página individual. Ambas vistas
 usan `DetalleFicha`, que se carga mediante `React.lazy` bajo la frontera cliente
 existente de `Ficha`. Así se difieren el código y los estilos del detalle hasta
 abrirlo, manteniendo el HTML de la ficha individual renderizado por el servidor.
 Contacto reutiliza Campo, Boton y Enlace; explica que el envío está deshabilitado
 y dirige al catálogo o a los canales de la CIC. No recoge ni transmite mensajes.
+El CTA principal «Solicitar un servicio» abre `/contacto?laboratorio=[id]` con el
+laboratorio validado en servidor, sus servicios y campos de nombre, correo,
+institución y descripción del proyecto. El sitio web queda como enlace secundario.
+El formulario permanece deshabilitado hasta conectar el backend de solicitudes.
 
 ## Rendimiento y verificación — 4 de octubre de 2026
 
@@ -351,3 +357,16 @@ npx lighthouse http://127.0.0.1:3002/laboratorios --only-categories=performance 
 
 Los informes completos y capturas de esta sesión quedaron en el scratchpad
 `hito-3`; no contienen credenciales y no se incorporan al repositorio.
+
+## Ajuste de navegación y solicitudes — 4 de octubre de 2026
+
+Se elimina «Abrir página de la ficha». El modal mantiene el catálogo montado al
+cambiar la URL y conserva su caché de fichas. Se verifican cierre, Escape, Atrás,
+Adelante, recarga, filtros, foco, posición y solicitud asociada al laboratorio en
+375, 1024 y 1400 px. El informe de rendimiento anterior corresponde al cierre del
+Hito 3, antes de este ajuste.
+
+Validación del ajuste: 53 pruebas unitarias y los 48 casos de navegador pasan
+(45 en la suite inicial y los casos ampliados de historial/posición comprobados
+después). Lint, TypeScript y build de producción pasan. Se revisaron capturas del
+modal y la solicitud en móvil y escritorio.

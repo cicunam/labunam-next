@@ -15,3 +15,5 @@
 .formulario textarea { resize: vertical; min-width: 0; border: 1px solid var(--filete); border-radius: var(--radio-sm); padding: 12px; font: var(--font-large-regular); background: var(--superficie-suave); }
 .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 @media (min-width: 744px) { .columnas { grid-template-columns: 1fr 1fr; gap: 64px; } }
+
+.formulario select { width: 100%; min-width: 0; padding: 12px; border: 1px solid var(--filete); border-radius: var(--radio-sm); font: var(--font-medium-regular); }
