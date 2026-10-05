@@ -10,11 +10,6 @@
 
   width: 100%;
 
-  --pagination-intervalo: var(--carousel-intervalo, 6000ms);
-
-  &:not([data-listo]) { --pagination-intervalo: 0s; }
-
-  &[data-pausado] { --pagination-estado: paused; }
 
 }
 
@@ -25,6 +20,11 @@
 }
 
 .carousel-pista {
+  position: relative;
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 
   display: flex;
   gap: 16px;
@@ -282,8 +282,12 @@
 .controles { display: flex; justify-content: center; align-items: center; gap: 8px; }
 .controles button { border: 1px solid var(--color-primary-dark); border-radius: 999px; width: 12px; height: 12px; background: transparent; cursor: pointer; }
 .controles button[aria-pressed="true"] { background: var(--color-primary-dark); width: 28px; }
-.controles .pausa { width: auto; height: 32px; padding-inline: 12px; font: var(--font-small-semibold); color: var(--color-primary-dark); }
 .controles button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 .carousel-flecha { font-size: 28px; }
 
 .carousel-pista::before, .carousel-pista::after { content: ""; flex: 0 0 max(0px, calc((100% - var(--carousel-ancho)) / 2 - 16px)); }
+
+.carousel-pista[data-dragging], .carousel-pista[data-resetting] { scroll-snap-type: none; }
+.carousel-pista[data-dragging], .carousel-pista[data-dragging] a { cursor: grabbing; }
+.carousel-pista a { -webkit-user-drag: none; cursor: inherit; }
+.carousel:not([data-listo]) [data-copy] { display: none; }

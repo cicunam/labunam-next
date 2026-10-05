@@ -54,12 +54,12 @@ test("busca con sugerencias, atajo y recientes", async ({ page }) => {
   await expect(page.getByRole("listbox", { name: "Sugerencias" }).getByRole("option").first()).toContainText("reciente");
 });
 
-test("carrusel respeta pausa y cabecera permite volver al buscador", async ({ page }) => {
+test("carrusel permite paginar y cabecera permite volver al buscador", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const carrusel = page.getByRole("region", { name: "Noticias destacadas" });
   await carrusel.scrollIntoViewIfNeeded();
-  await expect(carrusel.getByRole("button", { name: "Reanudar noticias" })).toBeVisible();
+  await expect(carrusel.getByRole("button", { name: /Pausar|Reanudar/ })).toHaveCount(0);
   await carrusel.getByRole("button", { name: "Ir a noticia 2" }).click();
   await expect(carrusel.getByRole("button", { name: "Ir a noticia 2" })).toHaveAttribute("aria-pressed", "true");
   await carrusel.getByRole("button", { name: "Ir a noticia 3" }).click();

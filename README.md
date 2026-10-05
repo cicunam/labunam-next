@@ -230,12 +230,13 @@ por página. Conserva las promesas de las fichas solicitadas durante el montaje,
 evita respuestas tardías y permite reintentar una petición fallida. Escape restaura
 el foco y las cuatro pestañas admiten flechas, Inicio y Fin.
 
-El carrusel conserva los estilos de Carlos con desplazamiento nativo y ajuste de
-posición, flechas, paginación, arrastre y avance circular cada siete segundos.
-`public/js/carrusel.js`, cargado mediante `next/script`, mejora el HTML de servidor
-sin añadir otro organismo React cliente. Su observador desmonta eventos y temporizador
-al navegar; pausa con foco, puntero, pestaña oculta o movimiento reducido, y ofrece
-un botón de pausa. El retorno desde la última noticia usa desplazamiento al inicio.
+El carrusel utiliza arrastre con mouse y gestos táctiles horizontales, flechas,
+indicadores y teclado. Las copias laterales permiten recorrer las noticias en ambos
+sentidos sin un salto de regreso al principio; son inertes y quedan fuera del árbol
+accesible. El movimiento vertical de la página se conserva en móvil y arrastrar no
+abre los enlaces. No hay avance automático ni botón de pausa: el usuario controla
+el recorrido. Respeta movimiento reducido y libera eventos al abandonar la página.
+`public/js/carrusel.js`, cargado mediante `next/script`, mejora el HTML del servidor.
 
 Las noticias están marcadas como ejemplos pendientes de validación editorial.
 ¿Qué es LabUNAM?, Misión y Visión reproducen los textos de
