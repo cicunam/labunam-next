@@ -116,17 +116,20 @@
 .modal-cuerpo {
   flex: 1 1 auto;
   min-height: 0;
-  padding: var(--espacio-sm) var(--espacio-lg);
+  padding: var(--espacio-lg);
   overflow-y: auto;
 }
 
 .modal-grupo {
+  min-inline-size: 0;
   margin: 0;
-  padding: var(--espacio-lg) 0;
+  padding: 0 0 var(--espacio-lg);
   border: 0;
   border-bottom: 1px solid var(--filete-suave);
 
-  &:last-child { border-bottom: 0; }
+  & + & { margin-top: var(--espacio-lg); }
+
+  &:last-child { padding-bottom: 0; border-bottom: 0; }
 }
 
 .modal-grupo-titulo {
