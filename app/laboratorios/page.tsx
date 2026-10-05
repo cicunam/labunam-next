@@ -11,7 +11,7 @@ import { DisciplineBar } from "@/components/organisms/DisciplineBar/DisciplineBa
 import { LaboratoryCard } from "@/components/organisms/LaboratoryCard/LaboratoryCard";
 import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
 import { ActiveChip } from "@/components/molecules/ActiveChip/ActiveChip";
-import styles from "../Laboratorios.module.css";
+import styles from "./Laboratorios.module.css";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Laboratorios" };

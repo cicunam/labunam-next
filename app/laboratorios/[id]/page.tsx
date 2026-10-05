@@ -4,7 +4,7 @@ import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
 import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
 import { AppLink } from "@/components/atoms/AppLink/AppLink";
 
-import styles from "../../Laboratorio.module.css";
+import styles from "./Laboratorio.module.css";
 
 export const dynamic = "force-dynamic";
 async function findLaboratorio(id: string) {

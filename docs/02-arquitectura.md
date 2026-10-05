@@ -39,6 +39,11 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `app/api/laboratorios/[id]/route.ts` | Endpoint que devuelve JSON |
 | `app/layout.tsx` | Envoltura común: estructura HTML, cabecera y pie |
 
+Los CSS Modules de una página viven junto a su `page.tsx`: por ejemplo,
+`app/laboratorios/Laboratorios.module.css` y
+`app/laboratorios/[id]/Laboratorio.module.css`. `Inicio.module.css` permanece en
+`app/` porque corresponde a `/`; `globals.css` contiene los estilos compartidos.
+
 `page.tsx` exporta por defecto un componente. `route.ts` exporta funciones HTTP
 como `GET`. Una carpeta cualquiera no se convierte en página sin su archivo
 especial. Usa `Link` de Next para enlaces internos.
