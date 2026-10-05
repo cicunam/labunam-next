@@ -19,6 +19,12 @@ o la arquitectura antes de darlo por cumplido; los detalles están al final.
 
 El Hito 4 (servidor de la UNAM y revisión institucional) sigue pendiente.
 
+## Incorporación al equipo
+
+Empieza por la [guía del equipo en docs](docs/README.md): preparación del entorno,
+Next.js desde cero, componentes, consultas, pruebas, Storybook e imágenes.
+Incluye ejemplos y comandos basados en este repositorio.
+
 ## Guía rápida del repositorio
 
 | Ruta | Responsabilidad |
