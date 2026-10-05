@@ -37,10 +37,12 @@ export function DetalleFicha({ laboratorio: lab, pagina = false }: { laboratorio
             {i === 3 && lab.mapa && <a className={styles["ficha-mapa"]} href={lab.mapa} target="_blank" rel="noopener">Ver en el mapa</a>}
           </div>)}
         </div>
-        {<footer className={styles["ficha-pie"]}>
-          <p className={styles["ficha-pie-nota"]}>{cifras(lab.servicios.length, lab.equipos.length)}</p>
+        <footer className={styles["ficha-pie"]}>
+          <div className={styles["ficha-pie-info"]}>
+            <p className={styles["ficha-pie-nota"]}>{cifras(lab.servicios.length, lab.equipos.length)}</p>
+            {lab.sitio && <a className={styles["ficha-mapa"]} href={lab.sitio} target="_blank" rel="noopener">Sitio web ↗</a>}
+          </div>
           <Link className={styles["ficha-sitio"]} href={`/contacto?laboratorio=${lab.idLab}`} prefetch={false}>Solicitar un servicio →</Link>
-          {lab.sitio && <a className={styles["ficha-mapa"]} href={lab.sitio} target="_blank" rel="noopener">Sitio web ↗</a>}
-        </footer>}
+        </footer>
   </>;
 }
