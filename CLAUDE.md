@@ -8,7 +8,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 ## Punto de partida
 
-1. Confirmar que se trabaja en `labunam2.1`, no en el PHP de referencia `labunam2`.
+1. Confirmar que se trabaja en `labunam-next`, no en el PHP de referencia `labunam2`.
 2. Revisar el estado de Git y la solicitud actual antes de asumir que un hito o
    una validación histórica representan el estado de hoy.
 3. Localizar la responsabilidad en el mapa de abajo; leer su código, pruebas e

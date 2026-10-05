@@ -18,7 +18,7 @@ cambie `package-lock.json`; no es necesario repetirlo cada vez que arrancas.
 Si no tienes nvm, instala la versión indicada de Node con el mecanismo de tu
 sistema. Comprueba `node --version` y `npm --version` antes de seguir.
 
-Trabajamos en **labunam2.1**. El repositorio vecino **labunam2** es la referencia
+Trabajamos en **labunam-next**. El repositorio vecino **labunam2** es la referencia
 PHP y no se modifica como parte de este desarrollo.
 
 ## Configuración local

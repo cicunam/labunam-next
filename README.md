@@ -1,4 +1,7 @@
-# LabUNAM 2.1
+# LabUNAM Next
+
+Repositorio: [cicunam/labunam-next](https://github.com/cicunam/labunam-next).
+Carpeta local: `labunam-next`.
 
 Reconstrucción en Next.js del portal público de laboratorios de la UNAM para la
 Coordinación de la Investigación Científica. La referencia visual y funcional es

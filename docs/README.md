@@ -17,7 +17,7 @@ No necesitas aprender todo el framework antes de trabajar en un componente.
 Si sólo vas a cambiar estilos, empieza con 1, 3 y 6. Si vas a cambiar búsqueda o
 filtros, lee también 2, 4 y 5. Los fragmentos de ejemplo son didácticos: no crean
 archivos ni rutas automáticamente. Los comandos se ejecutan desde la raíz de
-`labunam2.1`, salvo que se indique otra cosa.
+`labunam-next`, salvo que se indique otra cosa.
 
 ## Documentos de referencia
 
