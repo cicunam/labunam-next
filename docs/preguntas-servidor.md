@@ -21,7 +21,7 @@ Ubuntu 20.04 (desarrollo: `132.248.31.71`; producción: `labunam.unam.mx`). Esta
 
 - Raúl tiene acceso al servidor y ya administra API con PM2. Se propone reutilizar
   PM2 para LabUNAM; falta verificar Node 24, el arranque automático y Apache.
-- Raúl se encarga de esos puntos y autoriza continuar con los demás hitos.
+- La configuración de infraestructura está a cargo del responsable del servidor.
 - La carpeta de fotos será legible por el proceso de Node: confirmado por Raúl.
 - Producción: `https://labunam.unam.mx/`. Desarrollo: una IP, pendiente de precisar
   para LabUNAM y confirmar acceso desde la red de la CIC.

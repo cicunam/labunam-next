@@ -8,9 +8,9 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 ## Punto de partida
 
-1. Confirmar que se trabaja en `labunam-next`, no en el PHP de referencia `labunam2`.
-2. Revisar el estado de Git y la solicitud actual antes de asumir que un hito o
-   una validación histórica representan el estado de hoy.
+1. Confirmar que se trabaja en `labunam-next`.
+2. Revisar el estado de Git y la solicitud actual antes de asumir que
+   una validación anterior representa el estado de hoy.
 3. Localizar la responsabilidad en el mapa de abajo; leer su código, pruebas e
    instrucciones de Next instaladas antes de modificarla.
 4. Hacer el cambio y validarlo con el alcance adecuado; informar qué se comprobó
@@ -86,7 +86,7 @@ son locales y no definen la configuración del servidor de la UNAM.
   selecciones editoriales no. Un clon limpio no reproduce los datos locales aprobados.
 - El backend de contacto, noticias definitivas, aceptación institucional y despliegue
   siguen pendientes. Consultar la lista actual del README antes de planear trabajo.
-- La medición de rendimiento del Hito 3 es histórica. `docs/rendimiento-hito-3.json`
+- La medición de rendimiento del 4 de octubre de 2026 es histórica. `docs/rendimiento.json`
   documenta el exceso del presupuesto; no usarla como medición de cambios posteriores.
 
 ## Mantenimiento de estas instrucciones

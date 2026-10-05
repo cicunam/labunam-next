@@ -3,10 +3,9 @@
 ## Contexto y alcance
 
 - Este es el portal público Next.js de LabUNAM para la CIC/UNAM.
-- El PHP de `../labunam2`, rama de referencia `propuesta-raul-2`, se consulta sin
-  modificarlo. Confirmar el repositorio antes de editar o ejecutar Git.
-- Leer `README.md` para operación y pendientes; `docs/plan-labunam2.1-nextjs.md`
-  para el plan y `docs/preguntas-servidor.md` para acuerdos de infraestructura.
+- Confirmar que se trabaja en `labunam-next` antes de editar o ejecutar Git.
+- Leer `README.md` para operación y pendientes; `docs/decisiones-tecnicas.md`
+  para la arquitectura y `docs/preguntas-servidor.md` para acuerdos de infraestructura.
 - Las instrucciones explícitas de Raúl tienen prioridad sobre las convenciones
   del proyecto. No convertir una preferencia técnica en una aprobación adicional.
 

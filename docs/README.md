@@ -22,7 +22,7 @@ archivos ni rutas automáticamente. Los comandos se ejecutan desde la raíz de
 ## Documentos de referencia
 
 - [README principal](../README.md): estado, decisiones, pendientes y verificaciones históricas.
-- [Plan del proyecto](plan-labunam2.1-nextjs.md): alcance por hitos.
+- [Decisiones técnicas](decisiones-tecnicas.md): arquitectura y criterios de desarrollo.
 - [Acuerdos de servidor](preguntas-servidor.md): lo confirmado y lo pendiente con infraestructura.
 - [Reglas compartidas](../AGENTS.md): convenciones que también deben seguir los asistentes.
 
