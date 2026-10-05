@@ -134,9 +134,9 @@
 
 .ficha-encabezado > :first-child { align-self: flex-start; }
 .ficha-pie { flex-wrap: wrap; }
-.ficha-pie-info { display: grid; gap: var(--espacio-xxs); }
-.ficha-pie-info .ficha-mapa { margin-top: 0; }
-.ficha-pie > .ficha-sitio { margin-left: auto; flex-shrink: 0; }
+.ficha-pie-acciones { display: flex; align-items: center; justify-content: flex-end; gap: var(--espacio-base); margin-left: auto; }
+.ficha-pie-acciones .ficha-mapa { margin-top: 0; white-space: nowrap; }
+.ficha-pie-acciones .ficha-sitio { flex-shrink: 0; }
 
 @media (max-width: 743px) { .ficha-encabezado, .ficha-pestanas, .ficha-panel, .ficha-pie { padding-inline: var(--espacio-base); } }
 @media (prefers-reduced-motion: reduce) { .ficha-sitio { transition: none; } }
