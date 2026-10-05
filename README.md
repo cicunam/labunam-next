@@ -388,7 +388,7 @@ puedes exportarlo desde la interfaz. Anterior/Siguiente sólo navegan, no guarda
 cambios sin confirmar. Los logos institucionales generales no se proponen como
 logos propios de un laboratorio.
 
-«Aplicar aprobadas al catálogo» pide confirmar la selección y descarga únicamente
+«Aplicar aprobadas al catálogo» inicia directamente la importación y descarga únicamente
 las imágenes aprobadas. Genera WebP de 480/960/1440 según el tamaño original, con
 fondo blanco y sin recorte para logos, y publica `public/fotos/manifiesto-web.json`.
 Si alguna imagen falla, conserva la versión anterior de ese laboratorio. Las
@@ -423,3 +423,11 @@ lee la lista nueva al recargar o pulsar «Actualizar lista». Aplicar omite las
 selecciones que ya coinciden con el manifiesto web. Los datos, cachés y decisiones
 locales permanecen ignorados por Git; hay que conservar esa carpeta al trasladar
 el trabajo a otro equipo.
+
+
+La aplicación funciona en segundo plano con `GET /estado`: muestra el número de
+laboratorios procesados y el laboratorio actual, conserva el progreso visible al
+recargar y publica cada laboratorio completado. El botón se deshabilita mientras
+trabaja. Se retiró la confirmación nativa del navegador, que no iniciaba la
+operación en el navegador integrado. La última ejecución completó 95 laboratorios
+nuevos y conservó los 5 existentes, sin errores.

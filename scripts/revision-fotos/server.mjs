@@ -15,6 +15,7 @@ await mkdir(stateDir, { recursive: true });
 const stateFile = join(stateDir, 'seleccion.json');
 let state = JSON.parse(await readFile(stateFile, 'utf8').catch(() => '{}'));
 let busy = false;
+let operation = { estado: 'inactivo' };
 async function atomic(path, data) {
   await writeFile(path + '.nuevo', JSON.stringify(data, null, 2) + '\n');
   await rename(path + '.nuevo', path);
@@ -46,6 +47,7 @@ async function apply() {
   for (const lab of labs) {
     const selection = state[lab.idLab];
     if (selection?.estado !== 'aprobado') continue;
+    operation = { ...operation, procesados: applied.length + errors.length + unchanged.length, laboratorio: lab.nombre };
     const images = [...selection.elegidas].sort((a, b) => Number(b === selection.principal) - Number(a === selection.principal));
     const existing = manifest[lab.idLab];
     const candidates = images.map(id => [...lab.imagenes, ...(lab.alternativasLogo || [])].find(i => i.id === id));
@@ -75,7 +77,7 @@ async function apply() {
         }
         photos.push({ src: variants[Math.min(1, variants.length - 1)].src, srcset: variants.map(v => v.src + ' ' + v.width + 'w').join(', '), origen: lab.origen, imagenOriginal: candidate.url, tipo: candidate.tipo, autorizacion: lab.autorizacion });
       }
-      manifest[lab.idLab] = photos; applied.push(lab.idLab);
+      manifest[lab.idLab] = photos; await atomic(manifestPath, manifest); applied.push(lab.idLab);
     } catch { errors.push({ idLab: lab.idLab, mensaje: 'No se pudo descargar o convertir. Se conservó la versión anterior.' }); }
   }
   // Sólo publica cada laboratorio si se completaron todas sus imágenes.
@@ -88,6 +90,10 @@ const server = createServer(async (req, res) => {
   const send = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); };
   try {
     if (req.headers.host !== '127.0.0.1:' + port && req.headers.host !== 'localhost:' + port) return send(403, { error: 'Host no permitido.' });
+    if (req.method === 'GET' && req.url === '/estado') {
+      const ultimo = JSON.parse(await readFile(join(stateDir, 'ultima-aplicacion.json'), 'utf8').catch(() => 'null'));
+      return send(200, { ...operation, ultimo });
+    }
     if (req.method === 'GET' && req.url === '/api') {
       labs = JSON.parse(await readFile(join(stateDir, 'candidatas.json'), 'utf8').catch(() => readFile(join(here, 'candidatas.json'), 'utf8')));
       const progreso = JSON.parse(await readFile(join(stateDir, 'progreso.json'), 'utf8').catch(() => 'null'));
@@ -100,9 +106,16 @@ const server = createServer(async (req, res) => {
     }
     if (req.method !== 'POST' || req.headers.origin !== 'http://' + req.headers.host) return send(403, { error: 'Petición no permitida.' });
     if (busy) return send(409, { error: 'Espera a que termine la operación actual.' });
+    if (req.url === '/aplicar') {
+      busy = true;
+      operation = { estado: 'ejecutando', procesados: 0, total: labs.filter(l => state[l.idLab]?.estado === 'aprobado').length, laboratorio: '', inicio: new Date().toISOString() };
+      apply().then(result => { operation = { ...operation, estado: 'terminado', procesados: operation.total, resultado: result }; })
+        .catch(() => { operation = { ...operation, estado: 'error', mensaje: 'La importación se interrumpió. Las imágenes ya aplicadas se conservan; puedes reintentar.' }; })
+        .finally(() => { busy = false; });
+      return send(202, operation);
+    }
     busy = true;
     try {
-      if (req.url === '/aplicar') return send(200, await apply());
       if (req.url !== '/guardar') return send(404, {});
       let body = '';
       for await (const chunk of req) { body += chunk; if (body.length > 20000) throw Error('Petición demasiado grande.'); }

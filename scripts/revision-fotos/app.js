@@ -47,16 +47,33 @@ $('exportar').onclick = () => {
   const link = document.createElement('a'), url = URL.createObjectURL(new Blob([JSON.stringify({ labs, state }, null, 2)], { type: 'application/json' }));
   link.href = url; link.download = 'revision-labunam.json'; link.click(); URL.revokeObjectURL(url);
 };
+let timer;
+async function progress() {
+  clearTimeout(timer);
+  try {
+    const status = await (await fetch('/estado')).json();
+    busy = status.estado === 'ejecutando';
+    $('aplicar').disabled = busy;
+    if (busy) {
+      message('Aplicando: ' + status.procesados + ' de ' + status.total + ' laboratorios. Ahora: ' + status.laboratorio);
+      timer = setTimeout(progress, 1000);
+    } else if (status.estado === 'error') message(status.mensaje);
+    else {
+      const result = status.resultado || status.ultimo;
+      if (result) message('Última aplicación: ' + result.aplicados.length + ' aplicados, ' + (result.sinCambios?.length || 0) + ' sin cambios, ' + result.errores.length + ' fallidos.' + (result.errores.length ? ' IDs pendientes: ' + result.errores.map(e => e.idLab).join(', ') : ' Puedes revisar el catálogo.'));
+    }
+  } catch {
+    message('No se pudo consultar el progreso. Reintentando…');
+    timer = setTimeout(progress, 3000);
+  }
+}
 $('aplicar').onclick = async () => {
   if (busy) return;
   const count = Object.values(state).filter(s => s.estado === 'aprobado').length;
   if (!count) return message('Primero aprueba las imágenes de algún laboratorio.');
-  if (!confirm('¿Aplicar las imágenes aprobadas de ' + count + ' laboratorios al catálogo local?')) return;
-  busy = true; $('aplicar').disabled = true; message('Descargando y optimizando las imágenes aprobadas…');
-  try {
-    const result = await post('/aplicar', {});
-    message('Aplicados: ' + result.aplicados.length + '. Sin cambios: ' + (result.sinCambios?.length || 0) + '. Fallidos: ' + result.errores.length + (result.errores.length ? '. IDs: ' + result.errores.map(e => e.idLab).join(', ') : '. Puedes revisar el catálogo.'));
-  } catch (error) { message(error.message); } finally { busy = false; $('aplicar').disabled = false; }
+  busy = true; $('aplicar').disabled = true; message('Iniciando importación…');
+  try { await post('/aplicar', {}); await progress(); }
+  catch (error) { message(error.message); busy = false; $('aplicar').disabled = false; }
 };
 async function load() {
   if (busy) return;
@@ -68,3 +85,4 @@ async function load() {
 }
 $('recargar').onclick = load;
 await load();
+await progress();
