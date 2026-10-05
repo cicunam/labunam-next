@@ -155,6 +155,11 @@
 }
 
 .modal-limpiar {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: underline;
   color: var(--color-black);
   font: var(--font-medium-semibold);
   text-underline-offset: 3px;

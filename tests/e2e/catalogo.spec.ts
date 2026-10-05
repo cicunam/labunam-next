@@ -98,3 +98,23 @@ test("una ficha fallida puede reintentarse sin conservar el error", async ({ pag
   await expect(page.getByRole("tab", { name: "Servicios", exact: true })).toBeVisible();
   expect(intentos).toBe(2);
 });
+
+test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({ page }) => {
+  for (const ruta of ["/laboratorios", "/laboratorios?q=microscopia&tipo=nacionales"]) {
+    await page.goto(ruta);
+    await page.getByRole("button", { name: "Filtros", exact: true }).click();
+    const modal = page.getByRole("dialog", { name: "Filtros", exact: true });
+    await modal.getByRole("group", { name: "Sede", exact: true }).getByRole("radio", { name: /^Ciudad de México/ }).check();
+    await modal.getByRole("button", { name: "Limpiar todo", exact: true }).click();
+    for (const grupo of await modal.getByRole("group").all()) {
+      await expect(grupo.getByRole("radio", { name: "Cualquiera", exact: true })).toBeChecked();
+    }
+    const aplicar = modal.getByRole("button", { name: /^Ver 6\d\d laboratorios$/ });
+    await expect(aplicar).toBeEnabled();
+    await aplicar.click();
+    await expect(page.locator("[data-total]")).toContainText(/6\d\d laboratorios/);
+    await expect(page.getByRole("combobox", { name: "Qué buscas" })).toHaveValue("");
+    await expect(page.getByLabel("Red", { exact: true })).toHaveValue("");
+    await expect(page.getByLabel("Sede", { exact: true })).toHaveValue("");
+  }
+});

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import Link from "next/link";
 import type { Criterios } from "@/lib/tipos";
 import type { Filtro } from "@/lib/filtros";
 import { OpcionFiltro } from "../molecules/OpcionFiltro";
@@ -30,8 +29,7 @@ export function ModalFiltros({ criterios, filtros, total, children }: { criterio
     if (activo) pista.scrollLeft = Math.max(0, activo.offsetLeft - pista.clientWidth / 2);
     return () => { eventos.abort(); resize.disconnect(); peticion.current?.abort(); };
   }, []);
-  async function cambiar(nombre: string, valor: string) {
-    const nueva = { ...seleccion, [nombre]: valor };
+  async function actualizarSeleccion(nueva: Criterios) {
     setSeleccion(nueva); setPendiente(true); setError("");
     peticion.current?.abort();
     const control = new AbortController(); peticion.current = control;
@@ -52,19 +50,19 @@ export function ModalFiltros({ criterios, filtros, total, children }: { criterio
           <h2 id="filtros-titulo" className={styles["modal-titulo"]}>Filtros</h2>
         </header>
         <form method="get" action="/laboratorios" className={styles.formulario}>
-          {["q", "tipo"].map((eje) => <input key={eje} type="hidden" name={eje} value={criterios[eje as keyof Criterios] ?? ""} />)}
+          {["q", "tipo"].map((eje) => <input key={eje} type="hidden" name={eje} value={seleccion[eje as keyof Criterios] ?? ""} />)}
           <div className={styles["modal-cuerpo"]}>
             {datos.filtros.map((filtro) => <fieldset key={filtro.eje} className={styles["modal-grupo"]}>
               <legend className={styles["modal-grupo-titulo"]}>{filtro.etiqueta}</legend>
               <div className={styles["modal-opciones"]}>
-                <OpcionFiltro nombre={filtro.eje} valor="" etiqueta="Cualquiera" seleccionada={!seleccion[filtro.eje]} onChange={() => cambiar(filtro.eje, "")} />
-                {filtro.opciones.map((opcion) => <OpcionFiltro key={opcion.clave} nombre={filtro.eje} valor={opcion.clave} etiqueta={opcion.etiqueta} total={opcion.total} seleccionada={seleccion[filtro.eje] === opcion.clave} onChange={() => cambiar(filtro.eje, opcion.clave)} />)}
+                <OpcionFiltro nombre={filtro.eje} valor="" etiqueta="Cualquiera" seleccionada={!seleccion[filtro.eje]} onChange={() => actualizarSeleccion({ ...seleccion, [filtro.eje]: "" })} />
+                {filtro.opciones.map((opcion) => <OpcionFiltro key={opcion.clave} nombre={filtro.eje} valor={opcion.clave} etiqueta={opcion.etiqueta} total={opcion.total} seleccionada={seleccion[filtro.eje] === opcion.clave} onChange={() => actualizarSeleccion({ ...seleccion, [filtro.eje]: opcion.clave })} />)}
               </div>
             </fieldset>)}
             {error && <p role="alert">{error}</p>}
           </div>
           <footer className={styles["modal-pie"]}>
-            <Link href="/laboratorios" className={styles["modal-limpiar"]}>Limpiar todo</Link>
+            <button type="button" className={styles["modal-limpiar"]} onClick={() => actualizarSeleccion({})}>Limpiar todo</button>
             <button type="submit" className={styles["modal-aplicar"]} disabled={pendiente}>{pendiente ? "Actualizando…" : `Ver ${datos.total} ${datos.total === 1 ? "laboratorio" : "laboratorios"}`}</button>
           </footer>
         </form>
