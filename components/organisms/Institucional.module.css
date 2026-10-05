@@ -1,4 +1,8 @@
-.institucional { padding-block: var(--espacio-seccion); background: var(--superficie-tinte); }
+.institucional {
+  padding-block: var(--espacio-seccion);
+  margin-bottom: clamp(32px, 5vw, 64px);
+  background: var(--superficie-tinte);
+}
 .columnas { display: grid; gap: 32px; }
 .columnas p { margin-top: 16px; color: var(--color-neutral-dark); }
 .columnas img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radio-md); }
