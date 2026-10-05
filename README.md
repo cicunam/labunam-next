@@ -446,14 +446,12 @@ editorial dentro de cada tipo.
 
 ## Tarjetas del catálogo
 
-Las tarjetas priorizan el nombre completo, la entidad, la sede y hasta dos
-servicios o equipos registrados. Cuando hay coincidencias con la búsqueda,
-se muestran esas capacidades y un fragmento literal cercano al término buscado.
-Sin coincidencias se procura mostrar un servicio y un equipo, si existen.
-Los totales quedan al pie y toda la tarjeta abre la ficha.
+Las tarjetas recuperan la imagen cuadrada como protagonista, con nombre, entidad
+y una sola línea adicional: sede o una capacidad que coincida con la búsqueda.
+Los detalles y totales se consultan en la ficha; toda la tarjeta la abre.
 
-La foto o el logo ocupa un recuadro de 64 px; cuando falta se utiliza un icono
-de área discreto. El catálogo muestra una, dos o tres columnas según el ancho
-disponible. La galería de la ficha conserva las imágenes grandes y su respaldo.
-Validación del cambio: 61 pruebas unitarias, 51 pruebas de navegación en móvil,
-tableta y escritorio, compilación de producción y lint.
+Cuando no hay fotografía ni logo aprobado, una composición de círculos y un
+icono grande usa colores sutiles por área. Con varias áreas o ninguna se muestra
+el icono general. No se añade un aviso de imagen ausente a la tarjeta.
+Los logos se muestran completos y las fotografías llenan el espacio visual.
+El catálogo muestra hasta cuatro columnas en escritorio.

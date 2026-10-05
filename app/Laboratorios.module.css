@@ -84,7 +84,7 @@
 
 @media (min-width: 1128px) {
 
-  .reticula { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .reticula { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 }
 
