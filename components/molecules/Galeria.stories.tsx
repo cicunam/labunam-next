@@ -16,3 +16,5 @@ type Story = StoryObj<typeof meta>;
 export const TresFotos: Story = {};
 export const UnaFoto: Story = { args: { imagenes: [{ src: "/assets/images/laboratorio-abc.jpeg", alt: "Instalaciones de laboratorio" }] } };
 export const Vacia: Story = { args: { imagenes: [] } };
+
+export const SinFotografia: Story = { args: { imagenes: [{ src: "/assets/respaldos/quimica.svg", alt: "Sin fotografía disponible. Ilustración de Química.", tipo: "ilustracion" }] } };

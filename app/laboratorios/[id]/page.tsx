@@ -22,6 +22,6 @@ export default async function Laboratorio({ params }: { params: Promise<{ id: st
   const { idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, servicios, equipos, distinciones, sitio } = lab;
   return <div className={`contenido ${styles.detalle}`}>
     <Enlace href="/laboratorios">← Volver al catálogo</Enlace>
-    <Ficha key={idLab} inicial={{ idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, servicios, equipos, distinciones, sitio, galeria: fotosDe(idLab, await leerFotos()) }} />
+    <Ficha key={idLab} inicial={{ idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, servicios, equipos, distinciones, sitio, galeria: fotosDe(idLab, await leerFotos(), lab.grupos) }} />
   </div>;
 }

@@ -148,3 +148,8 @@
   .tarjeta:hover .tarjeta-foto { scale: none; }
 
 }
+
+.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="ilustracion"],
+.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="logo"] { object-fit: contain; background: #eef3f7; }
+.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="logo"] { background: white; }
+.respaldo { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: #526779; font-size: 12px; }

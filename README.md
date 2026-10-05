@@ -431,3 +431,15 @@ recargar y publica cada laboratorio completado. El botón se deshabilita mientra
 trabaja. Se retiró la confirmación nativa del navegador, que no iniciaba la
 operación en el navegador integrado. La última ejecución completó 95 laboratorios
 nuevos y conservó los 5 existentes, sin errores.
+
+## Respaldo visual sin fotografía
+
+Las tarjetas, el modal y la ficha individual usan fotografías reales primero,
+logos aprobados después y una única ilustración SVG cuando no hay imágenes.
+Un laboratorio con una sola área recibe su icono; con varias áreas o ninguna se
+usa la ilustración general. Se muestra «Sin fotografía disponible». Los logos y
+las ilustraciones se ajustan completos al espacio, sin recorte. Las fotos genéricas
+anteriores ya no se usan como respaldo y el generador deja de producirlas.
+Los SVG están en `public/assets/respaldos`, con los mismos trazos de los iconos
+de áreas. Las fotos tienen prioridad sobre los logos, conservando el orden
+editorial dentro de cada tipo.

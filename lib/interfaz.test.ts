@@ -42,10 +42,9 @@ it("conserva parámetros y elimina sólo el chip solicitado", () => {
 });
 it("usa tres fotos como máximo y ofrece respaldo determinista", () => {
   expect(fotosDe(7, { "7": [{ src: "/fotos/7.webp", srcset: "/fotos/7.webp 640w" }] })[0]).toEqual({ src: "/fotos/7.webp", srcSet: "/fotos/7.webp 640w", alt: "" });
-  expect(fotosDe(1, {})).toHaveLength(3); expect(fotosDe(1, {})).toEqual(fotosDe(1, {}));
+  expect(fotosDe(1, {})).toHaveLength(1); expect(fotosDe(1, {})).toEqual(fotosDe(1, {}));
 });
 
-it("rota los respaldos optimizados conservando su srcset", () => {
-  const respaldo = [0, 1, 2].map((n) => ({ src: `/fotos/respaldo/${n}.webp`, srcset: `/fotos/respaldo/${n}.webp 480w` }));
-  expect(fotosDe(4, { respaldo })[0]).toEqual({ src: "/fotos/respaldo/1.webp", srcSet: "/fotos/respaldo/1.webp 480w", alt: "" });
+it("ignora el respaldo fotográfico genérico anterior", () => {
+  expect(fotosDe(4, { respaldo: [{ src: "/foto-generica.webp" }] })[0].src).toBe("/assets/respaldos/general.svg");
 });

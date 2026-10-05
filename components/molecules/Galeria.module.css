@@ -9,3 +9,9 @@
 .galeria[data-cantidad="1"] { grid-template-columns: 1fr; }
 .galeria[data-cantidad="2"] .foto { grid-row: span 2; }
 .vacia { padding: var(--espacio-lg); color: var(--color-neutral-dark); }
+
+.galeria { position: relative; }
+.foto[data-tipo-imagen="ilustracion"], .foto[data-tipo-imagen="logo"] { object-fit: contain; background: #eef3f7; }
+.foto[data-tipo-imagen="logo"] { background: white; }
+.galeria[data-respaldo="true"] { background: #eef3f7; }
+.aviso { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; color: #526779; font-size: 12px; }

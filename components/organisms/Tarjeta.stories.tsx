@@ -6,3 +6,5 @@ const meta = { title: "Organismos/Tarjeta", component: Tarjeta, parameters: { la
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Principal: Story = {};
+
+export const SinFotografia: Story = { args: { foto: { src: "/assets/respaldos/general.svg", alt: "Sin fotografía disponible. Ilustración general de laboratorio.", tipo: "ilustracion" } } };

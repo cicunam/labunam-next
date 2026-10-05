@@ -7,7 +7,8 @@ export function Tarjeta({ laboratorio: lab, foto, prioritaria = false }: { labor
   return (
     <article className={styles.tarjeta}>
       <div className={styles["tarjeta-foto"]}>
-        <img className={styles["tarjeta-imagen"]} src={foto.src} srcSet={foto.srcSet} sizes="(min-width: 1128px) 25vw, (min-width: 992px) 33vw, (min-width: 744px) 50vw, 100vw" alt="" loading={prioritaria ? "eager" : "lazy"} fetchPriority={prioritaria ? "high" : "auto"} decoding="async" />
+        <img className={styles["tarjeta-imagen"]} src={foto.src} srcSet={foto.srcSet} sizes="(min-width: 1128px) 25vw, (min-width: 992px) 33vw, (min-width: 744px) 50vw, 100vw" alt={foto.alt} data-tipo-imagen={foto.tipo} loading={prioritaria ? "eager" : "lazy"} fetchPriority={prioritaria ? "high" : "auto"} decoding="async" />
+        {foto.tipo === "ilustracion" && <span className={styles.respaldo}>Sin fotografía disponible</span>}
         <span className={styles["tarjeta-insignia"]} data-tipo={lab.tipo}>{redes[lab.tipo].singular}</span>
       </div>
       <div className={styles["tarjeta-meta"]}>

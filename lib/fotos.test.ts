@@ -24,3 +24,15 @@ test("las aprobadas funcionan aunque todavía no exista el manifiesto de origina
   });
   expect(fotosDe(28, await leerFotos())[0].src).toBe("/logo.webp");
 });
+
+test("usa el área única y un respaldo general para varias áreas o ninguna", () => {
+  expect(fotosDe(1, {}, ["quimica"])[0].src).toContain("/quimica.svg");
+  expect(fotosDe(1, {}, ["quimica", "biologia"])[0].src).toContain("/general.svg");
+  expect(fotosDe(1, {})).toHaveLength(1);
+  expect(fotosDe(1, {})[0].alt).toContain("Sin fotografía disponible");
+});
+test("prioriza fotografías sobre logos y conserva el logo cuando es la única imagen", () => {
+  const fotos = { "1": [{ src: "/logo.webp", tipo: "logo" as const }, { src: "/foto.webp", tipo: "foto" as const }] };
+  expect(fotosDe(1, fotos)[0].src).toBe("/foto.webp");
+  expect(fotosDe(2, { "2": [fotos["1"][0]] })[0].tipo).toBe("logo");
+});

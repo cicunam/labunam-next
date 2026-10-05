@@ -29,12 +29,6 @@ async function generar(original: string, carpeta: string, posicion: number): Pro
 async function ejecutar() {
   if (!origen || !(await stat(origen)).isDirectory()) throw new Error("origen");
   const manifiesto: Record<string, Foto[]> = solo ? JSON.parse(await readFile(join(destino, "manifiesto.json"), "utf8").catch(() => "{}")) : {};
-  const respaldo = [];
-  for (const [posicion, nombre] of ["laboratorio-abc.jpeg", "mision.png", "vision.png"].entries()) {
-    respaldo.push(await generar(resolve("public/assets/images", nombre), "respaldo", posicion));
-  }
-  await writeFile(join(destino, "respaldo.json.nuevo"), JSON.stringify(respaldo));
-  await rename(join(destino, "respaldo.json.nuevo"), join(destino, "respaldo.json"));
   let generadas = 0, fallidas = 0;
   for (const carpeta of await readdir(origen, { withFileTypes: true })) {
     if (!carpeta.isDirectory() || !/^[1-9]\d*$/.test(carpeta.name) || (solo && !solo.includes(carpeta.name))) continue;
