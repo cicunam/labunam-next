@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { clave, plano, titulo } from "./texto";
+import { slugify, normalizeText, toTitleCase } from "./texto";
 
 describe("plano", () => {
   it.each([
     ["Microscopía Óptica", "microscopia optica"],
     ["  ÁÉÍÓÚ ÜÑ ÀÈÌÒÙ  ", "aeiou un aeiou"],
     ["", ""],
-  ])("normaliza %s", (entrada, salida) => expect(plano(entrada)).toBe(salida));
+  ])("normaliza %s", (entrada, salida) => expect(normalizeText(entrada)).toBe(salida));
 });
 
 describe("clave", () => {
@@ -14,16 +14,16 @@ describe("clave", () => {
     ["Ciencias de la Tierra e Ingenierías", "ciencias-de-la-tierra-e-ingenierias"],
     [" ¡QUÍMICA / RMN 3D! ", "quimica-rmn-3d"],
     ["---", ""],
-  ])("genera la clave de %s", (entrada, salida) => expect(clave(entrada)).toBe(salida));
+  ])("genera la clave de %s", (entrada, salida) => expect(slugify(entrada)).toBe(salida));
 });
 
 describe("titulo", () => {
   it("conserva las siglas indicadas", () => {
-    expect(titulo("LABORATORIO NACIONAL HAWC DE RAYOS GAMMA", ["HAWC"])).toBe("Laboratorio Nacional HAWC de Rayos Gamma");
-    expect(titulo("CENTRO ABC XYZ DE PRUEBAS", ["ABC-XYZ"])).toBe("Centro ABC XYZ de Pruebas");
+    expect(toTitleCase("LABORATORIO NACIONAL HAWC DE RAYOS GAMMA", ["HAWC"])).toBe("Laboratorio Nacional HAWC de Rayos Gamma");
+    expect(toTitleCase("CENTRO ABC XYZ DE PRUEBAS", ["ABC-XYZ"])).toBe("Centro ABC XYZ de Pruebas");
   });
   it("respeta la escritura manual", () => {
-    expect(titulo("Laboratorio de Nanosensores Biofotónicos")).toBe("Laboratorio de Nanosensores Biofotónicos");
+    expect(toTitleCase("Laboratorio de Nanosensores Biofotónicos")).toBe("Laboratorio de Nanosensores Biofotónicos");
   });
   it.each([
     ["  LABORATORIO   DE\nÓPTICA ", "Laboratorio de Óptica"],
@@ -33,9 +33,9 @@ describe("titulo", () => {
     ["LABORATORIO DE POZOS, AGUA Y SUELO.", "Laboratorio de Pozos, Agua y Suelo."],
     ["123 --", "123 --"],
     ["   ", ""],
-  ])("convierte %s", (entrada, salida) => expect(titulo(entrada)).toBe(salida));
+  ])("convierte %s", (entrada, salida) => expect(toTitleCase(entrada)).toBe(salida));
   it("sólo convierte desde el 85 % de mayúsculas", () => {
-    expect(titulo("ABCDEFGHIJKLMNOqrstUV")).toBe("ABCDEFGHIJKLMNOqrstUV");
-    expect(titulo("ABCDEFGHIJKLMNOPQrst")).toBe("Abcdefghijklmnopqrst");
+    expect(toTitleCase("ABCDEFGHIJKLMNOqrstUV")).toBe("ABCDEFGHIJKLMNOqrstUV");
+    expect(toTitleCase("ABCDEFGHIJKLMNOPQrst")).toBe("Abcdefghijklmnopqrst");
   });
 });

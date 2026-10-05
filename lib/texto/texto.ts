@@ -5,15 +5,15 @@ const acentos: Record<string, string> = {
 const menores = new Set(["de", "del", "la", "las", "los", "el", "y", "e", "o", "u", "en", "a", "al", "con", "para", "por", "sobre", "sin"]);
 const siglas = ["UNAM", "ISO", "ADN", "DNA", "RNA", "ARN", "PCR", "UV", "RMN", "IR", "HPLC", "GPS", "SIG", "GIS", "CO2", "HAWC", "MHZ", "IA", "TIC", "3D", "II", "III", "IV", "VI", "VII", "VIII", "IX", "XI", "XII", "XX", "XXI"];
 
-export function plano(texto: string): string {
+export function normalizeText(texto: string): string {
   return texto.trim().toLowerCase().replace(/[áéíóúüñàèìòù]/g, (letra) => acentos[letra]);
 }
 
-export function clave(texto: string): string {
-  return plano(texto).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+export function slugify(texto: string): string {
+  return normalizeText(texto).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
-export function titulo(texto: string, conservar: string[] = []): string {
+export function toTitleCase(texto: string, conservar: string[] = []): string {
   const limpio = texto.replace(/\s+/gu, " ").trim();
   const letras = limpio.match(/\p{L}/gu)?.length ?? 0;
   const mayusculas = limpio.match(/\p{Lu}/gu)?.length ?? 0;

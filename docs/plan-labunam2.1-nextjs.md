@@ -60,7 +60,7 @@ después; mover las rutas bajo un segmento de idioma es trabajo de un día, no u
 | --- | --- |
 | `/` | Portada: redes, recién incorporados, áreas, noticias, institucional |
 | `/laboratorios?q=&tipo=&disciplina=&especialidad=&sede=&perfil=&reconocimiento=` | Catálogo con tira de áreas, modal de filtros con conteos y retícula de tarjetas |
-| `/laboratorios/18` | Ficha con URL propia (nuevo respecto a PHP) |
+| `/laboratorios/18` | LaboratoryDialog con URL propia (nuevo respecto a PHP) |
 | `/contacto` | Formulario de contacto con el diseño nuevo |
 | `/api/laboratorios/18` | JSON de un laboratorio para la ficha modal |
 
@@ -97,10 +97,10 @@ Copiar de `laboratorios.latte`, `components/filter.latte`, `components/card.latt
     `micrositio` (Con micrositio en LabUNAM).
 - **Chips de filtros activos** con "Limpiar todo".
 - **Retícula** 1/2/3/4 columnas a 0/744/992/1128 px. **Sin paginación.**
-- **Tarjeta:** foto cuadrada con insignia de red, título (botón que abre la ficha; su `::after`
+- **LaboratoryCard:** foto cuadrada con insignia de red, título (botón que abre la ficha; su `::after`
   cubre toda la tarjeta), entidad, sede, y la línea "N servicios · M equipos" que se oculta si
   ambos son cero. `<img srcset sizes loading="lazy">`, no `next/image`.
-- **Buscador segmentado** (Qué buscas / Red / Sede / orbe naranja) con sugerencias por teclado,
+- **SearchBar segmentado** (Qué buscas / Red / Sede / orbe naranja) con sugerencias por teclado,
   búsquedas recientes en `localStorage` y atajo `/`. Lógica actual en `public/js/search.js`.
   Las clases `.search-input`, `.search-lista`, `.search-opcion` pueden cambiar de nombre al
   pasar a módulos, pero el comportamiento se conserva.
@@ -119,7 +119,7 @@ La página `/laboratorios/[id]` muestra lo mismo sin modal, con `metadata` propi
 `#F4721D` como único acento (botones primarios con texto blanco por decisión de imagen aunque
 dé 2.8:1; hover `#D9600F`), Inter, títulos 32/26/22/18/16, cuerpo 16/14/12/11, radios 4 a
 32 px, una sola sombra `--sombra`, tinte de banda `--superficie-tinte: #EFF3F9` y máscara de
-onda `--onda`. Cabecera plana de 80 px (64 en móvil): escudo UNAM, LabUNAM, píldora de búsqueda
+onda `--onda`. Header plana de 80 px (64 en móvil): escudo UNAM, LabUNAM, píldora de búsqueda
 compacta (oculta en móvil), navegación y hamburguesa. El bloque de buscador alto vive fuera de
 la barra y se pliega al bajar con `IntersectionObserver` (`public/js/menu.js`).
 
@@ -138,10 +138,10 @@ Rarezas ya conocidas que se heredan: `<dialog>` alterna `display: none/block`, a
 | Next que **no** se usa hasta tener razón escrita | middleware, Server Actions, `next/image`, parallel/intercepting routes, ISR, `unstable_*` |
 | Librerías permitidas | `mysql2`, `sharp` (sólo el script), `vitest`, `@playwright/test`, Storybook (`@storybook/nextjs-vite`, addon a11y, addon viewport). Nada más sin razón |
 | Prohibido | Redux/Zustand/Jotai, Tailwind, CSS-in-JS, styled-components, archivos barril `index.ts`, HOCs, `any`, configuración personalizada de webpack |
-| Estilo | **CSS Modules colocados** (`Tarjeta.module.css` junto a `Tarjeta.tsx`). Global sólo `app/globals.css` con tokens, reset y retícula de página, menos de 300 líneas |
+| Estilo | **CSS Modules colocados** (`LaboratoryCard.module.css` junto a `LaboratoryCard.tsx`). Global sólo `app/globals.css` con tokens, reset y retícula de página, menos de 300 líneas |
 | Componentes | Atomic Design: `components/atoms`, `components/molecules`, `components/organisms`; las plantillas son los `layout.tsx` de `app/`. Una carpeta por componente dentro de cada nivel, con tres archivos: `.tsx`, `.module.css`, `.stories.tsx` |
 | Lógica | `lib/<modulo>/` sin React, con implementación y prueba juntas (`buscador/buscador.ts`, `buscador/buscador.test.ts`) |
-| Nombres | dominio en español (`Tarjeta`, `Ficha`, `laboratorio`, `sede`), vocabulario React en inglés (`props`, `onClose`, `children`) |
+| Nombres | componentes y funciones en inglés (`LaboratoryCard`, `loadCatalog`); entidades y campos en español (`Laboratorio`, `laboratorio`, `sede`) |
 | Tamaño | ningún componente pasa de 150 líneas; props tipadas en la misma línea de la función |
 | Idioma | sólo español; los textos de interfaz se escriben directamente en los componentes, sin capa de traducción |
 | Caché del catálogo | objeto en memoria con fecha de vencimiento (600 s), en `lib/catalogo/catalogo.ts`; si la base falla y hay copia, se sirve la copia. Diez líneas, sin Next |
@@ -210,7 +210,7 @@ Cosas que **no** hay que usar: las vistas `datosLab`, `LabDisciplinas` y `busque
 
 | Dato | Laboratorios con dato (de 609) |
 | --- | --- |
-| Entidad con acentos (`dep_nombre_may_min`) | 567; el resto se arregla con `titulo()` |
+| Entidad con acentos (`dep_nombre_may_min`) | 567; el resto se arregla con `toTitleCase()` |
 | Sede por estado | 603 |
 | Alguna disciplina | 596 |
 | Algún equipo | 536 |
@@ -225,13 +225,13 @@ Cosas que **no** hay que usar: las vistas `datosLab`, `LabDisciplinas` y `busque
 ## 6. Lógica a portar, con su origen en PHP
 
 Leer los tres archivos antes de escribir TypeScript; son cortos y están comentados:
-`labunam2/src/Texto.php`, `labunam2/src/Buscador.php`, `labunam2/src/Catalogo.php`.
+`labunam2/src/Texto.php`, `labunam2/src/SearchBar.php`, `labunam2/src/Catalogo.php`.
 
 ### 6.1 `lib/texto/texto.ts`
 
-- `plano(t)`: minúsculas sin acentos (á é í ó ú ü ñ). Base de toda comparación.
-- `clave(t)`: `plano` más guiones, para URLs (`ciencias-de-la-tierra-e-ingenierias`).
-- `titulo(t, conservar = [])`: la base guarda nombres en MAYÚSCULAS; se convierte a
+- `normalizeText(t)`: minúsculas sin acentos (á é í ó ú ü ñ). Base de toda comparación.
+- `slugify(t)`: `plano` más guiones, para URLs (`ciencias-de-la-tierra-e-ingenierias`).
+- `toTitleCase(t, conservar = [])`: la base guarda nombres en MAYÚSCULAS; se convierte a
   «Laboratorio Nacional HAWC de Rayos Gamma». Reglas: si menos del 85 % de las letras son
   mayúsculas, se deja como está (ya lo escribieron a mano); palabras menores (de, del, la, y,
   e, en, …) en minúscula salvo al inicio; se conservan intactas las siglas del laboratorio y de
@@ -254,7 +254,7 @@ fecha, indice
 - **Sede:** `catEstados[idEstado]` del laboratorio; si es 0 o nulo, el de la dependencia.
   Etiquetas: `MEXICO` → «Estado de México», `QUERETARO` → «Querétaro», `MICHOACAN` →
   «Michoacán», `YUCATAN` → «Yucatán», `BAJA CALIFORNIA NORTE` → «Baja California»,
-  `DISTRITO FEDERAL` → «Ciudad de México»; el resto con `titulo()`. `NO ESPECIFICADO` = sin sede.
+  `DISTRITO FEDERAL` → «Ciudad de México»; el resto con `toTitleCase()`. `NO ESPECIFICADO` = sin sede.
 - **Ubicación:** calleNum, colonia, muniDeleg (con `titulo`), «C.P. nnnnn»; sin ceros ni vacíos.
 - **Mapa:** `https://www.google.com/maps?q=lat,lng` si ambos existen.
 - **Sitio:** si `marcaAutorizaInfoWeb = 2`, `https://labunam.unam.mx/micrositio/index.php?il=<idLab>`;
@@ -287,13 +287,13 @@ Un laboratorio puede estar en varios grupos.
 
 ### 6.4 `lib/buscador/buscador.ts`
 
-- `filtrar(laboratorios, criterios)`: los criterios son los siete parámetros de URL. Un valor
+- `filterLaboratorios(laboratorios, criterios)`: los criterios son los siete parámetros de URL. Un valor
   que no exista en las opciones se ignora, no vacía el catálogo. `q` se parte en palabras con
   `plano`; **todas** deben aparecer en `indice`, en cualquier orden. Resultado con
   `coincidencias` (equipos y servicios que contienen las palabras) y `enNombre`. Orden con `q`:
   primero los que coinciden en nombre o siglas, luego por número de coincidencias, luego por
   nombre. Sin `q`: alfabético.
-- `contarEje(laboratorios, criterios, eje, valores)`: cuántos resultados daría cada valor del
+- `countFacet(laboratorios, criterios, eje, valores)`: cuántos resultados daría cada valor del
   eje conservando el resto de criterios. Una pasada por eje. Con 609 laboratorios y cinco ejes
   cuesta menos de 2 ms en PHP; en Node debe ser parecido.
 
@@ -330,9 +330,9 @@ labunam2.1/
 │   ├── contacto/page.tsx
 │   └── api/laboratorios/[id]/route.ts
 ├── components/
-│   ├── atoms/        Boton, Pildora, Insignia, Icono, Campo, Enlace
-│   ├── molecules/    SegmentoBuscador, OpcionFiltro, ChipActivo, Pestana, Galeria
-│   └── organisms/    Cabecera, Pie, Buscador, TiraDisciplinas, ModalFiltros, Tarjeta, Ficha, Carrusel
+│   ├── atoms/        Button, Pill, Badge, Icon, Input, AppLink
+│   ├── molecules/    SearchField, FilterOption, ActiveChip, Tab, Gallery
+│   └── organisms/    Header, Footer, SearchBar, DisciplineBar, FilterDialog, LaboratoryCard, LaboratoryDialog, Carousel
 │                     (cada uno: X/X.tsx, X/X.module.css, X/X.stories.tsx)
 ├── lib/              db/db.ts, catalogo/catalogo.ts, buscador/buscador.ts, etc. (pruebas junto a cada módulo)
 ├── scripts/          fotos.ts
@@ -360,7 +360,7 @@ Cada hito termina con: verificación en navegador a 375/1024/1400, `npm run lint
    cabecera y pie reales.
 3. Copiar `tokens.css` a `app/globals.css` junto con el reset actual; copiar `public/assets`.
 4. Storybook con `@storybook/nextjs-vite`, addon a11y, viewports 375/1024/1400, `preview.ts`
-   importando `globals.css`. Un átomo de ejemplo completo (`Boton`) con sus tres archivos, para
+   importando `globals.css`. Un átomo de ejemplo completo (`Button`) con sus tres archivos, para
    que el equipo copie el patrón.
 5. Vitest configurado; `lib/texto/texto.ts` portado con sus pruebas (ver §9).
 6. README con: propósito, cómo correr, las reglas de §4, la lista de "no usamos", el
@@ -369,14 +369,14 @@ Cada hito termina con: verificación en navegador a 375/1024/1400, `npm run lint
    Es el riesgo número uno y hay que despejarlo en esta semana.
 
 Aceptación: `npm run dev` muestra `/` con cabecera y pie reales; Storybook muestra
-`Boton` en tres tamaños; las pruebas de `texto` pasan.
+`Button` en tres tamaños; las pruebas de `texto` pasan.
 
 ### Hito 1: lógica y piezas chicas (semana 1)
 
 1. `lib/db/db.ts`, `lib/catalogo/catalogo.ts`, `lib/buscador/buscador.ts`, `lib/tipos/tipos.ts`, con pruebas (§9). Probar contra `labunam_app` con un script en el scratchpad que no imprima
    credenciales ni datos de personas.
-2. Átomos y moléculas con historia: Pildora, Insignia, Icono (los 11 `path` SVG de la tira),
-   Campo, Enlace, SegmentoBuscador, OpcionFiltro, ChipActivo, Pestana, Galeria. CSS tomado de
+2. Átomos y moléculas con historia: Pill, Badge, Icon (los 11 `path` SVG de la tira),
+   Input, AppLink, SearchField, FilterOption, ActiveChip, Tab, Gallery. CSS tomado de
    los archivos de `labunam2/public/css/components/`, pasado a módulo.
 
 Aceptación: `catalogo.test.ts` construye 609 laboratorios desde la base en menos de 500 ms;
@@ -384,9 +384,9 @@ Aceptación: `catalogo.test.ts` construye 609 laboratorios desde la base en meno
 
 ### Hito 2: organismos y las dos páginas (semana 2)
 
-1. Cabecera (con el pliegue del buscador por `IntersectionObserver`), Pie, Buscador (sugerencias,
-   recientes, atajo `/`), TiraDisciplinas, ModalFiltros, Tarjeta, Ficha, Carrusel. Sólo
-   Cabecera/menú, Buscador, ModalFiltros y Ficha llevan `'use client'`.
+1. Header (con el pliegue del buscador por `IntersectionObserver`), Footer, SearchBar (sugerencias,
+   recientes, atajo `/`), DisciplineBar, FilterDialog, LaboratoryCard, LaboratoryDialog, Carousel. Sólo
+   Header/menú, SearchBar, FilterDialog y LaboratoryDialog llevan `'use client'`.
 2. `app/page.tsx` y `app/laboratorios/page.tsx` con datos reales, más
    `app/api/laboratorios/[id]/route.ts`.
 
@@ -424,13 +424,13 @@ Aceptación: la URL de desarrollo responde con el catálogo real; Raúl y Carlos
 
 Unitarias (Vitest, junto a cada archivo de `lib/`):
 
-- `plano('Microscopía Óptica') === 'microscopia optica'`.
-- `titulo('LABORATORIO NACIONAL HAWC DE RAYOS GAMMA', ['HAWC']) === 'Laboratorio Nacional HAWC de Rayos Gamma'`.
-- `titulo('Laboratorio de Nanosensores Biofotónicos')` no cambia.
-- `clave('Ciencias de la Tierra e Ingenierías') === 'ciencias-de-la-tierra-e-ingenierias'`.
+- `normalizeText('Microscopía Óptica') === 'microscopia optica'`.
+- `toTitleCase('LABORATORIO NACIONAL HAWC DE RAYOS GAMMA', ['HAWC']) === 'Laboratorio Nacional HAWC de Rayos Gamma'`.
+- `toTitleCase('Laboratorio de Nanosensores Biofotónicos')` no cambia.
+- `slugify('Ciencias de la Tierra e Ingenierías') === 'ciencias-de-la-tierra-e-ingenierias'`.
 - `filtrar` con `q: 'microscopia'` encuentra laboratorios cuyo nombre lleva «Microscopía».
 - `filtrar` con `q: 'xyzzy'` devuelve vacío sin lanzar error.
-- Para cada eje, la suma de `contarEje` sobre las opciones es ≥ el total de resultados (un
+- Para cada eje, la suma de `countFacet` sobre las opciones es ≥ el total de resultados (un
   laboratorio puede tener varias disciplinas) y para `tipo` y `sede` es exactamente igual.
 - Toda clave de sede y de especialidad es única.
 - Un valor de criterio inexistente se ignora y no vacía el catálogo.

@@ -3,7 +3,7 @@ import { createPool, type Pool, type RowDataPacket } from "mysql2/promise";
 // Next recarga módulos en desarrollo; el pool debe sobrevivir a esas recargas.
 const proceso = globalThis as typeof globalThis & { poolLabunam?: Pool };
 
-function conexion(): Pool {
+function getConnection(): Pool {
   if (proceso.poolLabunam) return proceso.poolLabunam;
   const { LABUNAM_DB_HOST: host, LABUNAM_DB_NAME: database, LABUNAM_DB_USER: user, LABUNAM_DB_PASS: password } = process.env;
   if (!host || !database || !user) throw new Error("Falta configurar la conexión de LabUNAM.");
@@ -15,9 +15,9 @@ function conexion(): Pool {
   return proceso.poolLabunam;
 }
 
-export async function consultar<T extends object>(sql: string): Promise<T[]> {
+export async function query<T extends object>(sql: string): Promise<T[]> {
   try {
-    const [filas] = await conexion().query<RowDataPacket[]>(sql);
+    const [filas] = await getConnection().query<RowDataPacket[]>(sql);
     return filas as T[];
   } catch {
     // Los errores del motor pueden incluir datos de conexión; no se propagan a la interfaz.

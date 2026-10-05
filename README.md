@@ -38,18 +38,19 @@ archivos de credenciales.
 - Atomic Design: `components/atoms`, `components/molecules`, `components/organisms`.
   Los átomos y moléculas no conocen el dominio; los organismos sí.
 - Una carpeta por componente dentro de cada nivel, con `Nombre.tsx`,
-  `Nombre.module.css` y `Nombre.stories.tsx` juntos. `Boton` es el patrón que puede copiar el equipo.
+  `Nombre.module.css` y `Nombre.stories.tsx` juntos. `Button` es el patrón que puede copiar el equipo.
 - Las plantillas son los `layout.tsx` de `app/`; una URL se implementa en `app/`.
   Cálculos y acceso a datos van en `lib/<modulo>/`, sin React, junto a sus pruebas y fixtures.
-- Ejemplos de organización: `components/organisms/Tarjeta/Tarjeta.tsx`,
-  `Tarjeta.module.css` y `Tarjeta.stories.tsx` en la misma carpeta;
+- Ejemplos de organización: `components/organisms/LaboratoryCard/LaboratoryCard.tsx`,
+  `LaboratoryCard.module.css` y `LaboratoryCard.stories.tsx` en la misma carpeta;
   `lib/catalogo/catalogo.ts`, `catalogo.test.ts` y `catalogo.fixtures.ts` juntos.
   Los datos compartidos de historias viven en `components/organisms/fixtures/`.
   Los imports apuntan al archivo concreto, sin archivos barril `index.ts`.
 - Ningún componente supera 150 líneas. Las props se tipan en la firma de la función.
-  Nombres de dominio en español; `props`, `children`, `onClose` conservan el vocabulario React.
+  Componentes y funciones en inglés; entidades y campos del dominio en español.
+  Los textos visibles y las rutas públicas permanecen en español.
 - Componentes de servidor por omisión. Sólo se agrega `"use client"` si se necesita
-  interacción: Cabecera, Buscador, ModalFiltros y Ficha.
+  interacción: Header, SearchBar, FilterDialog y LaboratoryDialog.
 - CSS Modules colocados. El único CSS global es `app/globals.css`: tokens, reset,
   tipografía y retícula, menos de 300 líneas. Los valores vienen de `tokens.css` del
   PHP; el alias `--sombra-alta` usa `--sombra` para cumplir la decisión de una sola sombra.
@@ -96,14 +97,14 @@ npm run storybook
 npm run build-storybook
 ```
 
-Abrir <http://localhost:6006>. `Átomos/Boton` ofrece pequeño, mediano, grande y
-estado deshabilitado. Cabecera y Pie también tienen historia. La configuración
+Abrir <http://localhost:6006>. `Átomos/Button` ofrece pequeño, mediano, grande y
+estado deshabilitado. Header y Footer también tienen historia. La configuración
 importa `globals.css` y sirve los assets reales.
 
 El selector de viewport incluye **375, 1024 y 1400 px**. Desde Storybook 9 esta
 [función viene integrada](https://storybook.js.org/docs/essentials/viewport);
 no se instala el antiguo addon viewport, que pertenece a versiones anteriores.
-El addon a11y queda activo y muestra sus hallazgos. Sólo Boton marca sus comprobaciones
+El addon a11y queda activo y muestra sus hallazgos. Sólo Button marca sus comprobaciones
 como pendientes: el naranja de marca con texto blanco tiene contraste insuficiente
 para AA, excepción de imagen explícita del plan. No se oculta la regla de contraste.
 
@@ -161,7 +162,7 @@ sin que lo pida. Temporales en el scratchpad de la sesión, nunca en `/tmp`.
 - `npm run test:e2e`: 6 casos pasan, repartidos entre 375, 1024 y 1400 px.
 - Portada y menú revisados en Chromium en esos tres anchos: logos y fuente cargan,
   sin desbordamiento horizontal ni errores de JavaScript.
-- Storybook arranca; Boton pequeño, mediano y grande revisados en cada ancho.
+- Storybook arranca; Button pequeño, mediano y grande revisados en cada ancho.
   `npm run build-storybook` termina correctamente. Su empaquetador avisa sobre
   directivas `use client` y chunks grandes del entorno de Storybook; no son errores
   de ejecución ni advertencias de la compilación de Next.
@@ -170,19 +171,19 @@ sin que lo pida. Temporales en el scratchpad de la sesión, nunca en `/tmp`.
 ## Capa de datos del Hito 1
 
 `lib/db/db.ts` crea un solo pool al consultar por primera vez. `lib/catalogo/catalogo.ts` hace
-seis consultas de sólo lectura; `normalizarCatalogo.ts` transforma sus filas en el
+seis consultas de sólo lectura; `normalizeCatalog.ts` transforma sus filas en el
 tipo público `Laboratorio`. Las filas de MySQL se tipan aparte en `tiposBase.ts`.
 La interfaz no recibe campos de personas ni detalles de errores de conexión.
 
-`cargarCatalogo()` entrega `{ laboratorios, sedes, disciplinas, sugerencias }`.
+`loadCatalog()` entrega `{ laboratorios, sedes, disciplinas, sugerencias }`.
 Sedes y especialidades son listas de `{ clave, etiqueta, total }`, sin claves
 repetidas y ordenadas por conteo. Las sugerencias incluyen las 38 disciplinas y
 hasta 60 equipos presentes en tres o más laboratorios. `grupos.ts` conserva la
 asignación de las 38 disciplinas a las diez áreas.
 
-`filtrar()` normaliza la consulta, combina todas sus palabras y prioriza nombre o
+`filterLaboratorios()` normaliza la consulta, combina todas sus palabras y prioriza nombre o
 siglas, luego capacidades coincidentes y nombre. Los criterios inexistentes se
-ignoran; los criterios válidos incompatibles sí devuelven cero. `contarEje()`
+ignoran; los criterios válidos incompatibles sí devuelven cero. `countFacet()`
 conserva los demás criterios y cuenta cada pertenencia una sola vez.
 
 Aclaración del criterio del plan: la suma de facetas no siempre es mayor o igual
@@ -192,8 +193,8 @@ Las pruebas comparan la suma contra las pertenencias reales; tipo y sede
 
 Las moléculas reciben texto, opciones, imágenes y callbacks; no importan el
 catálogo ni tipos de laboratorio. La selección y navegación por teclado de un
-grupo de pestañas pertenecen al organismo que las reúna; la historia de `Pestana`
-lo demuestra con flechas, Inicio y Fin. `OpcionFiltro` conserva habilitada una
+grupo de pestañas pertenecen al organismo que las reúna; la historia de `Tab`
+lo demuestra con flechas, Inicio y Fin. `FilterOption` conserva habilitada una
 opción elegida aunque su conteo sea cero.
 
 ## Verificación del Hito 1 — 2 de octubre de 2026
@@ -224,7 +225,7 @@ la petición anterior al cambiar rápidamente una selección. El formulario GET
 mantiene enlaces compartibles y funciona también mediante navegación nativa.
 
 `GET /api/laboratorios/[id]` devuelve sólo campos públicos y fotos; responde 400,
-404 o 503 según corresponda, sin detalles de conexión. Hay un solo diálogo Ficha
+404 o 503 según corresponda, sin detalles de conexión. Hay un solo diálogo LaboratoryDialog
 por página. Conserva las promesas de las fichas solicitadas durante el montaje,
 evita respuestas tardías y permite reintentar una petición fallida. Escape restaura
 el foco y las cuatro pestañas admiten flechas, Inicio y Fin.
@@ -299,10 +300,10 @@ ignorado por Git; hay que ejecutar el comando al desplegar.
 sede; un ID inválido o ausente devuelve 404. Abrir el modal actualiza la URL mediante
 History API; cerrarlo o usar Atrás recupera filtros y posición, y Adelante lo reabre.
 Recargar o compartir la dirección abre la página individual. Ambas vistas
-usan `DetalleFicha`, que se carga mediante `React.lazy` bajo la frontera cliente
-existente de `Ficha`. Así se difieren el código y los estilos del detalle hasta
+usan `LaboratoryDetails`, que se carga mediante `React.lazy` bajo la frontera cliente
+existente de `LaboratoryDialog`. Así se difieren el código y los estilos del detalle hasta
 abrirlo, manteniendo el HTML de la ficha individual renderizado por el servidor.
-Contacto reutiliza Campo, Boton y Enlace; explica que el envío está deshabilitado
+Contact reutiliza Input, Button y AppLink; explica que el envío está deshabilitado
 y dirige al catálogo o a los canales de la CIC. No recoge ni transmite mensajes.
 El CTA principal «Solicitar un servicio» abre `/contacto?laboratorio=[id]` con el
 laboratorio validado en servidor, sus servicios y campos de nombre, correo,
@@ -343,7 +344,7 @@ parte de la aplicación ni son necesarias para compilar los recursos ya guardado
 total **154,585 bytes** (154.6 KB decimales / 151.0 KiB), superior a los 120 KB del
 plan. Se sumaron los recursos JS/CSS descargados por Lighthouse, recomprimidos con
 `gzipSync` sin cabeceras HTTP; no se incluyen imágenes, fuentes ni HTML. Se redujo
-la carga inicial difiriendo `DetalleFicha`, pero no se declara satisfecho el límite.
+la carga inicial difiriendo `LaboratoryDetails`, pero no se declara satisfecho el límite.
 
 Como control, una aplicación mínima Next **16.3.8**, React **19.2.8**, App Router y
 Turbopack, con sólo `html/body` y un `h1` (sin componentes cliente propios ni CSS),

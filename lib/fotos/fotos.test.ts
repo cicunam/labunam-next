@@ -1,6 +1,6 @@
 import { beforeEach, expect, test, vi } from "vitest";
 import { readFile } from "node:fs/promises";
-import { fotosDe, leerFotos } from "./fotos";
+import { getPhotos, readPhotos } from "./fotos";
 
 vi.mock("node:fs/promises", () => ({ readFile: vi.fn() }));
 beforeEach(() => vi.resetAllMocks());
@@ -11,10 +11,10 @@ test("las fotos oficiales tienen prioridad y las aprobadas completan otros labor
     if (String(path).endsWith("manifiesto.json")) return JSON.stringify({ 5: [{ src: "/oficial.webp" }] });
     return "[]";
   });
-  const fotos = await leerFotos();
-  expect(fotosDe(5, fotos)[0].src).toBe("/oficial.webp");
-  expect(fotosDe(28, fotos)).toHaveLength(1);
-  expect(fotosDe(28, fotos)[0].src).toBe("/logo.webp");
+  const fotos = await readPhotos();
+  expect(getPhotos(5, fotos)[0].src).toBe("/oficial.webp");
+  expect(getPhotos(28, fotos)).toHaveLength(1);
+  expect(getPhotos(28, fotos)[0].src).toBe("/logo.webp");
 });
 
 test("las aprobadas funcionan aunque todavía no exista el manifiesto de originales", async () => {
@@ -22,17 +22,17 @@ test("las aprobadas funcionan aunque todavía no exista el manifiesto de origina
     if (String(path).endsWith("manifiesto-web.json")) return JSON.stringify({ 28: [{ src: "/logo.webp" }] });
     throw Error("No existe");
   });
-  expect(fotosDe(28, await leerFotos())[0].src).toBe("/logo.webp");
+  expect(getPhotos(28, await readPhotos())[0].src).toBe("/logo.webp");
 });
 
 test("usa el área única y un respaldo general para varias áreas o ninguna", () => {
-  expect(fotosDe(1, {}, ["quimica"])[0].src).toContain("/quimica.svg");
-  expect(fotosDe(1, {}, ["quimica", "biologia"])[0].src).toContain("/general.svg");
-  expect(fotosDe(1, {})).toHaveLength(1);
-  expect(fotosDe(1, {})[0].alt).toContain("Sin fotografía disponible");
+  expect(getPhotos(1, {}, ["quimica"])[0].src).toContain("/quimica.svg");
+  expect(getPhotos(1, {}, ["quimica", "biologia"])[0].src).toContain("/general.svg");
+  expect(getPhotos(1, {})).toHaveLength(1);
+  expect(getPhotos(1, {})[0].alt).toContain("Sin fotografía disponible");
 });
 test("prioriza fotografías sobre logos y conserva el logo cuando es la única imagen", () => {
   const fotos = { "1": [{ src: "/logo.webp", tipo: "logo" as const }, { src: "/foto.webp", tipo: "foto" as const }] };
-  expect(fotosDe(1, fotos)[0].src).toBe("/foto.webp");
-  expect(fotosDe(2, { "2": [fotos["1"][0]] })[0].tipo).toBe("logo");
+  expect(getPhotos(1, fotos)[0].src).toBe("/foto.webp");
+  expect(getPhotos(2, { "2": [fotos["1"][0]] })[0].tipo).toBe("logo");
 });

@@ -1,55 +1,55 @@
-import { clave, plano } from "../texto/texto";
+import { slugify, normalizeText } from "../texto/texto";
 import type { Criterios, Eje, Laboratorio, Resultado } from "../tipos/tipos";
 
 export const ejes: Eje[] = ["tipo", "disciplina", "especialidad", "sede", "perfil", "reconocimiento"];
 export const perfiles = { servicios: "Presta servicios", docencia: "Apoya la docencia", basica: "Investigación básica", aplicada: "Investigación aplicada" };
 export const reconocimientos = { certificacion: "Con certificación", acreditacion: "Con acreditación", micrositio: "Con micrositio en LabUNAM" };
 
-export function valoresDe(lab: Laboratorio, eje: Eje): string[] {
+export function getFacetValues(lab: Laboratorio, eje: Eje): string[] {
   switch (eje) {
     case "tipo": return [lab.tipo];
     case "sede": return [lab.sede];
     case "disciplina": return lab.grupos;
-    case "especialidad": return lab.disciplinas.map(clave);
+    case "especialidad": return lab.disciplinas.map(slugify);
     case "perfil": return lab.perfil;
     case "reconocimiento": return [lab.certificado ? "certificacion" : "", lab.acreditado ? "acreditacion" : "", lab.micrositio ? "micrositio" : ""].filter(Boolean);
   }
 }
 
-export function normalizarCriterios(laboratorios: Laboratorio[], criterios: Criterios): Criterios {
+export function normalizeCriteria(laboratorios: Laboratorio[], criterios: Criterios): Criterios {
   const validos: Criterios = { q: criterios.q?.trim() ?? "" };
   for (const eje of ejes) {
     const valor = criterios[eje];
-    if (valor && laboratorios.some((lab) => valoresDe(lab, eje).includes(valor))) validos[eje] = valor;
+    if (valor && laboratorios.some((lab) => getFacetValues(lab, eje).includes(valor))) validos[eje] = valor;
   }
   return validos;
 }
 
-const contiene = (texto: string, palabras: string[]) => palabras.every((palabra) => texto.includes(palabra));
-const palabrasDe = (q = "") => plano(q).split(/\s+/u).filter(Boolean);
+const contains = (texto: string, palabras: string[]) => palabras.every((palabra) => texto.includes(palabra));
+const getWords = (q = "") => normalizeText(q).split(/\s+/u).filter(Boolean);
 
-function cumple(lab: Laboratorio, criterios: Criterios, palabras: string[]): boolean {
-  return ejes.every((eje) => !criterios[eje] || valoresDe(lab, eje).includes(criterios[eje]!)) && contiene(lab.indice, palabras);
+function matchesCriteria(lab: Laboratorio, criterios: Criterios, palabras: string[]): boolean {
+  return ejes.every((eje) => !criterios[eje] || getFacetValues(lab, eje).includes(criterios[eje]!)) && contains(lab.indice, palabras);
 }
 
-export function filtrar(laboratorios: Laboratorio[], criterios: Criterios): Resultado[] {
-  const validos = normalizarCriterios(laboratorios, criterios);
-  const palabras = palabrasDe(validos.q);
-  return laboratorios.filter((lab) => cumple(lab, validos, palabras)).map((lab) => ({
+export function filterLaboratorios(laboratorios: Laboratorio[], criterios: Criterios): Resultado[] {
+  const validos = normalizeCriteria(laboratorios, criterios);
+  const palabras = getWords(validos.q);
+  return laboratorios.filter((lab) => matchesCriteria(lab, validos, palabras)).map((lab) => ({
     ...lab,
-    coincidencias: palabras.length ? [...lab.equipos, ...lab.servicios].filter((texto) => contiene(plano(texto), palabras)) : [],
-    enNombre: palabras.length > 0 && contiene(plano(`${lab.nombre} ${lab.siglas}`), palabras),
+    coincidencias: palabras.length ? [...lab.equipos, ...lab.servicios].filter((texto) => contains(normalizeText(texto), palabras)) : [],
+    enNombre: palabras.length > 0 && contains(normalizeText(`${lab.nombre} ${lab.siglas}`), palabras),
   })).sort((a, b) => Number(b.enNombre) - Number(a.enNombre) || b.coincidencias.length - a.coincidencias.length || a.nombre.localeCompare(b.nombre, "es"));
 }
 
-export function contarEje(laboratorios: Laboratorio[], criterios: Criterios, eje: Eje, valores: string[]): Record<string, number> {
-  const validos = normalizarCriterios(laboratorios, criterios);
+export function countFacet(laboratorios: Laboratorio[], criterios: Criterios, eje: Eje, valores: string[]): Record<string, number> {
+  const validos = normalizeCriteria(laboratorios, criterios);
   delete validos[eje];
-  const palabras = palabrasDe(validos.q);
+  const palabras = getWords(validos.q);
   const totales = Object.fromEntries(valores.map((valor) => [valor, 0]));
   for (const lab of laboratorios) {
-    if (!cumple(lab, validos, palabras)) continue;
-    for (const valor of new Set(valoresDe(lab, eje))) {
+    if (!matchesCriteria(lab, validos, palabras)) continue;
+    for (const valor of new Set(getFacetValues(lab, eje))) {
       if (Object.hasOwn(totales, valor)) totales[valor]++;
     }
   }

@@ -6,7 +6,7 @@ import type { Grupo } from "../tipos/tipos";
 export type Foto = { src: string; srcSet?: string; alt: string; tipo?: "foto" | "logo" | "ilustracion" };
 type Manifiesto = Record<string, { src: string; srcset?: string; tipo?: "foto" | "logo" }[]>;
 
-export async function leerFotos(): Promise<Manifiesto> {
+export async function readPhotos(): Promise<Manifiesto> {
   try {
     const base = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto.json"), "utf8").catch(() => "{}")) as Manifiesto;
     const web = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto-web.json"), "utf8").catch(() => "{}")) as Manifiesto;
@@ -16,7 +16,7 @@ export async function leerFotos(): Promise<Manifiesto> {
   catch { return {}; }
 }
 
-export function fotosDe(id: number, manifiesto: Manifiesto, areas: Grupo[] = []): Foto[] {
+export function getPhotos(id: number, manifiesto: Manifiesto, areas: Grupo[] = []): Foto[] {
   const fotos = manifiesto[String(id)];
   if (Array.isArray(fotos) && fotos.length) {
     // Fotografías primero; orden editorial conservado dentro de cada tipo.

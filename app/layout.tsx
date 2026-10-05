@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Cabecera } from "@/components/organisms/Cabecera/Cabecera";
-import { Pie } from "@/components/organisms/Pie/Pie";
+import { Header } from "@/components/organisms/Header/Header";
+import { Footer } from "@/components/organisms/Footer/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,9 +13,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
       <body>
-        <Cabecera />
+        <Header />
         <main id="contenido">{children}</main>
-        <Pie />
+        <Footer />
       </body>
     </html>
   );
