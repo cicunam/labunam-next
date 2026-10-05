@@ -21,12 +21,45 @@ export function FilterDialog({ criterios, filtros, total, children }: { criterio
     const flechas = barra.current?.querySelectorAll<HTMLButtonElement>("[data-mover]");
     if (!pista || !flechas) return;
     const eventos = new AbortController();
+    let drag: { id: number; x: number; scroll: number; moved: boolean } | null = null;
+    let suppressClick = false;
+    pista.addEventListener("dragstart", (event) => event.preventDefault(), { signal: eventos.signal });
+    pista.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "touch" || event.button !== 0 || !event.isPrimary) return;
+      suppressClick = false;
+      drag = { id: event.pointerId, x: event.clientX, scroll: pista.scrollLeft, moved: false };
+    }, { signal: eventos.signal });
+    pista.addEventListener("pointermove", (event) => {
+      if (!drag || event.pointerId !== drag.id) return;
+      const delta = event.clientX - drag.x;
+      if (!drag.moved && Math.abs(delta) < 6) return;
+      drag.moved = true;
+      suppressClick = true;
+      pista.dataset.dragging = "";
+      pista.setPointerCapture(event.pointerId);
+      event.preventDefault();
+      pista.scrollLeft = drag.scroll - delta;
+    }, { signal: eventos.signal });
+    function finishDrag(event: PointerEvent) {
+      if (!drag || event.pointerId !== drag.id) return;
+      drag = null;
+      delete pista!.dataset.dragging;
+      if (pista!.hasPointerCapture(event.pointerId)) pista!.releasePointerCapture(event.pointerId);
+    }
+    window.addEventListener("pointerup", finishDrag, { signal: eventos.signal });
+    window.addEventListener("pointercancel", finishDrag, { signal: eventos.signal });
+    pista.addEventListener("lostpointercapture", finishDrag, { signal: eventos.signal });
+    pista.addEventListener("click", (event) => {
+      if (!suppressClick) return;
+      event.preventDefault(); event.stopPropagation(); suppressClick = false;
+    }, { capture: true, signal: eventos.signal });
     function update() { flechas?.forEach((flecha) => { flecha.hidden = flecha.dataset.mover === "-1" ? pista!.scrollLeft < 8 : pista!.scrollWidth - pista!.clientWidth - pista!.scrollLeft < 8; }); }
     flechas.forEach((flecha) => flecha.addEventListener("click", () => pista.scrollBy({ left: Number(flecha.dataset.mover) * pista.clientWidth * .8, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }), { signal: eventos.signal }));
     pista.addEventListener("scroll", update, { signal: eventos.signal, passive: true });
     const resize = new ResizeObserver(update); resize.observe(pista); update();
     const activo = pista.querySelector<HTMLElement>('[aria-current="page"]');
-    if (activo) pista.scrollLeft = Math.max(0, activo.offsetLeft - pista.clientWidth / 2);
+    if (activo) pista.scrollTo({ left: Math.max(0, activo.offsetLeft - pista.clientWidth / 2), behavior: "instant" });
+    update();
     return () => { eventos.abort(); resize.disconnect(); peticion.current?.abort(); };
   }, []);
   async function updateSelection(nueva: Criterios) {

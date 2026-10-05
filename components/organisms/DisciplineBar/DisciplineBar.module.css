@@ -10,6 +10,10 @@
   gap: var(--espacio-lg);
 
   overflow-x: auto;
+  cursor: grab;
+  user-select: none;
+
+  &[data-dragging] { cursor: grabbing; scroll-behavior: auto; }
   scroll-behavior: smooth;
   scrollbar-width: none;
 
@@ -34,6 +38,7 @@
   font: var(--font-small-semibold);
   text-align: center;
   text-decoration: none;
+  cursor: inherit;
   white-space: nowrap;
 
   transition: color .2s ease, border-color .2s ease, opacity .2s ease;
@@ -118,5 +123,17 @@
 .tira-marco:has(.tira-flecha-despues:not([hidden]))::after { opacity: 1; }
 
 
-@media (max-width: 743px) { .tira-flecha { display: none; } .tira-categoria { font: var(--font-tiny-semibold); } }
+@media (max-width: 743px) {
+  /* Mantener controles visibles también cuando se usa un cursor en una pantalla pequeña. */
+  .tira-marco { display: grid; grid-template-columns: 32px minmax(0, 1fr) 32px; align-items: center; gap: 4px; }
+  .tira-pista { grid-column: 2; grid-row: 1; }
+  .tira-flecha { position: static; translate: none; grid-row: 1; }
+  .tira-flecha[hidden] { display: grid; visibility: hidden; }
+  .tira-flecha-antes { grid-column: 1; }
+  .tira-flecha-despues { grid-column: 3; }
+  .tira-marco::before, .tira-marco::after { display: none; }
+  .tira-categoria { font: var(--font-tiny-semibold); }
+}
 .tira-flecha { font-size: 24px; }
+
+@media (prefers-reduced-motion: reduce) { .tira-pista { scroll-behavior: auto; } }

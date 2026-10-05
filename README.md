@@ -276,6 +276,10 @@ por página. Conserva las promesas de las fichas solicitadas durante el montaje,
 evita respuestas tardías y permite reintentar una petición fallida. Escape restaura
 el foco y las cuatro pestañas admiten flechas, Inicio y Fin.
 
+La barra de áreas admite arrastre con cursor, desplazamiento táctil y flechas.
+En móvil ocupa una fila completa y el botón Filtros queda debajo, a todo el ancho.
+Arrastrar no activa enlaces; seleccionar un área conserva la consulta en la URL.
+
 El carrusel utiliza arrastre con mouse y gestos táctiles horizontales, flechas,
 indicadores y teclado. Las copias laterales permiten recorrer las noticias en ambos
 sentidos sin un salto de regreso al principio; son inertes y quedan fuera del árbol
