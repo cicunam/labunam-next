@@ -7,7 +7,9 @@ const respaldo = ["laboratorio-abc.jpeg", "mision.png", "vision.png"];
 
 export async function leerFotos(): Promise<Manifiesto> {
   try {
-    const manifiesto = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto.json"), "utf8")) as Manifiesto;
+    const base = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto.json"), "utf8").catch(() => "{}")) as Manifiesto;
+    const web = JSON.parse(await readFile(join(process.cwd(), "public/fotos/manifiesto-web.json"), "utf8").catch(() => "{}")) as Manifiesto;
+    const manifiesto = { ...web, ...base };
     manifiesto.respaldo = JSON.parse(await readFile(join(process.cwd(), "public/fotos/respaldo.json"), "utf8").catch(() => "[]"));
     return manifiesto;
   }

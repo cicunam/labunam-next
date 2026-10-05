@@ -13,3 +13,6 @@ next-env.d.ts
 .DS_Store
 public/fotos/
 public/assets/fotos/
+
+# Progreso local de revisión editorial
+.revision-fotos/

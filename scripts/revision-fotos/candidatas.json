@@ -1,0 +1,163 @@
+[
+  {
+    "idLab": 3,
+    "nombre": "LABORATORIO DE NANOMATERIALES, CATÁLISIS, BIOFISICOQUÍMICA Y MODELADO MOLECULAR",
+    "origen": "http://www.cuautitlan.unam.mx/",
+    "urlFinal": "",
+    "estado": "Sin candidata en esta revisión",
+    "nota": "El registro apunta a la portada general de FES Cuautitlán. La visita agotó el tiempo; no se atribuyen sus imágenes al laboratorio.",
+    "imagenes": [],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 5,
+    "nombre": "UNIDAD DE ESCALAMIENTO Y PLANTA PILOTO",
+    "origen": "https://www.ibt.unam.mx/agrupacion/unidad-de-escalamiento-y-planta-piloto-27",
+    "urlFinal": "https://www.ibt.unam.mx/agrupacion/unidad-de-escalamiento-y-planta-piloto-27",
+    "estado": "Candidatas para revisión",
+    "nota": "Imagen identificada con el nombre de la unidad en su página específica.",
+    "imagenes": [
+      {
+        "url": "https://www.ibt.unam.mx/media/agrupacion/img-4820.png",
+        "ancho": 950,
+        "alto": 633,
+        "id": "5-1",
+        "tipo": "foto"
+      }
+    ],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 9,
+    "nombre": "CEPARIO",
+    "origen": "https://quimica.unam.mx/investigacion/servicios-para-la-investigacion/cepario/",
+    "urlFinal": "",
+    "estado": "Sin candidata en esta revisión",
+    "nota": "El sitio no respondió correctamente en esta prueba. No implica que esté permanentemente fuera de servicio.",
+    "imagenes": [],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 17,
+    "nombre": "LABORATORIO DE SISTEMAS DE INFORMACIÓN, MONITOREO Y MODELACIÓN URBANA Y VIVIENDA",
+    "origen": "https://arquitectura.unam.mx/sistemas-de-informacioacuten-monitoreo-y-modelacioacuten-urbana-y-de-vivienda.html",
+    "urlFinal": "https://arquitectura.unam.mx/sistemas-de-informacioacuten-monitoreo-y-modelacioacuten-urbana-y-de-vivienda.html",
+    "estado": "Sin candidata en esta revisión",
+    "nota": "La dirección antigua abrió una página de Arquitectura sin imágenes detectadas. Hace falta localizar la página vigente.",
+    "imagenes": [],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 23,
+    "nombre": "LABORATORIO DE INVESTIGACIÓN ERGONOMICA DEL POSGRADO EN DISEÑO INDUSTRIAL",
+    "origen": "https://posgrado.unam.mx/pdi/web/laboratorios/",
+    "urlFinal": "https://disenoindustrial.posgrado.unam.mx/laboratorios/",
+    "estado": "Sin candidata en esta revisión",
+    "nota": "La dirección redirige al listado de laboratorios del posgrado. Se detectaron únicamente logotipos.",
+    "imagenes": [],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 25,
+    "nombre": "LABORATORIO DE ANÁLISIS EN INGENIERÍA DE REACTORES NUCLEARES",
+    "origen": "https://www.fi-b.unam.mx/info-li.php?depto=energeticos&nombre=reactores-nucleares-cu",
+    "urlFinal": "https://www.fi-b.unam.mx/info-li.php?depto=energeticos&nombre=reactores-nucleares-cu",
+    "estado": "Candidatas para revisión",
+    "nota": "Dos fotografías en el carrusel de su página: el letrero del laboratorio y el exterior del edificio. No muestran el equipamiento interior.",
+    "imagenes": [
+      {
+        "url": "https://www.fi-b.unam.mx/images/laboratorio/investigacion/nucleares-cu1.jpg",
+        "ancho": 3634,
+        "alto": 1313,
+        "id": "25-1",
+        "tipo": "foto"
+      },
+      {
+        "url": "https://www.fi-b.unam.mx/images/laboratorio/investigacion/nucleares-cu2.jpg",
+        "ancho": 4032,
+        "alto": 3024,
+        "id": "25-2",
+        "tipo": "foto"
+      }
+    ],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 28,
+    "nombre": "LABORATORIO HÁBITAT SOCIAL:  PARTICIPACIÓN Y GÉNERO",
+    "origen": "https://lahas.org",
+    "urlFinal": "https://lahas.org/",
+    "estado": "Candidatas para revisión",
+    "nota": "Fotografía de una sala con computadoras publicada por LAHAS. El archivo está identificado como inauguración; confirmar que aún representa sus instalaciones.",
+    "imagenes": [
+      {
+        "url": "https://lahas.org/wp-content/uploads/2019/09/LAHAS_Inauguraci%C3%B3n-003-1024x768.jpg",
+        "ancho": 1024,
+        "alto": 768,
+        "id": "28-1",
+        "tipo": "foto"
+      },
+      {
+        "id": "28-logo",
+        "url": "https://lahas.org/wp-content/uploads/2018/05/logo_header.png",
+        "ancho": 770,
+        "alto": 240,
+        "tipo": "logo"
+      }
+    ],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 36,
+    "nombre": "UNIDAD DE INVESTIGACIÓN EN BIOLOGÍA DE LA REPRODUCCIÓN",
+    "origen": "https://www.zaragoza.unam.mx/investigacion/unidades-investigacion/ui-biologia-reproduccion/",
+    "urlFinal": "https://www.zaragoza.unam.mx/investigacion/unidades-investigacion/ui-biologia-reproduccion/",
+    "estado": "Sin candidata en esta revisión",
+    "nota": "Sólo se detectó un encabezado general de unidades de investigación, no una foto específica.",
+    "imagenes": [],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 44,
+    "nombre": "LABORATORIO DE BIO-ROBÓTICA",
+    "origen": "https://biorobotics.fi-p.unam.mx/",
+    "urlFinal": "https://biorobotics.fi-p.unam.mx/",
+    "estado": "Candidatas para revisión",
+    "nota": "Imagen del robot Justina en el sitio del laboratorio. Es un proyecto/equipo, no una fotografía del espacio; encuadre vertical.",
+    "imagenes": [
+      {
+        "url": "https://biorobotics.fi-p.unam.mx/wp-content/uploads/2020/06/justina2018_PNG-957x1024.png",
+        "ancho": 957,
+        "alto": 1024,
+        "id": "44-1",
+        "tipo": "foto"
+      }
+    ],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  },
+  {
+    "idLab": 51,
+    "nombre": "LABORATORIO DE MECÁNICA DE GEOSISTEMAS",
+    "origen": "https://tellus.geociencias.unam.mx/index.php/mecanica-de-geosistemas/",
+    "urlFinal": "https://tellus.geociencias.unam.mx/index.php/mecanica-de-geosistemas/",
+    "estado": "Candidatas para revisión",
+    "nota": "Dos fotografías de la sección de infraestructura: equipo con computadora y tanque experimental de propagación de ondas.",
+    "imagenes": [
+      {
+        "url": "https://tellus.geociencias.unam.mx/wp-content/uploads/2023/10/Imagen3-Infraestructura-mecanica-de-rocas.jpg",
+        "ancho": 1279,
+        "alto": 836,
+        "id": "51-1",
+        "tipo": "foto"
+      },
+      {
+        "url": "https://tellus.geociencias.unam.mx/wp-content/uploads/2023/10/Imagen4-Infraestructura-mecanica-de-rocas.jpg",
+        "ancho": 1280,
+        "alto": 728,
+        "id": "51-2",
+        "tipo": "foto"
+      }
+    ],
+    "autorizacion": "Raúl informa que el Dr. José Sámano autorizó usar imágenes de las páginas de los laboratorios. Pendiente de selección editorial."
+  }
+]

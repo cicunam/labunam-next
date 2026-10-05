@@ -370,3 +370,33 @@ Validación del ajuste: 53 pruebas unitarias y los 48 casos de navegador pasan
 (45 en la suite inicial y los casos ampliados de historial/posición comprobados
 después). Lint, TypeScript y build de producción pasan. Se revisaron capturas del
 modal y la solicitud en móvil y escritorio.
+
+## Revisión local de imágenes web
+
+Ejecutar con Node 24: `npm run fotos:revisar`. Abre
+http://127.0.0.1:8767; es una herramienta local, separada del sitio público.
+Incluye los 10 laboratorios del piloto, siete fotografías candidatas y el logo
+propio de LAHAS como alternativa. Las páginas de origen se conservan; no es una
+recopilación completa de todos los laboratorios.
+
+Selecciona hasta tres imágenes, indica la principal y pulsa «Guardar y siguiente».
+También puedes dejar un registro pendiente o marcarlo sin imagen adecuada.
+El avance se guarda en `.revision-fotos/seleccion.json` (ignorado por Git);
+puedes exportarlo desde la interfaz. Anterior/Siguiente sólo navegan, no guardan
+cambios sin confirmar. Los logos institucionales generales no se proponen como
+logos propios de un laboratorio.
+
+«Aplicar aprobadas al catálogo» pide confirmar la selección y descarga únicamente
+las imágenes aprobadas. Genera WebP de 480/960/1440 según el tamaño original, con
+fondo blanco y sin recorte para logos, y publica `public/fotos/manifiesto-web.json`.
+Si alguna imagen falla, conserva la versión anterior de ese laboratorio. Las
+fotografías oficiales del manifiesto original tienen prioridad sobre las web.
+El generador de fotos originales no elimina este manifiesto adicional. Guardar
+una nueva revisión no retira fotos ya aplicadas; volver a aplicar reemplaza sólo
+los laboratorios aprobados. El archivo registra fuente y la autorización que
+Raúl informó haber recibido del Dr. José Sámano, sin asumir verificación externa.
+
+Para pruebas aisladas admite `--puerto=8768 --estado=/ruta/estado --destino=/ruta/fotos`.
+Se comprobó selección, guardado, recarga, importación de foto y logo en una carpeta
+temporal, formato WebP, diseño móvil, IDs inválidos y rechazo de escrituras desde
+otro origen. La selección real se deja vacía para la revisión de Raúl.
