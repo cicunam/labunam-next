@@ -61,6 +61,15 @@ export function SearchBar({ titulo, criterios = {}, sedes, sugerencias, frecuent
                   }} />
                 {q && <button className={styles["search-limpiar"]} type="button" aria-label="Borrar búsqueda" onClick={() => { setQ(""); setActive(-1); input.current?.focus(); }}><Icon nombre="cerrar" tamano={16} /></button>}
               </div>
+              <ul id="busqueda-lista" className={styles["search-lista"]} role="listbox" aria-label="Sugerencias" hidden={!visible}>
+                {opciones.map((opcion, i) => {
+                  const inicio = q.trim() ? normalizeText(opcion.texto).indexOf(normalizeText(q)) : -1;
+                  return <li id={`busqueda-opcion-${i}`} key={opcion.texto} className={styles["search-opcion"]} role="option" aria-selected={activa === i} onPointerDown={(event) => event.preventDefault()} onClick={() => selectSuggestion(opcion.texto)}>
+                    <Icon nombre="buscar" tamano={16} /><span className={styles["search-opcion-texto"]}>{inicio >= 0 ? <>{opcion.texto.slice(0, inicio)}<mark>{opcion.texto.slice(inicio, inicio + q.trim().length)}</mark>{opcion.texto.slice(inicio + q.trim().length)}</> : opcion.texto}</span>
+                    {opcion.reciente && <span className={styles["search-opcion-nota"]}>reciente</span>}
+                  </li>;
+                })}
+              </ul>
             </div>
             <span className={styles["buscador-filete"]} aria-hidden="true" />
             <div className={styles["buscador-segmento"]}>
@@ -79,15 +88,6 @@ export function SearchBar({ titulo, criterios = {}, sedes, sugerencias, frecuent
             </div>
             <button className={styles["buscador-orbe"]} type="submit" aria-label="Buscar"><Icon nombre="buscar" tamano={18} /><span className={styles["buscar-texto"]}>Buscar</span></button>
           </div>
-          <ul id="busqueda-lista" className={styles["search-lista"]} role="listbox" aria-label="Sugerencias" hidden={!visible}>
-            {opciones.map((opcion, i) => {
-              const inicio = q.trim() ? normalizeText(opcion.texto).indexOf(normalizeText(q)) : -1;
-              return <li id={`busqueda-opcion-${i}`} key={opcion.texto} className={styles["search-opcion"]} role="option" aria-selected={activa === i} onPointerDown={(event) => event.preventDefault()} onClick={() => selectSuggestion(opcion.texto)}>
-                <Icon nombre="buscar" tamano={16} /><span className={styles["search-opcion-texto"]}>{inicio >= 0 ? <>{opcion.texto.slice(0, inicio)}<mark>{opcion.texto.slice(inicio, inicio + q.trim().length)}</mark>{opcion.texto.slice(inicio + q.trim().length)}</> : opcion.texto}</span>
-                {opcion.reciente && <span className={styles["search-opcion-nota"]}>reciente</span>}
-              </li>;
-            })}
-          </ul>
         </form>
         {frecuentes.length > 0 && <p className={styles["search-frecuentes"]}>{frecuentes.map((q) => <Link key={q} href={getCatalogUrl({ q })}>{q}</Link>)}</p>}
       </div>

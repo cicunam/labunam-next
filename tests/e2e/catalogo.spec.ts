@@ -118,3 +118,29 @@ test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({
     await expect(page.getByLabel("Sede", { exact: true })).toHaveValue("");
   }
 });
+
+
+test("ancla sugerencias al campo en móvil y permite seleccionarlas", async ({ page }) => {
+  for (const ruta of ["/", "/laboratorios?q=nc&tipo=&sede="]) {
+    await page.goto(ruta);
+    const campo = page.getByRole("combobox", { name: "Qué buscas" });
+    await campo.fill("micros");
+    const lista = page.getByRole("listbox", { name: "Sugerencias" });
+    await expect(lista).toBeVisible();
+    const input = (await campo.boundingBox())!;
+    const suggestions = (await lista.boundingBox())!;
+    expect(suggestions.y).toBeGreaterThanOrEqual(input.y + input.height);
+    expect(suggestions.x).toBeGreaterThanOrEqual(0);
+    expect(suggestions.x + suggestions.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    if (page.viewportSize()!.width < 744) {
+      expect(suggestions.y - input.y - input.height).toBeLessThan(40);
+      const red = (await page.getByRole("combobox", { name: "Red", exact: true }).boundingBox())!;
+      expect(suggestions.y).toBeLessThan(red.y + red.height);
+    }
+    const opcion = lista.getByRole("option").first();
+    const texto = await opcion.locator("span").first().textContent();
+    await opcion.click();
+    await expect(lista).toBeHidden();
+    await expect.poll(() => new URL(page.url()).searchParams.get("q")).toBe(texto);
+  }
+});
