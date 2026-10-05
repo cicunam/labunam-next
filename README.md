@@ -7,8 +7,10 @@ Coordinación de la Investigación Científica. La referencia visual y funcional
 ## Estado: Hito 3 — funcionalidad verificada; presupuesto de peso pendiente
 
 Portada, catálogo, fichas con URL propia y contacto están implementados. El generador
-produce fotos para 62 laboratorios activos. Las pruebas y compilaciones pasan;
-Lighthouse móvil alcanza 93–96/100 en producción local.
+procesa las fotos originales; el revisor local permite incorporar fotos y logos web
+aprobados. Cuando faltan imágenes se muestran ilustraciones por área. Las últimas
+mediciones del Hito 3 dieron 93–96/100 en Lighthouse móvil en producción local
+(véase la fecha y alcance de la medición más abajo).
 
 El presupuesto de 120 KB gzip de JS+CSS **no se alcanzó**: quedan 154.6 KB. Una
 compilación mínima con la misma versión de Next, sin componentes cliente propios,
@@ -16,6 +18,35 @@ ya carga 133.5 KB gzip de JavaScript. Este criterio requiere revisar el presupue
 o la arquitectura antes de darlo por cumplido; los detalles están al final.
 
 El Hito 4 (servidor de la UNAM y revisión institucional) sigue pendiente.
+
+## Guía rápida del repositorio
+
+| Ruta | Responsabilidad |
+| --- | --- |
+| `app/` | Páginas, layouts y API pública |
+| `components/` | Átomos, moléculas y organismos, una carpeta por componente |
+| `lib/` | MySQL, normalización, búsqueda, facetas y selección de fotos |
+| `public/js/carrusel.js` | Arrastre, loop, avance automático y progreso del carrusel |
+| `scripts/` | Generación de imágenes y revisión editorial local |
+| `tests/e2e/` | Pruebas de navegador en 375, 1024 y 1400 px |
+| `docs/` | Plan, acuerdos del servidor e informe de rendimiento |
+
+`AGENTS.md` reúne las reglas compartidas para agentes. `CLAUDE.md` lo importa y
+agrega una guía de navegación para Claude. Este README documenta la operación y
+las decisiones; las secciones fechadas son resultados históricos, no mediciones
+renovadas automáticamente con cada cambio.
+
+## Pendientes reales
+
+- Conectar el backend del formulario de solicitudes y acordar destinatarios y envío.
+  Actualmente se muestra deshabilitado y no transmite mensajes.
+- Sustituir las noticias de ejemplo y obtener la revisión editorial de Ivonne/CIC.
+- Continuar la revisión de imágenes cuando haya nuevas candidatas; aceptar logos
+  propios si no hay fotografías adecuadas. La cobertura no es completa.
+- Resolver la desviación del presupuesto de 120 KB y repetir rendimiento y
+  accesibilidad con el contenido final y el servidor de la UNAM.
+- Hito 4: configurar Node/PM2/Apache, flujo de despliegue y persistencia de imágenes.
+  Aún no hay acciones de despliegue en este repositorio.
 
 ## Arranque
 
@@ -72,14 +103,15 @@ Se usan rutas por carpetas, componentes de servidor, `searchParams`, Route Handl
 Dependencias permitidas: `mysql2`, `sharp` (sólo para el script de fotos), Vitest,
 Playwright y Storybook con `@storybook/nextjs-vite` y accesibilidad. Las dependencias
 de base de Next/React/TypeScript/ESLint y las transitivas de esas herramientas son
-parte del andamiaje. MySQL ya está instalado; el procesado de fotos se añade en el Hito 3.
+parte del andamiaje. El acceso a MySQL es de sólo lectura; el procesado de fotos
+ya está implementado en los scripts.
 
 No usamos Redux, Zustand, Jotai, Tailwind, CSS-in-JS, styled-components, archivos
 barril `index.ts`, HOCs, `any` ni configuración personalizada de webpack.
 Tampoco middleware, Server Actions, `next/image`, rutas paralelas/interceptadas,
 ISR ni APIs `unstable_*` sin una razón escrita aquí. No se añadió ninguna excepción.
 
-Las fotos se servirán con `<img srcset sizes loading="lazy">`. Por esa decisión
+Las fotos se sirven con `<img srcset sizes loading="lazy">`. Por esa decisión
 explícita se desactiva únicamente `@next/next/no-img-element` en ESLint.
 La caché del catálogo es un objeto en memoria durante 600 segundos, con la copia
 anterior como respaldo si falla MySQL. Las peticiones concurrentes comparten una
@@ -126,28 +158,36 @@ La implementación conserva las reglas del PHP `Texto.php`.
 Playwright verifica la portada, el pie, el menú por teclado, cierre con Escape,
 retorno de foco, ausencia de desbordamiento horizontal y los cinco 301 con query
 strings a los tres anchos. Arranca Next automáticamente si no está en el puerto 3000.
-Los casos de catálogo y contacto se incorporarán en sus hitos.
+También cubre catálogo, filtros, contacto, historial de fichas y carrusel
+(arrastre con mouse/touch, loop y avance automático con progreso).
+Para usar un servidor existente, define `PLAYWRIGHT_BASE_URL`; así Playwright
+no intenta iniciar otro proceso. Las pruebas completas de navegador requieren
+la base configurada. No modificar datos reales para satisfacer las pruebas.
 
-## Fotos (Hito 3)
+## Imágenes y datos locales
 
-El script `scripts/fotos.ts` y el comando `npm run fotos` se implementan en el Hito 3;
-aún no existen. Raúl establecerá `LABUNAM_FOTOS_ORIGEN` con la carpeta real de
-micrositios. El script usará `sharp`, hasta tres fotos por laboratorio, orientación
-EXIF, WebP calidad 80 en 480/960/1440 px sin agrandar y
-`public/fotos/manifiesto.json`. Toda `public/fotos/` queda fuera de Git. Los respaldos
-son `laboratorio-abc.jpeg`, `mision.png` y `vision.png`.
+`npm run fotos` genera las imágenes originales; `npm run fotos:buscar` obtiene
+candidatas web y `npm run fotos:revisar` abre la revisión en
+<http://127.0.0.1:8767>. Guardar una selección no la publica: hay que pulsar
+«Aplicar aprobadas al catálogo» y comprobar el resultado de la importación.
+Los procedimientos y prioridades se detallan más abajo.
+
+`public/fotos/` y `.revision-fotos/` están ignoradas por Git. Un clon nuevo **no**
+contiene las imágenes aplicadas ni las decisiones editoriales: conservar ambas
+carpetas al mover el trabajo o desplegar. No borrar ni sobrescribir su contenido
+para limpiar el repositorio. Sin manifiestos se usan las ilustraciones incluidas.
 
 ## Presupuesto y servidor
 
-El catálogo debe pesar **≤ 120 KB gzip de JavaScript + CSS**. La medición con
-Lighthouse y su resultado se anotarán aquí en el Hito 3; todavía no hay catálogo
-para medir. Objetivo Lighthouse móvil: rendimiento ≥ 90.
+El objetivo es **≤ 120 KB gzip de JavaScript + CSS** y Lighthouse móvil ≥ 90.
+La medición documentada del Hito 3 supera el peso permitido; no marcar este
+criterio como cumplido. Consultar el informe y sus limitaciones más abajo.
 
 Las [preguntas para quien administra el servidor](docs/preguntas-servidor.md)
 registran las respuestas disponibles. Raúl se encarga de la configuración del
 servidor y autoriza continuar el desarrollo. Node debe mantenerse vivo y Apache
 hacer proxy inverso. Si no es viable, Raúl debe decidir el cambio a exportación estática antes de
-construir las páginas.
+cambiar la arquitectura existente.
 
 ## Forma de trabajo
 
@@ -244,9 +284,8 @@ el avance automático con movimiento reducido. Libera eventos al abandonar la p�
 Las noticias están marcadas como ejemplos pendientes de validación editorial.
 ¿Qué es LabUNAM?, Misión y Visión reproducen los textos de
 [la portada publicada](https://labunam.unam.mx/), consultada el 2 de octubre de 2026.
-Las fotos generadas de la copia PHP se reutilizaron localmente en `public/fotos`
-para la comparación. Esa carpeta sigue ignorada por Git; el generador del Hito 3
-hará reproducible su construcción. Si falta el manifiesto se usan fotos de respaldo.
+Las fotos originales se regeneran con `npm run fotos`; las web aprobadas usan
+un manifiesto independiente. Si faltan ambos se muestran ilustraciones por área.
 
 ## Verificación del Hito 2 — 2 de octubre de 2026
 
@@ -293,10 +332,10 @@ con los **609 IDs activos**, **62 laboratorios** tienen foto real. Las otras tre
 carpetas no pertenecen al catálogo activo. Se probaron además una imagen EXIF 6,
 un original de 200×100 y una ejecución parcial que conserva los IDs anteriores.
 
-El mismo comando crea versiones WebP responsivas de las tres imágenes de respaldo
-en `public/fotos/respaldo`, con índice independiente `respaldo.json`. Si no se han
-generado, la interfaz sigue usando los originales. Todo `public/fotos` continúa
-ignorado por Git; hay que ejecutar el comando al desplegar.
+El generador actual sólo procesa fotos originales de laboratorios. Los antiguos
+respaldos fotográficos genéricos fueron sustituidos por SVG incluidos en Git.
+`public/fotos` sigue ignorado: al desplegar, generar los originales y conservar
+por separado las imágenes web aprobadas y su manifiesto.
 
 ## Fichas y contacto — Hito 3
 
@@ -465,3 +504,10 @@ icono grande usa colores sutiles por área. Con varias áreas o ninguna se muest
 el icono general. No se añade un aviso de imagen ausente a la tarjeta.
 Los logos se muestran completos y las fotografías llenan el espacio visual.
 El catálogo muestra hasta cuatro columnas en escritorio.
+
+## Última comprobación del carrusel — 5 de octubre de 2026
+
+Avance automático cada siete segundos, progreso amarillo, arrastre e infinito:
+`npm run lint`, `npm run build` y nueve casos Playwright específicos pasaron en
+los tres anchos. Esta validación es del cambio del carrusel, no una nueva ejecución
+de toda la suite ni una nueva medición Lighthouse.
