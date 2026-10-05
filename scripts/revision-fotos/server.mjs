@@ -10,7 +10,7 @@ const arg = (name, fallback) => process.argv.find(a => a.startsWith(name + '='))
 const port = Number(arg('--puerto', '8767'));
 const stateDir = resolve(arg('--estado', '.revision-fotos'));
 const output = resolve(arg('--destino', 'public/fotos'));
-const labs = JSON.parse(await readFile(join(here, 'candidatas.json'), 'utf8'));
+let labs = JSON.parse(await readFile(join(stateDir, 'candidatas.json'), 'utf8').catch(() => readFile(join(here, 'candidatas.json'), 'utf8')));
 await mkdir(stateDir, { recursive: true });
 const stateFile = join(stateDir, 'seleccion.json');
 let state = JSON.parse(await readFile(stateFile, 'utf8').catch(() => '{}'));
@@ -22,7 +22,7 @@ async function atomic(path, data) {
 function validate(id, value) {
   const lab = labs.find(l => String(l.idLab) === id);
   if (!lab || !value || !['pendiente', 'sin-imagen', 'aprobado'].includes(value.estado)) throw Error('Selección inválida.');
-  const allowed = new Set(lab.imagenes.map(i => i.id));
+  const allowed = new Set([...lab.imagenes, ...(lab.alternativasLogo || [])].map(i => i.id));
   if (!Array.isArray(value.elegidas) || value.elegidas.length > 3 || new Set(value.elegidas).size !== value.elegidas.length || value.elegidas.some(i => !allowed.has(i))) throw Error('Imágenes inválidas.');
   if (value.estado === 'aprobado' && (!value.elegidas.length || !value.elegidas.includes(value.principal))) throw Error('Elige una imagen principal.');
   return { estado: value.estado, elegidas: value.elegidas, principal: value.principal || '', actualizado: new Date().toISOString() };
@@ -42,15 +42,20 @@ async function apply() {
   await mkdir(output, { recursive: true });
   const manifestPath = join(output, 'manifiesto-web.json');
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8').catch(() => '{}'));
-  const applied = [], errors = [];
+  const applied = [], errors = [], unchanged = [];
   for (const lab of labs) {
     const selection = state[lab.idLab];
     if (selection?.estado !== 'aprobado') continue;
     const images = [...selection.elegidas].sort((a, b) => Number(b === selection.principal) - Number(a === selection.principal));
+    const existing = manifest[lab.idLab];
+    const candidates = images.map(id => [...lab.imagenes, ...(lab.alternativasLogo || [])].find(i => i.id === id));
+    if (existing?.length === candidates.length && candidates.every((image, i) => image && existing[i].imagenOriginal === image.url && existing[i].tipo === image.tipo)) {
+      unchanged.push(lab.idLab); continue;
+    }
     try {
       const photos = [];
       for (const id of images) {
-        const candidate = lab.imagenes.find(i => i.id === id);
+        const candidate = [...lab.imagenes, ...(lab.alternativasLogo || [])].find(i => i.id === id);
         const bytes = await download(candidate.url);
         const hash = createHash('sha256').update(bytes).update(candidate.tipo).digest('hex').slice(0,16);
         const folder = join(output, 'web', String(lab.idLab));
@@ -75,7 +80,7 @@ async function apply() {
   }
   // Sólo publica cada laboratorio si se completaron todas sus imágenes.
   await atomic(manifestPath, manifest);
-  const result = { aplicados: applied, errores: errors, fecha: new Date().toISOString() };
+  const result = { aplicados: applied, sinCambios: unchanged, errores: errors, fecha: new Date().toISOString() };
   await atomic(join(stateDir, 'ultima-aplicacion.json'), result);
   return result;
 }
@@ -83,7 +88,11 @@ const server = createServer(async (req, res) => {
   const send = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); };
   try {
     if (req.headers.host !== '127.0.0.1:' + port && req.headers.host !== 'localhost:' + port) return send(403, { error: 'Host no permitido.' });
-    if (req.method === 'GET' && req.url === '/api') return send(200, { labs, state });
+    if (req.method === 'GET' && req.url === '/api') {
+      labs = JSON.parse(await readFile(join(stateDir, 'candidatas.json'), 'utf8').catch(() => readFile(join(here, 'candidatas.json'), 'utf8')));
+      const progreso = JSON.parse(await readFile(join(stateDir, 'progreso.json'), 'utf8').catch(() => 'null'));
+      return send(200, { labs, state, progreso });
+    }
     if (req.method === 'GET' && ['/', '/index.html', '/app.js'].includes(req.url)) {
       const js = req.url === '/app.js';
       res.writeHead(200, { 'Content-Type': js ? 'text/javascript' : 'text/html', 'Cache-Control': 'no-store' });

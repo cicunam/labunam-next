@@ -1,7 +1,10 @@
 const $ = id => document.getElementById(id);
 let labs = [], state = {}, index = 0, busy = false;
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const visible = () => labs.filter(l => $('filtro').value === 'todos' || (state[l.idLab]?.estado || 'pendiente') === $('filtro').value);
+const visible = () => labs.filter(l => {
+  const filter = $('filtro').value, status = state[l.idLab]?.estado || 'pendiente';
+  return filter === 'todos' || (filter === 'con-candidatas' ? status === 'pendiente' && l.imagenes.length > 0 : status === filter);
+});
 const message = text => { $('mensaje').textContent = text; };
 function render() {
   const list = visible(); index = Math.max(0, Math.min(index, list.length - 1));
@@ -10,8 +13,9 @@ function render() {
   $('posicion').textContent = list.length ? (index + 1) + ' de ' + list.length : 'Sin resultados';
   $('anterior').disabled = !index; $('siguiente').disabled = index >= list.length - 1;
   if (!lab) { $('laboratorio').textContent = 'No hay laboratorios en este grupo.'; return; }
+  const candidates = [...lab.imagenes, ...(lab.alternativasLogo || [])];
   const selection = state[lab.idLab] || { estado: 'pendiente', elegidas: [], principal: '' };
-  $('laboratorio').innerHTML = '<span class="tag">ID ' + lab.idLab + ' · ' + escape(selection.estado) + '</span><h2>' + escape(lab.nombre) + '</h2><a target="_blank" rel="noopener" href="' + escape(lab.origen) + '">Ver página de origen ↗</a><p>' + escape(lab.nota) + '</p><div class="cards">' + lab.imagenes.map(i => '<div class="card"><a href="' + escape(i.url) + '" target="_blank" rel="noopener"><img src="' + escape(i.url) + '" alt="' + (i.tipo === 'logo' ? 'Logo candidato del laboratorio' : 'Fotografía candidata') + '"></a><p class="tag">' + (i.tipo === 'logo' ? 'Logo propio · alternativa a las fotos' : 'Fotografía') + ' · ' + i.ancho + ' × ' + i.alto + '</p><label><input type="checkbox" name="elegida" value="' + i.id + '"' + (selection.elegidas.includes(i.id) ? ' checked' : '') + '> Incluir</label><label><input type="radio" name="principal" value="' + i.id + '"' + (selection.principal === i.id ? ' checked' : '') + '> Usar como principal</label></div>').join('') + '</div>' + (!lab.imagenes.length ? '<p>No se encontraron candidatas específicas. Puedes dejarlo pendiente para otra búsqueda.</p>' : '') + '<footer class="row"><button id="aprobar" class="primary">Guardar y siguiente</button><button id="sin">Sin imagen adecuada</button><button id="pendiente">Dejar pendiente</button></footer><p class="help">Sólo incluye logos que correspondan al laboratorio. Las imágenes descartadas quedan disponibles para cambiar de opinión.</p>';
+  $('laboratorio').innerHTML = '<span class="tag">ID ' + lab.idLab + ' · ' + escape(selection.estado) + '</span><h2>' + escape(lab.nombre) + '</h2><a target="_blank" rel="noopener" href="' + escape(lab.origen || 'https://labunam.unam.mx/') + '">Ver página de origen ↗</a><p>' + escape(lab.nota) + '</p><div class="cards">' + candidates.map(i => '<div class="card"><a href="' + escape(i.url) + '" target="_blank" rel="noopener"><img src="' + escape(i.url) + '" alt="' + (i.tipo === 'logo' ? 'Logo candidato por verificar' : 'Fotografía candidata') + '"></a><p class="tag">' + (i.tipo === 'logo' ? 'Logo candidato · confirmar pertenencia' : 'Fotografía') + ' · ' + i.ancho + ' × ' + i.alto + '</p><label><input type="checkbox" name="elegida" value="' + i.id + '"' + (selection.elegidas.includes(i.id) ? ' checked' : '') + '> Incluir</label><label><input type="radio" name="principal" value="' + i.id + '"' + (selection.principal === i.id ? ' checked' : '') + '> Usar como principal</label></div>').join('') + '</div>' + (!candidates.length ? '<p>No se encontraron candidatas específicas. Puedes dejarlo pendiente para otra búsqueda.</p>' : '') + '<footer class="row"><button id="aprobar" class="primary">Guardar y siguiente</button><button id="sin">Sin imagen adecuada</button><button id="pendiente">Dejar pendiente</button></footer><p class="help">Sólo incluye logos que correspondan al laboratorio. Las imágenes descartadas quedan disponibles para cambiar de opinión.</p>';
   $('aprobar').onclick = () => save(lab, 'aprobado');
   $('sin').onclick = () => save(lab, 'sin-imagen');
   $('pendiente').onclick = () => save(lab, 'pendiente');
@@ -51,8 +55,16 @@ $('aplicar').onclick = async () => {
   busy = true; $('aplicar').disabled = true; message('Descargando y optimizando las imágenes aprobadas…');
   try {
     const result = await post('/aplicar', {});
-    message('Aplicados: ' + result.aplicados.length + '. Fallidos: ' + result.errores.length + (result.errores.length ? '. IDs: ' + result.errores.map(e => e.idLab).join(', ') : '. Puedes revisar el catálogo.'));
+    message('Aplicados: ' + result.aplicados.length + '. Sin cambios: ' + (result.sinCambios?.length || 0) + '. Fallidos: ' + result.errores.length + (result.errores.length ? '. IDs: ' + result.errores.map(e => e.idLab).join(', ') : '. Puedes revisar el catálogo.'));
   } catch (error) { message(error.message); } finally { busy = false; $('aplicar').disabled = false; }
 };
-try { const data = await (await fetch('/api')).json(); labs = data.labs; state = data.state; render(); }
-catch { message('No se pudo cargar la revisión. Recarga la página.'); }
+async function load() {
+  if (busy) return;
+  try {
+    const data = await (await fetch('/api')).json(); labs = data.labs; state = data.state; index = 0;
+    $('rastreo').textContent = data.progreso ? 'Búsqueda: ' + data.progreso.revisados + ' de ' + data.progreso.objetivo + ' laboratorios revisados.' : '';
+    render();
+  } catch { message('No se pudo cargar la revisión. Recarga la página.'); }
+}
+$('recargar').onclick = load;
+await load();

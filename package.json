@@ -14,7 +14,8 @@
     "build-storybook": "storybook build --disable-telemetry",
     "test:e2e": "playwright test",
     "fotos": "node --env-file-if-exists=.env scripts/fotos.ts",
-    "fotos:revisar": "node scripts/revision-fotos/server.mjs"
+    "fotos:revisar": "node scripts/revision-fotos/server.mjs",
+    "fotos:buscar": "node --env-file-if-exists=.env scripts/revision-fotos/buscar.mjs"
   },
   "dependencies": {
     "mysql2": "^3.24.5",

@@ -375,9 +375,11 @@ modal y la solicitud en móvil y escritorio.
 
 Ejecutar con Node 24: `npm run fotos:revisar`. Abre
 http://127.0.0.1:8767; es una herramienta local, separada del sitio público.
-Incluye los 10 laboratorios del piloto, siete fotografías candidatas y el logo
-propio de LAHAS como alternativa. Las páginas de origen se conservan; no es una
-recopilación completa de todos los laboratorios.
+La lista local incluye la exploración de todos los registros sin imágenes,
+además de los ya aprobados. El archivo incluido en Git conserva el piloto como
+base; la lista ampliada está en `.revision-fotos/candidatas.json`.
+Las páginas de origen se conservan. «Pendientes con imágenes» permite revisar
+primero los resultados útiles; «Todos» incluye los casos sin sitio o sin candidatas.
 
 Selecciona hasta tres imágenes, indica la principal y pulsa «Guardar y siguiente».
 También puedes dejar un registro pendiente o marcarlo sin imagen adecuada.
@@ -399,4 +401,25 @@ Raúl informó haber recibido del Dr. José Sámano, sin asumir verificación ex
 Para pruebas aisladas admite `--puerto=8768 --estado=/ruta/estado --destino=/ruta/fotos`.
 Se comprobó selección, guardado, recarga, importación de foto y logo en una carpeta
 temporal, formato WebP, diseño móvil, IDs inválidos y rechazo de escrituras desde
-otro origen. La selección real se deja vacía para la revisión de Raúl.
+otro origen. Las decisiones de Raúl se conservan al ampliar la lista.
+
+
+### Búsqueda ampliada
+
+`npm run fotos:buscar` (Node 24 y Python 3) consulta sólo laboratorios activos sin
+fotos oficiales ni web aplicadas, revisa sus webs y comprueba las imágenes.
+No publica resultados automáticamente. Guarda páginas en caché local y consulta
+robots.txt; descarta direcciones privadas, sitios bloqueados, iconos pequeños,
+duplicados institucionales y logos generales identificados. Revisa hasta dos
+enlaces pertinentes de una página general; no es un rastreo exhaustivo de cada
+sitio. Una candidata automática requiere confirmar correspondencia y actualidad.
+Algunos servidores, páginas dinámicas y SVG pueden necesitar revisión manual.
+
+Resultado de esta ampliación: 542 registros sin imagen revisados, 128 laboratorios
+nuevos con candidatas tras depuración, 5 aprobados conservados, 308 imágenes en la
+lista total (27 clasificadas como logos candidatos). Los demás permanecen con una
+nota de por qué no se obtuvo imagen. Se conserva el avance en disco y el revisor
+lee la lista nueva al recargar o pulsar «Actualizar lista». Aplicar omite las
+selecciones que ya coinciden con el manifiesto web. Los datos, cachés y decisiones
+locales permanecen ignorados por Git; hay que conservar esa carpeta al trasladar
+el trabajo a otro equipo.
