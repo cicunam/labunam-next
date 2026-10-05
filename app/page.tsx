@@ -15,7 +15,11 @@ import styles from "./Inicio.module.css";
 export const dynamic = "force-dynamic";
 const imagenes = ["laboratorio-abc.jpeg", "mision.png", "vision.png"];
 const tipos = ["nacionales", "universitarios", "unidades"] as const;
-const descripciones = ["Infraestructura de gran escala reconocida por la SECIHTI, abierta a todo el país.", "Equipo puesto en común entre institutos, centros, facultades y escuelas.", "Servicios técnicos que respaldan de forma transversal la investigación y la docencia."];
+const descripciones = [
+  "Investigación especializada con tecnología de vanguardia, compartida entre instituciones para formar especialistas y atender necesidades de la sociedad.",
+  "Investigación y servicios con tecnología de vanguardia que promueven la colaboración y el uso compartido de recursos entre entidades académicas.",
+  "Servicios con equipo especializado dentro y fuera de la UNAM, que fortalecen la vinculación con el sector productivo.",
+];
 export default async function Inicio() {
   const [catalogo, fotos] = await Promise.all([cargarCatalogo(), leerFotos()]);
   const totales = contarEje(catalogo.laboratorios, {}, "tipo", [...tipos]);
