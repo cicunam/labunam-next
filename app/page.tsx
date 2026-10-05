@@ -37,7 +37,7 @@ export default async function Inicio() {
     </section>
     <section className={`contenido ${styles.destacados}`} aria-labelledby="destacados-titulo">
       <div className={styles["destacados-cabeza"]}><h2 id="destacados-titulo" className="banda-titulo">Recién incorporados</h2><Link className={styles["destacados-todos"]} href="/laboratorios">Ver los {catalogo.laboratorios.length}</Link></div>
-      <div className={styles.reticula}>{recientes.map((lab) => <Tarjeta key={lab.idLab} laboratorio={{ ...lab, servicios: lab.servicios.length, equipos: lab.equipos.length }} foto={fotosDe(lab.idLab, fotos, lab.grupos)[0]} />)}</div>
+      <div className={styles.reticula}>{recientes.map((lab) => <Tarjeta key={lab.idLab} laboratorio={lab} foto={fotosDe(lab.idLab, fotos, lab.grupos)[0]} />)}</div>
     </section>
     <section className={`contenido ${styles.disciplinas} ${styles["banda-tinte"]}`} aria-labelledby="disciplinas-titulo">
       <h2 id="disciplinas-titulo" className="banda-titulo">Buscar por disciplina</h2>

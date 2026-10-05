@@ -1,6 +1,7 @@
 import styles from "./Icono.module.css";
 
 const trazos = {
+  general: "M4 21h16M6 21V4h12v17M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-6h4v6",
   todas: "M4 12h16M4 6h16M4 18h16",
   biologia: "M7 4c0 6 10 10 10 16M17 4c0 6-10 10-10 16M8 8h8M7.5 12h9M8 16h8",
   quimica: "M9 3v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V3M9 3h6M7 15h10",

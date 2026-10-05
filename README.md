@@ -437,9 +437,23 @@ nuevos y conservó los 5 existentes, sin errores.
 Las tarjetas, el modal y la ficha individual usan fotografías reales primero,
 logos aprobados después y una única ilustración SVG cuando no hay imágenes.
 Un laboratorio con una sola área recibe su icono; con varias áreas o ninguna se
-usa la ilustración general. Se muestra «Sin fotografía disponible». Los logos y
+usa la ilustración general. En la galería se muestra «Sin fotografía disponible». Los logos y
 las ilustraciones se ajustan completos al espacio, sin recorte. Las fotos genéricas
 anteriores ya no se usan como respaldo y el generador deja de producirlas.
 Los SVG están en `public/assets/respaldos`, con los mismos trazos de los iconos
 de áreas. Las fotos tienen prioridad sobre los logos, conservando el orden
 editorial dentro de cada tipo.
+
+## Tarjetas del catálogo
+
+Las tarjetas priorizan el nombre completo, la entidad, la sede y hasta dos
+servicios o equipos registrados. Cuando hay coincidencias con la búsqueda,
+se muestran esas capacidades y un fragmento literal cercano al término buscado.
+Sin coincidencias se procura mostrar un servicio y un equipo, si existen.
+Los totales quedan al pie y toda la tarjeta abre la ficha.
+
+La foto o el logo ocupa un recuadro de 64 px; cuando falta se utiliza un icono
+de área discreto. El catálogo muestra una, dos o tres columnas según el ancho
+disponible. La galería de la ficha conserva las imágenes grandes y su respaldo.
+Validación del cambio: 61 pruebas unitarias, 51 pruebas de navegación en móvil,
+tableta y escritorio, compilación de producción y lint.

@@ -32,7 +32,7 @@ export default async function Laboratorios({ searchParams }: { searchParams: Pro
         <p className={styles.cuenta} data-total>{total} {total === 1 ? "laboratorio" : "laboratorios"}</p>
         {activos.length > 0 && <div className={styles.activos}>{activos.map(([eje, valor]) => <ChipActivo key={eje} href={urlCatalogo(criterios, { [eje]: "" })} etiqueta={eje} valor={eje === "tipo" ? redes[valor as TipoLaboratorio].nombre : etiquetas[`${eje}:${valor}`] ?? valor!} />)}<Link href="/laboratorios">Limpiar todo</Link></div>}
       </div>
-      {total ? <div className={styles.reticula}>{resultados.map((lab, i) => <Tarjeta prioritaria={i === 0} key={lab.idLab} laboratorio={{ ...lab, servicios: lab.servicios.length, equipos: lab.equipos.length }} foto={fotosDe(lab.idLab, fotos, lab.grupos)[0]} />)}</div> : <div className={styles["catalogo-vacio"]}>
+      {total ? <div className={styles.reticula}>{resultados.map((lab, i) => <Tarjeta prioritaria={i === 0} key={lab.idLab} laboratorio={lab} coincidencias={lab.coincidencias} busqueda={criterios.q} foto={fotosDe(lab.idLab, fotos, lab.grupos)[0]} />)}</div> : <div className={styles["catalogo-vacio"]}>
         <h2 className={styles["catalogo-vacio-titulo"]}>Ningún laboratorio coincide con esta búsqueda</h2>
         <p className={styles["catalogo-vacio-texto"]}>Prueba con otras palabras, cambia de disciplina o quita algún filtro.</p>
         <Link className={styles["catalogo-vacio-accion"]} href="/laboratorios">Quitar los filtros</Link>

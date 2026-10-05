@@ -1,155 +1,61 @@
 .tarjeta {
-
   position: relative;
   content-visibility: auto;
-  contain-intrinsic-size: auto 430px;
+  contain-intrinsic-size: auto 350px;
   display: flex;
   flex-direction: column;
-
-  box-sizing: border-box;
-  width: 100%;
+  gap: 14px;
   min-width: 0;
-  margin: 0;
-
-}
-
-.tarjeta-foto {
-
-  position: relative;
-
-  aspect-ratio: 1 / 1;
-
-  overflow: hidden;
+  height: 100%;
+  padding: 20px;
+  border: 1px solid var(--filete-suave);
   border-radius: var(--radio-md);
-  background-color: var(--superficie-fuerte);
-
-  transition: scale .3s var(--suave);
-
-  & > .tarjeta-imagen {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .tarjeta:hover &,
-  .tarjeta:focus-within & { scale: 1.01; }
-
+  background: var(--superficie);
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
-
-.tarjeta-insignia {
-
-  position: absolute;
-  top: var(--espacio-md);
-  left: var(--espacio-md);
-
+.tarjeta:hover, .tarjeta:focus-within { border-color: var(--color-primary); box-shadow: var(--sombra); }
+.insignia {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-
-  padding: 5px var(--espacio-md);
-
-  border-radius: var(--radio-full);
-  background: var(--superficie);
-  box-shadow: var(--sombra);
-  color: var(--color-black);
+  align-self: flex-start;
+  color: var(--color-neutral-dark);
   font: var(--font-tiny-semibold);
-
-  &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: var(--radio-full);
-    background: var(--punto, var(--color-neutral));
-  }
-
-  &[data-tipo="nacionales"]     { --punto: var(--color-tipo-nacionales); }
-  &[data-tipo="universitarios"] { --punto: var(--color-tipo-universitarios); }
-  &[data-tipo="unidades"]       { --punto: var(--color-tipo-unidades); }
-
 }
-
-.tarjeta-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.tarjeta-titulo {
-  margin: 0;
-  font: var(--font-title-tiny);
-}
-
-.tarjeta-disparador {
-
+.insignia::before { content: ""; width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--punto, var(--color-neutral)); }
+.insignia[data-tipo="nacionales"] { --punto: var(--color-tipo-nacionales); }
+.insignia[data-tipo="universitarios"] { --punto: var(--color-tipo-universitarios); }
+.insignia[data-tipo="unidades"] { --punto: var(--color-tipo-unidades); }
+.encabezado { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 12px; align-items: start; }
+.titulo { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 650; }
+.disparador {
+  display: block;
+  overflow-wrap: anywhere;
   padding: 0;
   border: 0;
   background: transparent;
   color: var(--color-black);
   font: inherit;
-  letter-spacing: var(--tracking-small);
   text-align: left;
   cursor: pointer;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radio-md);
-  }
-
-  &:hover { text-decoration: underline; text-underline-offset: 3px; }
-
-  &:focus-visible {
-    outline: none;
-
-    &::after {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 4px;
-    }
-  }
-
 }
-
-.tarjeta-linea {
-
-  margin: 0;
-
-  color: var(--color-neutral-dark);
-  font: var(--font-medium-regular);
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-}
-
-.tarjeta-cifra {
-
-  margin: var(--espacio-xs) 0 0;
-
-  color: var(--color-black);
-  font: var(--font-medium-regular);
-
-  & > strong { font-weight: 700; }
-
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-  .tarjeta-foto { transition: none; }
-
-  .tarjeta:hover .tarjeta-foto { scale: none; }
-
-}
-
-.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="ilustracion"],
-.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="logo"] { object-fit: contain; background: #eef3f7; }
-.tarjeta-foto > .tarjeta-imagen[data-tipo-imagen="logo"] { background: white; }
-.respaldo { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: #526779; font-size: 12px; }
+.disparador::after { content: ""; position: absolute; inset: 0; border-radius: var(--radio-md); }
+.disparador:focus-visible { outline: none; }
+.disparador:focus-visible::after { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.visual { width: 64px; height: 64px; border-radius: 12px; overflow: hidden; display: grid; place-items: center; background: #eef3f7; color: #617e98; }
+.visual img { width: 100%; height: 100%; object-fit: cover; }
+.visual[data-tipo-imagen="logo"] { background: white; border: 1px solid var(--filete-suave); }
+.visual[data-tipo-imagen="logo"] img { object-fit: contain; }
+.ubicacion p { margin: 0; color: var(--color-neutral-dark); font: var(--font-medium-regular); }
+.entidad { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ubicacion .sede { margin-top: 4px; font-size: 12px; line-height: 1.4; }
+.capacidades { padding-top: 12px; border-top: 1px solid var(--filete-suave); }
+.etiqueta { margin: 0 0 10px; font: var(--font-tiny-semibold); color: var(--color-primary-dark); }
+.capacidades ul { display: grid; gap: 10px; list-style: none; padding: 0; margin: 0; }
+.capacidades li { display: flex; flex-direction: column; gap: 2px; }
+.tipo { font-size: 11px; line-height: 1.4; color: var(--color-neutral-dark); }
+.descripcion { font: var(--font-medium-regular); color: var(--color-black); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 12px; color: var(--color-neutral-dark); font: var(--font-tiny-regular); }
+.ver { margin-left: auto; white-space: nowrap; font: var(--font-tiny-semibold); color: var(--color-primary-dark); }
+.ver span { margin-left: 3px; }
+@media (prefers-reduced-motion: reduce) { .tarjeta { transition: none; } }
