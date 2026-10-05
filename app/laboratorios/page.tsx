@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { cargarCatalogo } from "@/lib/catalogo";
-import { filtrar, normalizarCriterios } from "@/lib/buscador";
-import { prepararFiltros } from "@/lib/filtros";
-import { fotosDe, leerFotos } from "@/lib/fotos";
-import { redes, urlCatalogo } from "@/lib/presentacion";
-import type { Criterios, TipoLaboratorio } from "@/lib/tipos";
-import { Buscador } from "@/components/organisms/Buscador";
-import { ModalFiltros } from "@/components/organisms/ModalFiltros";
-import { TiraDisciplinas } from "@/components/organisms/TiraDisciplinas";
-import { Tarjeta } from "@/components/organisms/Tarjeta";
-import { Ficha } from "@/components/organisms/Ficha";
-import { ChipActivo } from "@/components/molecules/ChipActivo";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { filtrar, normalizarCriterios } from "@/lib/buscador/buscador";
+import { prepararFiltros } from "@/lib/filtros/filtros";
+import { fotosDe, leerFotos } from "@/lib/fotos/fotos";
+import { redes, urlCatalogo } from "@/lib/presentacion/presentacion";
+import type { Criterios, TipoLaboratorio } from "@/lib/tipos/tipos";
+import { Buscador } from "@/components/organisms/Buscador/Buscador";
+import { ModalFiltros } from "@/components/organisms/ModalFiltros/ModalFiltros";
+import { TiraDisciplinas } from "@/components/organisms/TiraDisciplinas/TiraDisciplinas";
+import { Tarjeta } from "@/components/organisms/Tarjeta/Tarjeta";
+import { Ficha } from "@/components/organisms/Ficha/Ficha";
+import { ChipActivo } from "@/components/molecules/ChipActivo/ChipActivo";
 import styles from "../Laboratorios.module.css";
 
 export const dynamic = "force-dynamic";

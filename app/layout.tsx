@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Cabecera } from "@/components/organisms/Cabecera";
-import { Pie } from "@/components/organisms/Pie";
+import { Cabecera } from "@/components/organisms/Cabecera/Cabecera";
+import { Pie } from "@/components/organisms/Pie/Pie";
 import "./globals.css";
 
 export const metadata: Metadata = {

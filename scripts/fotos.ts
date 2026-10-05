@@ -1,7 +1,7 @@
 import { readdir, stat, mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import sharp from "sharp";
-import { seleccionarFotos } from "../lib/seleccionFotos.ts";
+import { seleccionarFotos } from "../lib/seleccionFotos/seleccionFotos.ts";
 
 type Foto = { src: string; srcset: string };
 const argumentos = process.argv.slice(2);

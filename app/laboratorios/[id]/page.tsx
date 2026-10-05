@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { cargarCatalogo } from "@/lib/catalogo";
-import { fotosDe, leerFotos } from "@/lib/fotos";
-import { Ficha } from "@/components/organisms/Ficha";
-import { Enlace } from "@/components/atoms/Enlace";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { fotosDe, leerFotos } from "@/lib/fotos/fotos";
+import { Ficha } from "@/components/organisms/Ficha/Ficha";
+import { Enlace } from "@/components/atoms/Enlace/Enlace";
 
 import styles from "../../Laboratorio.module.css";
 

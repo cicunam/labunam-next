@@ -1,6 +1,6 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
-import {consultar} from '../../lib/db.ts';
+import {consultar} from '../../lib/db/db.ts';
 
 await mkdir('.revision-fotos',{recursive:true});
 try {

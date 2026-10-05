@@ -1,6 +1,6 @@
-import { cargarCatalogo } from "@/lib/catalogo";
-import { normalizarCriterios } from "@/lib/buscador";
-import { prepararFiltros } from "@/lib/filtros";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { normalizarCriterios } from "@/lib/buscador/buscador";
+import { prepararFiltros } from "@/lib/filtros/filtros";
 
 export async function GET(request: Request) {
   try {

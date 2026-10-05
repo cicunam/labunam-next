@@ -139,12 +139,12 @@ Rarezas ya conocidas que se heredan: `<dialog>` alterna `display: none/block`, a
 | Librerías permitidas | `mysql2`, `sharp` (sólo el script), `vitest`, `@playwright/test`, Storybook (`@storybook/nextjs-vite`, addon a11y, addon viewport). Nada más sin razón |
 | Prohibido | Redux/Zustand/Jotai, Tailwind, CSS-in-JS, styled-components, archivos barril `index.ts`, HOCs, `any`, configuración personalizada de webpack |
 | Estilo | **CSS Modules colocados** (`Tarjeta.module.css` junto a `Tarjeta.tsx`). Global sólo `app/globals.css` con tokens, reset y retícula de página, menos de 300 líneas |
-| Componentes | Atomic Design: `components/atoms`, `components/molecules`, `components/organisms`; las plantillas son los `layout.tsx` de `app/`. Archivos planos por nivel, tres por componente: `.tsx`, `.module.css`, `.stories.tsx` |
-| Lógica | `lib/` sin React, con prueba al lado (`buscador.test.ts`) |
+| Componentes | Atomic Design: `components/atoms`, `components/molecules`, `components/organisms`; las plantillas son los `layout.tsx` de `app/`. Una carpeta por componente dentro de cada nivel, con tres archivos: `.tsx`, `.module.css`, `.stories.tsx` |
+| Lógica | `lib/<modulo>/` sin React, con implementación y prueba juntas (`buscador/buscador.ts`, `buscador/buscador.test.ts`) |
 | Nombres | dominio en español (`Tarjeta`, `Ficha`, `laboratorio`, `sede`), vocabulario React en inglés (`props`, `onClose`, `children`) |
 | Tamaño | ningún componente pasa de 150 líneas; props tipadas en la misma línea de la función |
 | Idioma | sólo español; los textos de interfaz se escriben directamente en los componentes, sin capa de traducción |
-| Caché del catálogo | objeto en memoria con fecha de vencimiento (600 s), en `lib/catalogo.ts`; si la base falla y hay copia, se sirve la copia. Diez líneas, sin Next |
+| Caché del catálogo | objeto en memoria con fecha de vencimiento (600 s), en `lib/catalogo/catalogo.ts`; si la base falla y hay copia, se sirve la copia. Diez líneas, sin Next |
 | Imágenes | `<img srcset>` desde `public/fotos/<idLab>/N-480.webp` etc. generadas por `scripts/fotos.ts` |
 | Presupuesto | catálogo ≤ 120 KB gzip de JS+CSS (el sitio PHP pesa 25 KB). Se mide con Lighthouse y se anota en el README |
 | Node | versión LTS vigente; `.nvmrc` en el repo |
@@ -153,7 +153,7 @@ Rarezas ya conocidas que se heredan: `<dialog>` alterna `display: none/block`, a
 
 ## 5. La base de datos
 
-Conexión con `mysql2/promise`, un solo pool en `lib/db.ts`. Variables en `.env`:
+Conexión con `mysql2/promise`, un solo pool en `lib/db/db.ts`. Variables en `.env`:
 
 ```
 LABUNAM_DB_HOST=
@@ -227,7 +227,7 @@ Cosas que **no** hay que usar: las vistas `datosLab`, `LabDisciplinas` y `busque
 Leer los tres archivos antes de escribir TypeScript; son cortos y están comentados:
 `labunam2/src/Texto.php`, `labunam2/src/Buscador.php`, `labunam2/src/Catalogo.php`.
 
-### 6.1 `lib/texto.ts`
+### 6.1 `lib/texto/texto.ts`
 
 - `plano(t)`: minúsculas sin acentos (á é í ó ú ü ñ). Base de toda comparación.
 - `clave(t)`: `plano` más guiones, para URLs (`ciencias-de-la-tierra-e-ingenierias`).
@@ -238,10 +238,10 @@ Leer los tres archivos antes de escribir TypeScript; son cortos y están comenta
   la entidad, una lista corta de siglas comunes (UNAM, ISO, ADN, RMN, HPLC, IA, …), palabras con
   dígitos y palabras entre paréntesis.
 
-### 6.2 `lib/catalogo.ts`
+### 6.2 `lib/catalogo/catalogo.ts`
 
 Devuelve `{ laboratorios, sedes, disciplinas, sugerencias }` y lo guarda en memoria 600 s.
-Cada laboratorio tiene exactamente estos campos (tipo `Laboratorio` en `lib/tipos.ts`):
+Cada laboratorio tiene exactamente estos campos (tipo `Laboratorio` en `lib/tipos/tipos.ts`):
 
 ```
 idLab, nombre, siglas, tipo ('nacionales'|'universitarios'|'unidades'|'internacionales'),
@@ -285,7 +285,7 @@ Pendiente de validar con la CIC, pero es lo que va:
 
 Un laboratorio puede estar en varios grupos.
 
-### 6.4 `lib/buscador.ts`
+### 6.4 `lib/buscador/buscador.ts`
 
 - `filtrar(laboratorios, criterios)`: los criterios son los siete parámetros de URL. Un valor
   que no exista en las opciones se ignora, no vacía el catálogo. `q` se parte en palabras con
@@ -333,8 +333,8 @@ labunam2.1/
 │   ├── atoms/        Boton, Pildora, Insignia, Icono, Campo, Enlace
 │   ├── molecules/    SegmentoBuscador, OpcionFiltro, ChipActivo, Pestana, Galeria
 │   └── organisms/    Cabecera, Pie, Buscador, TiraDisciplinas, ModalFiltros, Tarjeta, Ficha, Carrusel
-│                     (cada uno: X.tsx, X.module.css, X.stories.tsx)
-├── lib/              db.ts, catalogo.ts, buscador.ts, texto.ts, tipos.ts (+ *.test.ts)
+│                     (cada uno: X/X.tsx, X/X.module.css, X/X.stories.tsx)
+├── lib/              db/db.ts, catalogo/catalogo.ts, buscador/buscador.ts, etc. (pruebas junto a cada módulo)
 ├── scripts/          fotos.ts
 ├── public/           assets/ (logos, respaldo), fotos/ (generada, ignorada)
 ├── tests/e2e/        portada.spec.ts, catalogo.spec.ts, contacto.spec.ts
@@ -362,7 +362,7 @@ Cada hito termina con: verificación en navegador a 375/1024/1400, `npm run lint
 4. Storybook con `@storybook/nextjs-vite`, addon a11y, viewports 375/1024/1400, `preview.ts`
    importando `globals.css`. Un átomo de ejemplo completo (`Boton`) con sus tres archivos, para
    que el equipo copie el patrón.
-5. Vitest configurado; `lib/texto.ts` portado con sus pruebas (ver §9).
+5. Vitest configurado; `lib/texto/texto.ts` portado con sus pruebas (ver §9).
 6. README con: propósito, cómo correr, las reglas de §4, la lista de "no usamos", el
    presupuesto de peso, cómo correr Storybook, pruebas y el script de fotos.
 7. **Entregar a Raúl la lista de preguntas para el administrador del servidor** (§10).
@@ -373,7 +373,7 @@ Aceptación: `npm run dev` muestra `/` con cabecera y pie reales; Storybook mues
 
 ### Hito 1: lógica y piezas chicas (semana 1)
 
-1. `lib/db.ts`, `lib/catalogo.ts`, `lib/buscador.ts`, `lib/tipos.ts`, con pruebas (§9). Probar contra `labunam_app` con un script en el scratchpad que no imprima
+1. `lib/db/db.ts`, `lib/catalogo/catalogo.ts`, `lib/buscador/buscador.ts`, `lib/tipos/tipos.ts`, con pruebas (§9). Probar contra `labunam_app` con un script en el scratchpad que no imprima
    credenciales ni datos de personas.
 2. Átomos y moléculas con historia: Pildora, Insignia, Icono (los 11 `path` SVG de la tira),
    Campo, Enlace, SegmentoBuscador, OpcionFiltro, ChipActivo, Pestana, Galeria. CSS tomado de

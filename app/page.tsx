@@ -1,15 +1,15 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { cargarCatalogo } from "@/lib/catalogo";
-import { contarEje } from "@/lib/buscador";
-import { fotosDe, leerFotos } from "@/lib/fotos";
-import { grupos } from "@/lib/grupos";
-import { redes, urlCatalogo } from "@/lib/presentacion";
-import { Buscador } from "@/components/organisms/Buscador";
-import { Tarjeta } from "@/components/organisms/Tarjeta";
-import { Ficha } from "@/components/organisms/Ficha";
-import { Carrusel } from "@/components/organisms/Carrusel";
-import { Institucional } from "@/components/organisms/Institucional";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { contarEje } from "@/lib/buscador/buscador";
+import { fotosDe, leerFotos } from "@/lib/fotos/fotos";
+import { grupos } from "@/lib/grupos/grupos";
+import { redes, urlCatalogo } from "@/lib/presentacion/presentacion";
+import { Buscador } from "@/components/organisms/Buscador/Buscador";
+import { Tarjeta } from "@/components/organisms/Tarjeta/Tarjeta";
+import { Ficha } from "@/components/organisms/Ficha/Ficha";
+import { Carrusel } from "@/components/organisms/Carrusel/Carrusel";
+import { Institucional } from "@/components/organisms/Institucional/Institucional";
 import styles from "./Inicio.module.css";
 
 export const dynamic = "force-dynamic";

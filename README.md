@@ -37,10 +37,15 @@ archivos de credenciales.
 
 - Atomic Design: `components/atoms`, `components/molecules`, `components/organisms`.
   Los átomos y moléculas no conocen el dominio; los organismos sí.
-- Archivos planos por nivel, con `Nombre.tsx`, `Nombre.module.css` y
-  `Nombre.stories.tsx` juntos. `Boton` es el patrón que puede copiar el equipo.
+- Una carpeta por componente dentro de cada nivel, con `Nombre.tsx`,
+  `Nombre.module.css` y `Nombre.stories.tsx` juntos. `Boton` es el patrón que puede copiar el equipo.
 - Las plantillas son los `layout.tsx` de `app/`; una URL se implementa en `app/`.
-  Cálculos y acceso a datos van en `lib/`, sin React, con pruebas colocadas.
+  Cálculos y acceso a datos van en `lib/<modulo>/`, sin React, junto a sus pruebas y fixtures.
+- Ejemplos de organización: `components/organisms/Tarjeta/Tarjeta.tsx`,
+  `Tarjeta.module.css` y `Tarjeta.stories.tsx` en la misma carpeta;
+  `lib/catalogo/catalogo.ts`, `catalogo.test.ts` y `catalogo.fixtures.ts` juntos.
+  Los datos compartidos de historias viven en `components/organisms/fixtures/`.
+  Los imports apuntan al archivo concreto, sin archivos barril `index.ts`.
 - Ningún componente supera 150 líneas. Las props se tipan en la firma de la función.
   Nombres de dominio en español; `props`, `children`, `onClose` conservan el vocabulario React.
 - Componentes de servidor por omisión. Sólo se agrega `"use client"` si se necesita
@@ -164,7 +169,7 @@ sin que lo pida. Temporales en el scratchpad de la sesión, nunca en `/tmp`.
 
 ## Capa de datos del Hito 1
 
-`lib/db.ts` crea un solo pool al consultar por primera vez. `lib/catalogo.ts` hace
+`lib/db/db.ts` crea un solo pool al consultar por primera vez. `lib/catalogo/catalogo.ts` hace
 seis consultas de sólo lectura; `normalizarCatalogo.ts` transforma sus filas en el
 tipo público `Laboratorio`. Las filas de MySQL se tipan aparte en `tiposBase.ts`.
 La interfaz no recibe campos de personas ni detalles de errores de conexión.

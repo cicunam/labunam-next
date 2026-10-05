@@ -1,5 +1,5 @@
-import { cargarCatalogo } from "@/lib/catalogo";
-import { fotosDe, leerFotos } from "@/lib/fotos";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { fotosDe, leerFotos } from "@/lib/fotos/fotos";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

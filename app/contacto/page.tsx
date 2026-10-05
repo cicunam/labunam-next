@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { cargarCatalogo } from "@/lib/catalogo";
-import { Contacto } from "@/components/organisms/Contacto";
+import { cargarCatalogo } from "@/lib/catalogo/catalogo";
+import { Contacto } from "@/components/organisms/Contacto/Contacto";
 export const metadata = { title: "Contacto", description: "Consulta los canales de contacto de LabUNAM y la Coordinación de la Investigación Científica de la UNAM." };
 export default async function PaginaContacto({ searchParams }: { searchParams: Promise<{ laboratorio?: string | string[] }> }) {
   const { laboratorio } = await searchParams;
