@@ -280,8 +280,16 @@
 }
 
 .controles { display: flex; justify-content: center; align-items: center; gap: 8px; }
-.controles button { border: 1px solid var(--color-primary-dark); border-radius: 999px; width: 12px; height: 12px; background: transparent; cursor: pointer; }
-.controles button[aria-pressed="true"] { background: var(--color-primary-dark); width: 28px; }
+.controles button { position: relative; overflow: hidden; padding: 0; border: 1px solid var(--color-primary-dark); border-radius: 999px; width: 12px; height: 12px; background: transparent; cursor: pointer; }
+.controles button[aria-pressed="true"] { background: var(--color-primary-dark); width: 40px; }
+.controles button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform: scaleX(var(--carousel-progress, 0));
+  transform-origin: left;
+}
 .controles button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 .carousel-flecha { font-size: 28px; }
 

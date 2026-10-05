@@ -13,10 +13,18 @@
     const events = new AbortController();
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     let index = offset, drag = null, suppressClick = false, timer, frame;
+    const duration = 7000;
+    let elapsed = 0, lastTick = performance.now(), autoplayFrame, hovering = false, focused = false, visible = false;
+    function resetProgress() {
+      elapsed = 0;
+      root.style.setProperty("--carousel-progress", "0");
+    }
     const listen = (element, name, handler, options = {}) => element.addEventListener(name, handler, { ...options, signal: events.signal });
     const position = (i) => slides[i].offsetLeft - (track.clientWidth - slides[i].offsetWidth) / 2;
     function update() {
+      const previous = index % count;
       index = slides.reduce((best, _, i) => Math.abs(position(i) - track.scrollLeft) < Math.abs(position(best) - track.scrollLeft) ? i : best, 0);
+      if (previous !== index % count) resetProgress();
       slides.forEach((slide, i) => slide.toggleAttribute("data-activo", i === index));
       pages.forEach((page, i) => page.setAttribute("aria-pressed", String(i === index % count)));
     }
@@ -33,6 +41,7 @@
       if (count > 1 && (index < count || index >= count * 2)) jump(count + index % count);
     }
     function show(i) {
+      resetProgress();
       const target = Math.max(0, Math.min(slides.length - 1, i));
       track.scrollTo({ left: position(target), behavior: motion.matches ? "instant" : "smooth" });
     }
@@ -83,11 +92,32 @@
     listen(window, "pointercancel", finish);
     listen(track, "lostpointercapture", (event) => { if (event.target === track) finish(event); });
     listen(track, "click", (event) => { if (suppressClick) { event.preventDefault(); event.stopPropagation(); suppressClick = false; } }, { capture: true });
+    listen(root, "mouseenter", () => { hovering = true; });
+    listen(root, "mouseleave", () => { hovering = false; });
+    listen(root, "focusin", () => { focused = true; });
+    listen(root, "focusout", (event) => { focused = root.contains(event.relatedTarget); });
+    listen(document, "visibilitychange", () => { lastTick = performance.now(); });
+    listen(motion, "change", resetProgress);
+    const visibility = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; lastTick = performance.now(); });
+    visibility.observe(root);
+    // La barra y el avance comparten reloj; las pausas conservan el tiempo restante.
+    function tick(now) {
+      const delta = now - lastTick;
+      lastTick = now;
+      const centered = Math.abs(position(index) - track.scrollLeft) < 2;
+      if (count > 1 && visible && !document.hidden && !hovering && !focused && !drag && !motion.matches && centered) {
+        elapsed = Math.min(duration, elapsed + delta);
+        root.style.setProperty("--carousel-progress", String(elapsed / duration));
+        if (elapsed >= duration) { settle(); show(index + 1); }
+      }
+      autoplayFrame = requestAnimationFrame(tick);
+    }
     root.dataset.listo = "";
     jump(offset);
+    autoplayFrame = requestAnimationFrame(tick);
     const resize = new ResizeObserver(() => { if (!drag) jump(offset + index % count); });
     resize.observe(track);
-    mounted.set(root, () => { events.abort(); resize.disconnect(); clearTimeout(timer); cancelAnimationFrame(frame); });
+    mounted.set(root, () => { events.abort(); resize.disconnect(); visibility.disconnect(); clearTimeout(timer); cancelAnimationFrame(frame); cancelAnimationFrame(autoplayFrame); });
   }
   function refresh() {
     mounted.forEach((cleanup, root) => { if (!root.isConnected) { cleanup(); mounted.delete(root); } });

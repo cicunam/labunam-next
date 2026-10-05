@@ -234,8 +234,11 @@ El carrusel utiliza arrastre con mouse y gestos táctiles horizontales, flechas,
 indicadores y teclado. Las copias laterales permiten recorrer las noticias en ambos
 sentidos sin un salto de regreso al principio; son inertes y quedan fuera del árbol
 accesible. El movimiento vertical de la página se conserva en móvil y arrastrar no
-abre los enlaces. No hay avance automático ni botón de pausa: el usuario controla
-el recorrido. Respeta movimiento reducido y libera eventos al abandonar la página.
+abre los enlaces. Avanza automáticamente cada siete segundos; el indicador activo
+se llena de amarillo con el tiempo transcurrido. Se pausa al pasar el cursor,
+enfocar los controles, arrastrar, ocultar la pestaña o salir del área visible.
+La navegación manual reinicia el progreso. No muestra botón de pausa y desactiva
+el avance automático con movimiento reducido. Libera eventos al abandonar la página.
 `public/js/carrusel.js`, cargado mediante `next/script`, mejora el HTML del servidor.
 
 Las noticias están marcadas como ejemplos pendientes de validación editorial.

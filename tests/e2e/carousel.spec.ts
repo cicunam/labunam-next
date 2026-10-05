@@ -1,5 +1,33 @@
 import { expect, test } from "@playwright/test";
 
+test("avanza automáticamente con progreso amarillo y respeta las pausas", async ({ page }) => {
+  test.setTimeout(45000);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const carousel = page.locator("[data-carrusel][data-listo]");
+  await carousel.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  const progress = () => carousel.evaluate(el => Number((el as HTMLElement).style.getPropertyValue("--carousel-progress")));
+  await expect.poll(progress).toBeGreaterThan(0.1);
+  expect(await carousel.locator('[data-pagina][aria-pressed="true"]').evaluate(el => getComputedStyle(el, "::after").backgroundColor)).toBe("rgb(250, 195, 18)");
+  for (const expected of [2, 3, 1]) {
+    await expect(carousel.getByRole("button", { name: `Ir a noticia ${expected}` })).toHaveAttribute("aria-pressed", "true", { timeout: 10000 });
+  }
+  await carousel.hover();
+  const paused = await progress();
+  await page.waitForTimeout(300);
+  expect(await progress()).toBeCloseTo(paused, 2);
+  await carousel.getByRole("button", { name: "Ir a noticia 2" }).click();
+  await expect.poll(progress).toBeLessThan(0.01);
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(300);
+  expect(await progress()).toBeLessThan(0.01);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.locator("body").click({ position: { x: 1, y: 1 } });
+  await page.waitForTimeout(300);
+  expect(await progress()).toBe(0);
+});
+
 test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: page.viewportSize()!.width === 1400 ? "reduce" : "no-preference" });
   await page.goto("/");
