@@ -18,23 +18,22 @@ se mantienen en español. No es necesario traducir props existentes al tocar est
 Este ejemplo no tiene estado ni eventos y no necesita `"use client"`. Crea:
 
 ```text
-components/atoms/InfoNote/
-  InfoNote.tsx
+src/components/atoms/InfoNote/
+  InfoNote.jsx
   InfoNote.module.css
-  InfoNote.stories.tsx
+  InfoNote.stories.jsx
 ```
 
-En `InfoNote.tsx`:
+En `InfoNote.jsx`:
 
-```tsx
+```jsx
 import styles from "./InfoNote.module.css";
-
-export function InfoNote({ text }: { text: string }) {
-  return <p className={styles.note}>{text}</p>;
+export function InfoNote({ text }) {
+    return <p className={styles.note}>{text}</p>;
 }
 ```
 
-`text` es una prop obligatoria de tipo cadena. La función devuelve JSX; `className`
+`text` es la prop donde pasamos el texto; el ejemplo espera una cadena. La función devuelve JSX; `className`
 es el equivalente React de `class` en HTML. Las llaves insertan valores JavaScript.
 
 En `InfoNote.module.css`:
@@ -50,39 +49,35 @@ En `InfoNote.module.css`:
 ```
 
 Un CSS Module limita los nombres de clase al componente, evitando colisiones con
-otras `.note`. Usa los tokens de `app/globals.css` y los patrones de componentes
+otras `.note`. Usa los tokens de `src/app/globals.css` y los patrones de componentes
 vecinos antes de añadir colores o estilos nuevos. No pongas estilos específicos
 de esta nota en el CSS global.
 
 En una página u organismo:
 
-```tsx
+```jsx
 import { InfoNote } from "@/components/atoms/InfoNote/InfoNote";
-
 // Dentro del JSX del componente:
-<InfoNote text="Selecciona una opción para continuar." />
+<InfoNote text="Selecciona una opción para continuar."/>;
 ```
 
-El import llega al archivo concreto. No crees `index.ts` para reexportarlo.
+El import llega al archivo concreto. No crees `index.js` para reexportarlo.
 
 ## Si necesita interacción
 
 Estado significa un dato que React conserva y cuyo cambio actualiza la interfaz.
 Por ejemplo, un organismo genérico `Disclosure` podría alternar contenido:
 
-```tsx
+```jsx
 "use client";
-
 import { useId, useState } from "react";
-import type { ReactNode } from "react";
-
-export function Disclosure({ title, children }: { title: string; children: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const contentId = useId();
-  function toggleOpen() {
-    setOpen((current) => !current);
-  }
-  return <section>
+export function Disclosure({ title, children }) {
+    const [open, setOpen] = useState(false);
+    const contentId = useId();
+    function toggleOpen() {
+        setOpen((current) => !current);
+    }
+    return <section>
     <button type="button" aria-expanded={open} aria-controls={contentId} onClick={toggleOpen}>
       {title}
     </button>
@@ -105,7 +100,7 @@ No conviertas toda la página a cliente sólo para manejar un botón.
 
 1. Añadir historias de sus estados relevantes (ver [Storybook](06-storybook.md)).
 2. Probar texto largo, móvil, teclado, foco visible y estado vacío si aplica.
-3. Mantener la lógica de datos en `lib/`; no consultar MySQL desde un componente cliente.
+3. Mantener la lógica de datos en `src/lib/`; no consultar MySQL desde un componente cliente.
 4. Mantener componentes de hasta 150 líneas separando responsabilidades.
 5. Ejecutar lint y build; añadir pruebas cuando exista comportamiento que proteger.
 

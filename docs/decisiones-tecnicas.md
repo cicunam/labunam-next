@@ -10,13 +10,13 @@ equipo familiarizado con React que está incorporando Next.js.
 
 ## Plataforma y estructura
 
-- Next.js con App Router, React y TypeScript. Las versiones exactas se fijan en
+- Next.js con App Router, React y JavaScript. Las versiones exactas se fijan en
   `package-lock.json`; Node se declara en `.nvmrc` y `package.json`.
-- Páginas y layouts en `app/`, sin `src/`. Usar las convenciones de la versión
+- Páginas y layouts en `src/app/`. Usar las convenciones de la versión
   instalada; consultar `node_modules/next/dist/docs/` antes de asumir APIs antiguas.
 - Componentes de servidor por defecto; fronteras cliente pequeñas para interacción.
 - Atomic Design y una carpeta por componente con CSS Module e historia.
-- Datos y funciones sin React en `lib/`, con pruebas junto al módulo.
+- Datos y funciones sin React en `src/lib/`, con pruebas junto al módulo.
 - Componentes y funciones en inglés; entidades del dominio y textos en español.
 - Imports directos, sin barriles. Componentes de hasta 150 líneas, extrayendo
   responsabilidades cuando sea necesario, sin comprimir el código artificialmente.
@@ -27,7 +27,7 @@ Se usan mysql2 para datos, sharp para scripts de imágenes, Vitest, Playwright y
 Storybook con su integración de Next y accesibilidad. Reutilizar estas herramientas
 antes de añadir dependencias.
 
-No se usan Redux, Zustand, Jotai, Tailwind, CSS-in-JS, HOCs, `any` ni configuración
+No se usan Redux, Zustand, Jotai, Tailwind, CSS-in-JS, HOCs ni configuración
 personalizada de webpack. Middleware, Server Actions, `next/image`, rutas paralelas
 o interceptadas, ISR y APIs `unstable_*` requieren una justificación documentada
 antes de introducirse.

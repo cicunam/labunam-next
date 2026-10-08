@@ -6,12 +6,12 @@
 
 | Necesidad | Herramienta | Ubicación |
 | --- | --- | --- |
-| Comprobar una regla o transformación | Vitest | `lib/<modulo>/<modulo>.test.ts` |
-| Verificar filtros, navegación, teclado o modal | Playwright | `tests/e2e/*.spec.ts` |
-| Inspeccionar estados y diseño de una pieza | Storybook | Junto al componente, `*.stories.tsx` |
-| Revisar tipos y convenciones | TypeScript / ESLint | Comandos de proyecto |
+| Comprobar una regla o transformación | Vitest | `src/lib/<modulo>/<modulo>.test.js` |
+| Verificar filtros, navegación, teclado o modal | Playwright | `tests/e2e/*.spec.js` |
+| Inspeccionar estados y diseño de una pieza | Storybook | Junto al componente, `*.stories.jsx` |
+| Revisar convenciones y errores de código | ESLint | Comandos de proyecto |
 
-Vitest está configurado para **Node** y sólo recoge `lib/**/*.test.ts`. No asumas
+Vitest está configurado para **Node** y sólo recoge `src/lib/**/*.test.js`. No asumas
 que un test JSX junto al componente se ejecutará o que existe un entorno DOM.
 Storybook permite revisar componentes, pero una historia por sí sola no demuestra
 que una interacción se haya probado automáticamente.
@@ -19,11 +19,11 @@ que una interacción se haya probado automáticamente.
 ## Prueba unitaria
 
 Un ejemplo que puedes añadir como caso al archivo existente
-`lib/texto/texto.test.ts`:
+`src/lib/texto/texto.test.js`:
 
-```ts
+```js
 it("permite comparar una técnica con acentos y espacios", () => {
-  expect(normalizeText("  Microscopía  ")).toBe("microscopia");
+    expect(normalizeText("  Microscopía  ")).toBe("microscopia");
 });
 ```
 
@@ -33,8 +33,8 @@ importa sus funciones desde `./nombreDelModulo` y las utilidades desde `vitest`.
 
 ```sh
 npm test
-npm test -- lib/texto/texto.test.ts
-npm run test:watch -- lib/texto/texto.test.ts
+npm test -- src/lib/texto/texto.test.js
+npm run test:watch -- src/lib/texto/texto.test.js
 ```
 
 Elige casos normales, límites y errores relevantes: entrada vacía, acentos,
@@ -45,8 +45,8 @@ repetir el mismo error. Usa un resultado que represente el requisito.
 ## Aislar MySQL y servicios
 
 Un **mock** reemplaza una dependencia por una respuesta controlada durante el test.
-`lib/db/db.test.ts` simula `mysql2/promise`; comprueba reutilización del pool y errores
-sin abrir conexiones. `lib/catalogo/catalogo.test.ts` cubre la caché y concurrencia.
+`src/lib/db/db.test.js` simula `mysql2/promise`; comprueba reutilización del pool y errores
+sin abrir conexiones. `src/lib/catalogo/catalogo.test.js` cubre la caché y concurrencia.
 
 Copia esos patrones cuando haga falta: reiniciar mocks entre casos, restaurar
 variables simuladas y usar fixtures ficticios. No cargues `.env` real para unitarias.
@@ -65,16 +65,15 @@ Sin `PLAYWRIGHT_BASE_URL`, Playwright inicia o reutiliza el servidor de desarrol
 local según la configuración. Las pruebas del portal necesitan base configurada.
 La suite corre en 375, 1024 y 1400 px.
 
-Ejemplo para un archivo nuevo `tests/e2e/portada.spec.ts`:
+Ejemplo para un archivo nuevo `tests/e2e/portada.spec.js`:
 
-```ts
+```js
 import { expect, test } from "@playwright/test";
-
 test("la portada presenta el propósito del buscador", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByRole("heading", {
-    name: "Encuentra el laboratorio que necesitas", level: 1,
-  })).toBeVisible();
+    await page.goto("/");
+    await expect(page.getByRole("heading", {
+        name: "Encuentra el laboratorio que necesitas", level: 1,
+    })).toBeVisible();
 });
 ```
 
@@ -84,7 +83,7 @@ necesitar abrir un menú que en escritorio ya está visible. Usa nombres accesib
 generadas. No agregues esperas largas arbitrarias: `expect` espera la condición.
 
 ```sh
-npm run test:e2e -- tests/e2e/carousel.spec.ts
+npm run test:e2e -- tests/e2e/carousel.spec.js
 npm run test:e2e -- --project=375px
 npm run test:e2e -- --grep 'carrusel'
 ```
@@ -107,7 +106,8 @@ npx playwright show-trace ruta/al/trace.zip
 ## Qué ejecutar antes de entregar
 
 Para código, `npm run lint` y `npm run build`, más las pruebas del comportamiento
-modificado. `npm run typecheck` comprueba tipos sin compilar la aplicación completa.
+modificado. No hay comando de comprobación de tipos; las pruebas protegen las reglas
+y el build comprueba que la aplicación puede compilarse.
 Para cambios visuales, revisar Storybook y la página integrada a los tres anchos.
 Para documentación, comprobar rutas, ejemplos y formato; no hace falta arrancar
 MySQL ni repetir toda la suite.

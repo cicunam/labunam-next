@@ -20,22 +20,22 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 | Trabajo | Archivos de entrada |
 | --- | --- |
-| Portada y noticias | `app/page.tsx`, `app/Inicio.module.css` |
-| Catálogo y URL de filtros | `app/laboratorios/page.tsx`, `lib/filtros/filtros.ts` |
-| Consultas SQL y caché | `lib/db/db.ts`, `lib/catalogo/catalogo.ts` |
-| Filas SQL y modelo público | `lib/tiposBase/tiposBase.ts`, `lib/tipos/tipos.ts`, `lib/normalizeCatalog/normalizeCatalog.ts` |
-| Búsqueda y facetas | `lib/buscador/buscador.ts`, `lib/capacidades/capacidades.ts` |
-| Sugerencias e iconos de áreas | `lib/sugerencias/sugerencias.ts`, `lib/grupos/grupos.ts` |
-| API de filtros | `app/api/filtros/route.ts` |
-| Ficha pública y API | `app/laboratorios/[id]/page.tsx`, `app/api/laboratorios/[id]/route.ts`, `lib/ficha/ficha.ts` |
-| Modal, historial y contenido de ficha | `components/organisms/LaboratoryDialog/`, `components/organisms/LaboratoryDetails/` |
-| Tarjetas y filtros visuales | `components/organisms/LaboratoryCard/`, `components/organisms/FilterDialog/` |
-| Solicitud de servicios | `app/contacto/page.tsx`, `components/organisms/Contact/` |
-| Carrusel | `components/organisms/Carousel/`, `public/js/carrusel.js` |
-| Selección y presentación de imágenes | `lib/selectPhotos/selectPhotos.ts`, `lib/fotos/fotos.ts` |
-| Procesamiento de originales | `scripts/fotos.ts` |
+| Portada y noticias | `src/app/page.jsx`, `src/app/Inicio.module.css` |
+| Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/lib/filtros/filtros.js` |
+| Consultas SQL y caché | `src/lib/db/db.js`, `src/lib/catalogo/catalogo.js` |
+| Filas SQL y modelo público | `src/lib/normalizeCatalog/normalizeCatalog.js`, `src/lib/catalogo/catalogo.fixtures.js` |
+| Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
+| Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |
+| API de filtros | `src/app/api/filtros/route.js` |
+| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/lib/ficha/ficha.js` |
+| Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
+| Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
+| Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
+| Carrusel | `src/components/organisms/Carousel/`, `public/js/carrusel.js` |
+| Selección y presentación de imágenes | `src/lib/selectPhotos/selectPhotos.js`, `src/lib/fotos/fotos.js` |
+| Procesamiento de originales | `scripts/fotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
-| Pruebas de interacción | `tests/e2e/`, `playwright.config.ts` |
+| Pruebas de interacción | `tests/e2e/`, `playwright.config.js` |
 
 ## Comandos cotidianos
 
@@ -47,7 +47,6 @@ npm run storybook           # componentes: http://localhost:6006
 npm run fotos:revisar       # revisión local: http://127.0.0.1:8767
 npm run lint
 npm test
-npm run typecheck
 npm run build
 npm run test:e2e
 npm run build-storybook
