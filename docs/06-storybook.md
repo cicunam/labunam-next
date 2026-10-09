@@ -19,45 +19,40 @@ portal (3000) en otra terminal. `Ctrl+C` detiene sólo el proceso de esa termina
 ## Crear la historia de InfoNote
 
 Siguiendo el [ejemplo de componente](03-componentes.md), escribe
-`components/atoms/InfoNote/InfoNote.stories.tsx`:
+`src/components/atoms/InfoNote/InfoNote.stories.jsx`:
 
-```tsx
-import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+```jsx
 import { InfoNote } from "./InfoNote";
-
 const meta = {
-  title: "Átomos/InfoNote",
-  component: InfoNote,
-  args: { text: "Selecciona una opción para continuar." },
-} satisfies Meta<typeof InfoNote>;
-
+    title: "Átomos/InfoNote",
+    component: InfoNote,
+    args: { text: "Selecciona una opción para continuar." },
+};
 export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {};
-export const LongText: Story = {
-  args: {
-    text: "Puedes consultar la información del laboratorio y revisar sus servicios antes de iniciar una solicitud de contacto.",
-  },
+export const Default = {};
+export const LongText = {
+    args: {
+        text: "Puedes consultar la información del laboratorio y revisar sus servicios antes de iniciar una solicitud de contacto.",
+    },
 };
 ```
 
 `title` determina dónde aparece en el menú. `component` indica qué se renderiza.
-`args` contiene sus props; cada exportación define una historia. `satisfies Meta`
-comprueba que la configuración concuerda con el componente sin perder sus tipos.
+`args` contiene sus props; cada exportación define una historia. Los ejemplos
+usan objetos JavaScript normales, sin anotaciones de tipos.
 
-No hay que registrar cada archivo manualmente: `.storybook/main.ts` busca
-`components/**/*.stories.tsx`. Si no aparece, verifica el nombre y la extensión.
+No hay que registrar cada archivo manualmente: `.storybook/main.js` busca
+`src/components/**/*.stories.jsx`. Si no aparece, verifica el nombre y la extensión.
 
 ## Controles y eventos
 
 En **Controls** puedes cambiar las props que Storybook detecta. Para una lista
-cerrada añade `argTypes`, tomando `Button.stories.tsx` como ejemplo.
+cerrada añade `argTypes`, tomando `Button.stories.jsx` como ejemplo.
 Si el componente recibe un callback, usa `fn()` de `storybook/test` como valor
 del callback en la historia. Así se registra la interacción sin ejecutar servicios
 reales. No uses solicitudes reales ni datos personales para simular un estado.
 
-Para organismos, reutiliza fixtures de `components/organisms/fixtures/` cuando
+Para organismos, reutiliza fixtures de `src/components/organisms/fixtures/` cuando
 corresponda. Un componente asíncrono que depende directamente de MySQL no debe
 llevar esa dependencia a Storybook: muestra la pieza visual con datos ficticios.
 
@@ -71,7 +66,7 @@ llevar esa dependencia a Storybook: muestra la pieza visual con datos ficticios.
 6. Comprueba el resultado integrado en el portal.
 
 El selector de viewport ya viene integrado; no instales el antiguo addon de
-viewport. `.storybook/preview.ts` importa `app/globals.css` y define los anchos;
+viewport. `.storybook/preview.js` importa `src/app/globals.css` y define los anchos;
 `public/` se sirve como directorio de assets. Fuente y tokens deben coincidir con
 el portal.
 

@@ -5,6 +5,9 @@ desarrollado para la Coordinación de la Investigación Científica (CIC).
 Permite encontrar laboratorios por nombre, técnicas, equipos, servicios y áreas,
 consultar sus fichas y comenzar una solicitud de servicio.
 
+Usamos Next.js con App Router y JavaScript: componentes en `.jsx` y lógica en
+`.js`. El código del portal vive en `src/`; el alias `@/` apunta a esa carpeta.
+
 Repositorio: [cicunam/labunam-next](https://github.com/cicunam/labunam-next).
 
 ## Documentación para el equipo
@@ -62,21 +65,21 @@ el sitio en la UNAM.
 
 | Ruta | Responsabilidad |
 | --- | --- |
-| `app/` | Páginas, layouts y endpoints HTTP |
-| `components/atoms/` | Piezas básicas de interfaz |
-| `components/molecules/` | Combinaciones genéricas de piezas |
-| `components/organisms/` | Secciones y comportamiento del portal |
-| `lib/` | MySQL, normalización, búsqueda, filtros y fotos |
+| `src/app/` | Páginas, layouts y endpoints HTTP |
+| `src/components/atoms/` | Piezas básicas de interfaz |
+| `src/components/molecules/` | Combinaciones genéricas de piezas |
+| `src/components/organisms/` | Secciones y comportamiento del portal |
+| `src/lib/` | MySQL, normalización, búsqueda, filtros y fotos |
 | `public/` | Recursos estáticos, fuente, iconos e ilustraciones |
 | `scripts/` | Generación de imágenes y revisión editorial |
 | `tests/e2e/` | Pruebas de navegador |
 | `.storybook/` | Configuración de historias y revisión visual |
 | `docs/` | Guías y acuerdos técnicos |
 
-Cada componente tiene su carpeta, CSS Module e historia. Cada módulo de `lib/`
+Cada componente tiene su carpeta, CSS Module e historia. Cada módulo de `src/lib/`
 agrupa su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
-sus rutas; `app/globals.css` contiene tokens, reset, tipografía y retícula.
-Los imports apuntan al archivo concreto, sin barriles `index.ts`.
+sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
+Los imports apuntan al archivo concreto, sin barriles `index.js`.
 
 Componentes y funciones se nombran en inglés; entidades y campos del dominio,
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
@@ -94,6 +97,12 @@ OFL, sin depender de una descarga de Google.
 | `/contacto?laboratorio=[id]` | Solicitud asociada a un laboratorio |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
+
+La portada incluye un mapa por estado (`LaboratoryMap`) entre las disciplinas y
+las noticias. Recibe sólo los conteos de `catalogo.sedes`; seleccionar
+un estado abre el catálogo con `?sede=...`. Los trazados SVG se sirven localmente
+desde `public/assets/maps/`, con origen y licencia en su archivo `CREDITOS.md`.
+No se consulta un servicio externo de mapas ni se muestran ubicaciones exactas.
 
 El catálogo se renderiza en servidor. `loadCatalog()` combina seis consultas de
 sólo lectura y reutiliza una caché en memoria. Las peticiones concurrentes comparten
@@ -125,7 +134,6 @@ Las rutas heredadas `/nacionales`, `/universitarios`, `/unidades`,
 ```sh
 npm run lint
 npm test
-npm run typecheck
 npm run build
 npx playwright install chromium
 npm run test:e2e

@@ -10,7 +10,7 @@ Un manifiesto es un índice JSON que relaciona el ID del laboratorio con archivo
 y variantes de tamaño. El original tiene prioridad por laboratorio sobre el web.
 Dentro de la selección se muestran fotos antes que logos.
 
-Si no hay imágenes, `lib/fotos/fotos.ts` elige un SVG de
+Si no hay imágenes, `src/lib/fotos/fotos.js` elige un SVG de
 `public/assets/respaldos/`. Un área única obtiene su icono; varias o ninguna usan
 el general. No sustituirlo por una fotografía genérica que parezca del laboratorio.
 Los logos se muestran completos, sin recorte.

@@ -1,7 +1,7 @@
 # Guía del equipo de LabUNAM
 
 Esta guía parte de que sabes HTML, CSS y JavaScript, pero todavía no conoces Next.js.
-Los ejemplos corresponden a este repositorio: Next con App Router, React y TypeScript.
+Los ejemplos corresponden a este repositorio: Next con App Router, React y JavaScript.
 No necesitas aprender todo el framework antes de trabajar en un componente.
 
 ## Orden de lectura

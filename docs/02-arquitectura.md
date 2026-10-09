@@ -6,45 +6,46 @@
 
 **React** permite escribir componentes: funciones que reciben datos y devuelven
 interfaz. **Next.js** organiza esas interfaces en páginas, ejecuta código de servidor
-y expone endpoints HTTP. **TypeScript** comprueba tipos antes de ejecutar; `.tsx`
-es TypeScript con etiquetas de interfaz (JSX), y `.ts` contiene lógica sin JSX.
+y expone endpoints HTTP. Usamos **JavaScript**: `.jsx` contiene componentes con etiquetas de interfaz
+(JSX), y `.js` contiene funciones, configuración y pruebas sin JSX.
 
 **Node** ejecuta el servidor Next y las herramientas. No corre dentro del navegador.
 MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo lectura.
 
 | Carpeta | Responsabilidad | Ejemplo |
 | --- | --- | --- |
-| `app/` | Páginas, layout y endpoints | `app/laboratorios/page.tsx` |
-| `components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
-| `components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
-| `components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
-| `lib/` | Datos y funciones sin React | `catalogo`, `buscador`, `fotos` |
+| `src/app/` | Páginas, layout y endpoints | `src/app/laboratorios/page.jsx` |
+| `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
+| `src/components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
+| `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
+| `src/lib/` | Datos y funciones sin React | `catalogo`, `buscador`, `fotos` |
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
 | `tests/e2e/` | Pruebas en navegador | Catálogo, fichas, carrusel |
 | `.storybook/` | Configuración del explorador de componentes | Historias, estilos y viewports |
 | `docs/` | Guías y acuerdos | Este documento |
 
-`@/` en un import apunta a la raíz del proyecto, por ejemplo
-`@/lib/catalogo/catalogo`. No hay carpeta `src/` ni barriles `index.ts`.
+`@/` en un import apunta a `src/`, por ejemplo
+`@/lib/catalogo/catalogo`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
+la raíz. No usamos barriles `index.js`.
 
 ## Una carpeta define una URL
 
 | Archivo | Resultado |
 | --- | --- |
-| `app/page.tsx` | `/` |
-| `app/laboratorios/page.tsx` | `/laboratorios` |
-| `app/laboratorios/[id]/page.tsx` | `/laboratorios/70`, con `id = "70"` |
-| `app/contacto/page.tsx` | `/contacto` |
-| `app/api/laboratorios/[id]/route.ts` | Endpoint que devuelve JSON |
-| `app/layout.tsx` | Envoltura común: estructura HTML, cabecera y pie |
+| `src/app/page.jsx` | `/` |
+| `src/app/laboratorios/page.jsx` | `/laboratorios` |
+| `src/app/laboratorios/[id]/page.jsx` | `/laboratorios/70`, con `id = "70"` |
+| `src/app/contacto/page.jsx` | `/contacto` |
+| `src/app/api/laboratorios/[id]/route.js` | Endpoint que devuelve JSON |
+| `src/app/layout.jsx` | Envoltura común: estructura HTML, cabecera y pie |
 
-Los CSS Modules de una página viven junto a su `page.tsx`: por ejemplo,
-`app/laboratorios/Laboratorios.module.css` y
-`app/laboratorios/[id]/Laboratorio.module.css`. `Inicio.module.css` permanece en
-`app/` porque corresponde a `/`; `globals.css` contiene los estilos compartidos.
+Los CSS Modules de una página viven junto a su `page.jsx`: por ejemplo,
+`src/app/laboratorios/Laboratorios.module.css` y
+`src/app/laboratorios/[id]/Laboratorio.module.css`. `Inicio.module.css` permanece en
+`src/app/` porque corresponde a `/`; `globals.css` contiene los estilos compartidos.
 
-`page.tsx` exporta por defecto un componente. `route.ts` exporta funciones HTTP
+`page.jsx` exporta por defecto un componente. `route.js` exporta funciones HTTP
 como `GET`. Una carpeta cualquiera no se convierte en página sin su archivo
 especial. Usa `Link` de Next para enlaces internos.
 
@@ -94,8 +95,8 @@ la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 ## Cómo decidir dónde editar
 
-Texto de portada: `app/page.tsx`. Estilo de una tarjeta: su CSS Module.
-Regla de búsqueda: `lib/buscador/`. Consulta SQL: `lib/catalogo/`.
+Texto de portada: `src/app/page.jsx`. Estilo de una tarjeta: su CSS Module.
+Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/lib/catalogo/`.
 Interacción del carrusel: `public/js/carrusel.js` y su organismo; es una mejora
 sobre HTML de servidor y no exige convertir toda la portada a cliente.
 

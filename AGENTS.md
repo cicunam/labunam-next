@@ -25,27 +25,27 @@
 
 ## Organización y nombres
 
-- Atomic Design en `components/atoms`, `molecules` y `organisms`.
-- Una carpeta por componente: `Component/Component.tsx`, su CSS Module e historia.
-  Una carpeta por módulo en `lib/`, con pruebas y fixtures junto al módulo.
-- Componentes y funciones en inglés. Conservar nombres de entidades, tipos y
+- Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
+- Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
+  Una carpeta por módulo en `src/lib/`, con pruebas y fixtures junto al módulo.
+- Componentes y funciones en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
-- Imports al archivo concreto, sin barriles `index.ts`.
-- Átomos y moléculas no importan catálogo ni tipos del dominio. Cálculo y datos
-  pertenecen a `lib/`, sin React.
-- Mantener componentes de hasta 150 líneas y props tipadas en la firma. Extraer
+- Imports al archivo concreto, sin barriles `index.js`.
+- Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
+  pertenecen a `src/lib/`, sin React.
+- Mantener componentes de hasta 150 líneas y props claras con valores predeterminados cuando corresponda. Extraer
   responsabilidades cuando haga falta; no comprimir código para cumplir el límite.
 - Server Components por defecto. Añadir una frontera cliente sólo si se necesita
   interacción. Conservar el renderizado servidor de catálogo y ficha individual.
-- CSS Modules junto al componente; globales sólo en `app/globals.css` para tokens,
+- CSS Modules junto al componente; globales sólo en `src/app/globals.css` para tokens,
   reset, tipografía y retícula. Reutilizar tokens, fuente local y assets existentes.
 - Comentarios en español que expliquen decisiones, no repitan el código.
 
 ## Decisiones técnicas
 
-- App Router, TypeScript y alias `@/`, sin `src/`.
+- App Router y JavaScript; código en `src/` y alias `@/` a esa carpeta.
 - Seguir las dependencias y restricciones documentadas en README. No introducir
-  gestores de estado, Tailwind, CSS-in-JS, HOCs, `any` o webpack personalizado.
+  gestores de estado, Tailwind, CSS-in-JS, HOCs o webpack personalizado.
 - Middleware, Server Actions, `next/image`, rutas paralelas/interceptadas, ISR y
   APIs `unstable_*` requieren una razón documentada antes de adoptarse.
 - Imágenes con `img`, `srcSet`, `sizes` y carga diferida cuando corresponda.
