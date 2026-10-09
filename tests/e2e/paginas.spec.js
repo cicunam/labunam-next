@@ -62,6 +62,34 @@ test("contacto explica el envío deshabilitado y no solicita datos", async ({ pa
     await expect(page.getByText("El envío de mensajes aún no está disponible.", { exact: false })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+test("la navegación lleva a solicitud y la sección aún no recaba datos", async ({ page }) => {
+    await page.goto("/");
+    const menu = page.getByRole("navigation", { name: "Principal" });
+    await expect(menu.getByRole("link", { name: "Contacto" })).toHaveCount(0);
+    if (await menu.isVisible())
+        await menu.getByRole("link", { name: "Solicitud" }).click();
+    else {
+        await page.getByRole("button", { name: "Abrir menú" }).click();
+        await page.getByRole("navigation", { name: "Navegación" }).getByRole("link", { name: "Solicitud" }).click();
+    }
+    await expect(page).toHaveURL(/\/solicitud$/);
+    await expect(page).toHaveTitle("Solicitud | LabUNAM");
+    await expect(page.getByRole("heading", { name: "Solicitud de servicio", level: 1 })).toBeVisible();
+    await expect(page.locator("main form, main input, main textarea, main select")).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+test("solicitud asociada a un laboratorio valida el identificador", async ({ page, request }) => {
+    await page.goto("/laboratorios?tipo=internacionales");
+    const tarjeta = page.locator("[data-ficha]").first();
+    const nombre = await tarjeta.textContent();
+    const id = await tarjeta.getAttribute("data-ficha");
+    await page.goto(`/solicitud?laboratorio=${id}`);
+    await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "Volver al laboratorio" }).click();
+    await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
+    expect((await request.get("/solicitud?laboratorio=no-valido")).status()).toBe(404);
+    expect((await request.get("/solicitud?laboratorio=999999999")).status()).toBe(404);
+});
 test("una ficha inexistente responde 404", async ({ request }) => {
     expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
     expect((await request.get("/laboratorios/999999999")).status()).toBe(404);

@@ -1,0 +1,12 @@
+.solicitud { padding-block: 40px 64px; }
+.cabecera { max-width: 650px; margin-bottom: 40px; }
+.cabecera h1 { font: var(--font-title-huge); color: var(--color-primary-dark); letter-spacing: var(--tracking-huge); }
+.cabecera p { margin-top: 12px; color: var(--color-neutral-dark); }
+.columnas { display: grid; gap: 40px; }
+.informacion, .pendiente { min-width: 0; }
+.columnas h2 { font: var(--font-title-medium); margin-bottom: 16px; }
+.informacion p { margin-bottom: 16px; color: var(--color-neutral-dark); }
+.informacion a { color: var(--color-primary-dark); text-underline-offset: 4px; }
+.pendiente { border: 1px solid var(--filete-suave); border-radius: var(--radio-md); padding: 24px; }
+.pendiente p { color: var(--color-neutral-dark); }
+@media (min-width: 744px) { .columnas { grid-template-columns: 1fr 1fr; gap: 64px; } }

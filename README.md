@@ -95,6 +95,8 @@ OFL, sin depender de una descarga de Google.
 | `/laboratorios/[id]` | Ficha individual del laboratorio |
 | `/contacto` | Presentación del flujo de contacto |
 | `/contacto?laboratorio=[id]` | Solicitud asociada a un laboratorio |
+| `/solicitud` | Sección de solicitud de servicio; el formulario aún no se incorpora |
+| `/solicitud?laboratorio=[id]` | Solicitud asociada a un laboratorio |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
 

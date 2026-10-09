@@ -6,7 +6,7 @@ import styles from "./Header.module.css";
 const enlaces = [
     { href: "/", texto: "Inicio" },
     { href: "/laboratorios", texto: "Laboratorios" },
-    { href: "/contacto", texto: "Contacto" },
+    { href: "/solicitud", texto: "Solicitud" },
 ];
 const redes = [
     { tipo: "nacionales", texto: "Laboratorios nacionales" },
