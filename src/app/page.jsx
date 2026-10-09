@@ -9,6 +9,7 @@ import { LaboratoryCard } from "@/components/organisms/LaboratoryCard/Laboratory
 import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
 import { Carousel } from "@/components/organisms/Carousel/Carousel";
 import { About } from "@/components/organisms/About/About";
+import { LaboratoryMap } from "@/components/organisms/LaboratoryMap/LaboratoryMap";
 import styles from "./Inicio.module.css";
 export const dynamic = "force-dynamic";
 const imagenes = ["laboratorio-abc.jpeg", "mision.png", "vision.png"];
@@ -41,6 +42,7 @@ export default async function HomePage() {
       <h2 id="disciplinas-titulo" className="banda-titulo">Buscar por disciplina</h2>
       <ul className={styles["disciplinas-lista"]}>{grupos.map((g) => <li key={g.clave}><Link className={styles.disciplina} href={getCatalogUrl({ disciplina: g.clave })}><span className={styles["disciplina-nombre"]}>{g.etiqueta}</span><span className={styles["disciplina-cuenta"]}>{areas[g.clave]} laboratorios</span></Link></li>)}</ul>
     </section>
+    <LaboratoryMap sedes={catalogo.sedes} />
     <section className={`contenido ${styles.noticias}`} aria-labelledby="noticias-titulo">
       <h2 id="noticias-titulo" className="banda-titulo">Noticias</h2><p className="banda-entrada">Contenido de ejemplo para revisión editorial.</p>
       <Carousel slides={tipos.map((tipo, i) => ({ imagen: `/assets/images/${imagenes[i]}`, titulo: ["UNAM logra avance histórico en energía limpia", "Secuenciación genética de precisión", "Equipo compartido, ciencia que rinde más"][i], texto: "Ejemplo de noticia · contenido pendiente de validación", href: getCatalogUrl({ tipo }), enlace: `Ver ${redes[tipo].nombre.toLocaleLowerCase("es")}` }))}/>

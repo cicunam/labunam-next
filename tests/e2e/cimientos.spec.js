@@ -14,6 +14,11 @@ test("cabecera, pie y menú funcionan con teclado", async ({ page }) => {
     await boton.click();
     await expect(menu).toBeVisible();
     await expect(boton).toHaveAttribute("aria-expanded", "true");
+    if (page.viewportSize().width >= 1128) {
+        const cajaMenu = await menu.boundingBox();
+        const cajaBoton = await boton.boundingBox();
+        expect(Math.abs(cajaMenu.x + cajaMenu.width - cajaBoton.x - cajaBoton.width)).toBeLessThanOrEqual(1);
+    }
     await page.keyboard.press("Tab");
     await expect(menu.getByRole("link", { name: "Inicio", exact: true })).toBeFocused();
     await page.keyboard.press("Shift+Tab");

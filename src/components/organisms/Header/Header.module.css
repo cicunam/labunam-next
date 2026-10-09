@@ -238,6 +238,8 @@
 
   .menu-directo { display: flex; }
 
+  .encabezado-barra { position: relative; }
+
   .menu {
 
     position: absolute;

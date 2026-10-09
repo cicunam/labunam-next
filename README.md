@@ -98,6 +98,12 @@ OFL, sin depender de una descarga de Google.
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
 
+La portada incluye un mapa por estado (`LaboratoryMap`) entre las disciplinas y
+las noticias. Recibe sólo los conteos de `catalogo.sedes`; seleccionar
+un estado abre el catálogo con `?sede=...`. Los trazados SVG se sirven localmente
+desde `public/assets/maps/`, con origen y licencia en su archivo `CREDITOS.md`.
+No se consulta un servicio externo de mapas ni se muestran ubicaciones exactas.
+
 El catálogo se renderiza en servidor. `loadCatalog()` combina seis consultas de
 sólo lectura y reutiliza una caché en memoria. Las peticiones concurrentes comparten
 la carga; si una actualización falla, se conserva la última copia válida.

@@ -1,0 +1,162 @@
+[
+  {
+    "id": "AGS",
+    "clave": "aguascalientes",
+    "etiqueta": "Aguascalientes"
+  },
+  {
+    "id": "BCN",
+    "clave": "baja-california",
+    "etiqueta": "Baja California"
+  },
+  {
+    "id": "BCS",
+    "clave": "baja-california-sur",
+    "etiqueta": "Baja California Sur"
+  },
+  {
+    "id": "CAM",
+    "clave": "campeche",
+    "etiqueta": "Campeche"
+  },
+  {
+    "id": "CHP",
+    "clave": "chiapas",
+    "etiqueta": "Chiapas"
+  },
+  {
+    "id": "CHI",
+    "clave": "chihuahua",
+    "etiqueta": "Chihuahua"
+  },
+  {
+    "id": "CMX",
+    "clave": "ciudad-de-mexico",
+    "etiqueta": "Ciudad de México"
+  },
+  {
+    "id": "COA",
+    "clave": "coahuila",
+    "etiqueta": "Coahuila"
+  },
+  {
+    "id": "COL",
+    "clave": "colima",
+    "etiqueta": "Colima"
+  },
+  {
+    "id": "DUR",
+    "clave": "durango",
+    "etiqueta": "Durango"
+  },
+  {
+    "id": "MEX",
+    "clave": "estado-de-mexico",
+    "etiqueta": "Estado de México"
+  },
+  {
+    "id": "GTO",
+    "clave": "guanajuato",
+    "etiqueta": "Guanajuato"
+  },
+  {
+    "id": "GRO",
+    "clave": "guerrero",
+    "etiqueta": "Guerrero"
+  },
+  {
+    "id": "HGO",
+    "clave": "hidalgo",
+    "etiqueta": "Hidalgo"
+  },
+  {
+    "id": "JAL",
+    "clave": "jalisco",
+    "etiqueta": "Jalisco"
+  },
+  {
+    "id": "MIC",
+    "clave": "michoacan",
+    "etiqueta": "Michoacán"
+  },
+  {
+    "id": "MOR",
+    "clave": "morelos",
+    "etiqueta": "Morelos"
+  },
+  {
+    "id": "NAY",
+    "clave": "nayarit",
+    "etiqueta": "Nayarit"
+  },
+  {
+    "id": "NLE",
+    "clave": "nuevo-leon",
+    "etiqueta": "Nuevo León"
+  },
+  {
+    "id": "OAX",
+    "clave": "oaxaca",
+    "etiqueta": "Oaxaca"
+  },
+  {
+    "id": "PUE",
+    "clave": "puebla",
+    "etiqueta": "Puebla"
+  },
+  {
+    "id": "QRO",
+    "clave": "queretaro",
+    "etiqueta": "Querétaro"
+  },
+  {
+    "id": "ROO",
+    "clave": "quintana-roo",
+    "etiqueta": "Quintana Roo"
+  },
+  {
+    "id": "SLP",
+    "clave": "san-luis-potosi",
+    "etiqueta": "San Luis Potosí"
+  },
+  {
+    "id": "SIN",
+    "clave": "sinaloa",
+    "etiqueta": "Sinaloa"
+  },
+  {
+    "id": "SON",
+    "clave": "sonora",
+    "etiqueta": "Sonora"
+  },
+  {
+    "id": "TAB",
+    "clave": "tabasco",
+    "etiqueta": "Tabasco"
+  },
+  {
+    "id": "TAM",
+    "clave": "tamaulipas",
+    "etiqueta": "Tamaulipas"
+  },
+  {
+    "id": "TLA",
+    "clave": "tlaxcala",
+    "etiqueta": "Tlaxcala"
+  },
+  {
+    "id": "VER",
+    "clave": "veracruz",
+    "etiqueta": "Veracruz"
+  },
+  {
+    "id": "YUC",
+    "clave": "yucatan",
+    "etiqueta": "Yucatán"
+  },
+  {
+    "id": "ZAC",
+    "clave": "zacatecas",
+    "etiqueta": "Zacatecas"
+  }
+]
