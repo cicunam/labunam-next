@@ -45,7 +45,7 @@ export function LaboratoryDetails({ laboratorio: lab, pagina = false }) {
           <p className={styles["ficha-pie-nota"]}>{formatCounts(lab.servicios.length, lab.equipos.length)}</p>
           <div className={styles["ficha-pie-acciones"]}>
             {lab.sitio && <a className={styles["ficha-mapa"]} href={lab.sitio} target="_blank" rel="noopener">Sitio web ↗</a>}
-            <Link className={styles["ficha-sitio"]} href={`/contacto?laboratorio=${lab.idLab}`} prefetch={false}>Solicitar un servicio →</Link>
+            <Link className={styles["ficha-sitio"]} href={`/solicitud?laboratorio=${lab.idLab}`} prefetch={false}>Solicitar un servicio →</Link>
           </div>
         </footer>
   </>;

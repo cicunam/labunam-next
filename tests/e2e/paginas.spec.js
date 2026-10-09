@@ -94,23 +94,21 @@ test("una ficha inexistente responde 404", async ({ request }) => {
     expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
     expect((await request.get("/laboratorios/999999999")).status()).toBe(404);
 });
-test("solicitud de servicio conserva el laboratorio y explica el envío pendiente", async ({ page }) => {
+test("solicitud de servicio conserva el laboratorio y explica que el formulario está pendiente", async ({ page }) => {
     await page.goto("/laboratorios?tipo=internacionales");
     const tarjeta = page.locator("[data-ficha]").first();
     const nombre = await tarjeta.textContent();
     const id = await tarjeta.getAttribute("data-ficha");
     await tarjeta.click();
     await page.getByRole("link", { name: "Solicitar un servicio" }).click();
-    await expect(page).toHaveURL(new RegExp(`/contacto\\?laboratorio=${id}$`));
+    await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
     await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
-    await expect(page.getByLabel("Servicio de interés")).toBeDisabled();
-    await expect(page.getByRole("button", { name: "Envío no disponible" })).toBeDisabled();
-    await expect(page.getByText("No se enviará información al laboratorio.", { exact: false })).toBeVisible();
+    await expect(page.getByText("El formulario de solicitud estará disponible próximamente.", { exact: false })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.goBack();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("link", { name: "Solicitar un servicio" }).click();
-    await expect(page).toHaveURL(new RegExp(`/contacto\\?laboratorio=${id}$`));
+    await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
     await page.reload();
     await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
     await page.getByRole("link", { name: "Volver al laboratorio" }).click();
