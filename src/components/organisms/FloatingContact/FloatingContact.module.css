@@ -1,0 +1,21 @@
+/* Queda por debajo del menú móvil (z-index 900); los diálogos modales usan la capa superior del navegador. */
+.sobre {
+  position: fixed;
+  top: 50%;
+  right: var(--espacio-base);
+  translate: 0 -50%;
+  z-index: 800;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radio-full);
+  /* El tono oscuro asegura contraste suficiente para el ícono blanco (6.9:1). */
+  background: var(--color-secondary-dark);
+  box-shadow: var(--sombra);
+  transition: background-color .2s ease;
+}
+.sobre:hover { background: color-mix(in srgb, var(--color-secondary-dark) 75%, black); }
+.sobre:focus-visible { outline: 3px solid var(--color-secondary-dark); outline-offset: 3px; }
+.sobre img { width: 28px; height: auto; }
+@media (min-width: 1128px) { .sobre { right: var(--espacio-xl); } }

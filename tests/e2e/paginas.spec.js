@@ -90,6 +90,18 @@ test("solicitud asociada a un laboratorio valida el identificador", async ({ pag
     expect((await request.get("/solicitud?laboratorio=no-valido")).status()).toBe(404);
     expect((await request.get("/solicitud?laboratorio=999999999")).status()).toBe(404);
 });
+test("el sobre flotante abre contacto desde cualquier página", async ({ page }) => {
+    await page.goto("/laboratorios");
+    const sobre = page.getByRole("link", { name: "Contacto", exact: true });
+    await expect(sobre).toBeInViewport();
+    await page.mouse.wheel(0, 2000);
+    await expect(sobre).toBeInViewport();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await sobre.focus();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/contacto$/);
+    await expect(page.getByRole("heading", { name: "Contacto", exact: true, level: 1 })).toBeVisible();
+});
 test("una ficha inexistente responde 404", async ({ request }) => {
     expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
     expect((await request.get("/laboratorios/999999999")).status()).toBe(404);

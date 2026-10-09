@@ -1,5 +1,6 @@
 import { Header } from "@/components/organisms/Header/Header";
 import { Footer } from "@/components/organisms/Footer/Footer";
+import { FloatingContact } from "@/components/organisms/FloatingContact/FloatingContact";
 import "./globals.css";
 export const metadata = {
     title: { default: "LabUNAM", template: "%s | LabUNAM" },
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main id="contenido">{children}</main>
         <Footer />
+        <FloatingContact />
       </body>
     </html>);
 }
