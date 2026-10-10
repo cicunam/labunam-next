@@ -5,7 +5,15 @@ export default defineConfig([
   ...nextVitals,
   {
     // El plan exige img nativo con srcset; las fotos se procesan fuera de Next.
-    rules: { "@next/next/no-img-element": "off" },
+    rules: { "@next/next/no-img-element": "off", curly: ["error", "all"] },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "storybook-static/**", "next-env.d.ts", "test-results/**", "playwright-report/**"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "storybook-static/**",
+    "next-env.d.ts",
+    "test-results/**",
+    "playwright-report/**",
+  ]),
 ]);

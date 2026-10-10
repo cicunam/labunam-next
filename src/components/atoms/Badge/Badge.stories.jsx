@@ -1,8 +1,9 @@
 import { Badge } from "./Badge";
+
 const meta = {
-    title: "Átomos/Badge",
-    component: Badge,
-    args: { children: "Laboratorio nacional" },
+  title: "Átomos/Badge",
+  component: Badge,
+  args: { children: "Laboratorio nacional" },
 };
 export default meta;
 export const Nacional = { args: { tono: "rojo", children: "Laboratorio nacional" } };

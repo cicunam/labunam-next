@@ -18,8 +18,8 @@ equipo familiarizado con React que está incorporando Next.js.
 - Atomic Design y una carpeta por componente con CSS Module e historia.
 - Datos y funciones sin React en `src/lib/`, con pruebas junto al módulo.
 - Componentes y funciones en inglés; entidades del dominio y textos en español.
-- Imports directos, sin barriles. Componentes de hasta 150 líneas, extrayendo
-  responsabilidades cuando sea necesario, sin comprimir el código artificialmente.
+- Imports directos, sin barriles. Componentes con una responsabilidad; 150 líneas es una
+  referencia de revisión, no un límite que justifique comprimir el código.
 
 ## Dependencias y estilos
 

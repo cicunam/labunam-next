@@ -20,9 +20,9 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 | Trabajo | Archivos de entrada |
 | --- | --- |
-| Portada y noticias | `src/app/page.jsx`, `src/app/Inicio.module.css` |
+| Portada y noticias | `src/app/page.jsx`, `src/lib/home/homeContent.js`, organismos `LaboratoryNetworks`, `RecentLaboratories`, `DisciplineSection` y `NewsSection` |
 | Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/lib/filtros/filtros.js` |
-| Consultas SQL y caché | `src/lib/db/db.js`, `src/lib/catalogo/catalogo.js` |
+| Consultas SQL y caché | `src/lib/db/db.js`, `src/lib/catalogo/catalogoQueries.js`, `src/lib/catalogo/catalogo.js` |
 | Filas SQL y modelo público | `src/lib/normalizeCatalog/normalizeCatalog.js`, `src/lib/catalogo/catalogo.fixtures.js` |
 | Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
 | Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |

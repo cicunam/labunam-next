@@ -101,9 +101,34 @@ No conviertas toda la página a cliente sólo para manejar un botón.
 1. Añadir historias de sus estados relevantes (ver [Storybook](06-storybook.md)).
 2. Probar texto largo, móvil, teclado, foco visible y estado vacío si aplica.
 3. Mantener la lógica de datos en `src/lib/`; no consultar MySQL desde un componente cliente.
-4. Mantener componentes de hasta 150 líneas separando responsabilidades.
+4. Usar 150 líneas como señal para revisar responsabilidades, no como límite rígido. Nunca comprimir JSX para reducir líneas.
 5. Ejecutar lint y build; añadir pruebas cuando exista comportamiento que proteger.
 
 No hace falta una prueba que sólo compruebe que existe una etiqueta `p`. Sí hace
 falta proteger reglas, interacciones y regresiones. Para diálogos, verificar
 Escape, retorno de foco y navegación es parte del comportamiento.
+
+## Código fácil de mantener
+
+- Ejecutar `npm run format`; comprobar con `npm run format:check`.
+- Separar imports, estado/datos, funciones de eventos e interfaz con líneas en blanco.
+- Usar llaves en todos los `if`, aunque tengan una sola instrucción.
+- Extraer eventos con varios pasos a funciones con nombre, por ejemplo `clearSearch`.
+- Guardar un hook específico junto al componente. `useSearchSuggestions` es el ejemplo
+  del buscador; no crear un hook para una operación que ya es fácil de entender.
+- Comentar en español decisiones, supuestos y casos difíciles. Un comentario debe
+  explicar por qué se conserva una caché o una entrada de historial, no repetir un `setState`.
+- En funciones de datos complejas, describir qué reciben y qué devuelven. Actualizar
+  el comentario si cambia la regla; evitar bloques de código viejo comentado.
+
+Ejemplo del criterio de comentarios:
+
+```js
+// Compartimos la carga para evitar consultas duplicadas ante peticiones simultáneas.
+if (pendingCatalog) {
+  return pendingCatalog;
+}
+```
+
+La portada (`src/app/page.jsx`) muestra cómo componer secciones de servidor y
+pasar sólo los datos necesarios a los componentes interactivos.

@@ -1,13 +1,10 @@
 .footer {
-
   border-top: 1px solid var(--filete-suave);
   background: var(--superficie-suave);
   color: var(--color-black);
-
 }
 
 .footer-contenido {
-
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--espacio-xl);
@@ -17,7 +14,6 @@
   max-width: var(--ancho-contenido);
   margin-inline: auto;
   padding: var(--espacio-xxl) var(--espacio-base);
-
 }
 
 .footer-marca {
@@ -28,7 +24,6 @@
 }
 
 .footer-logo {
-
   display: inline-flex;
   border-radius: var(--radio-sm);
 
@@ -38,11 +33,15 @@
     height: 40px;
   }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
 }
 
-.footer-logo-unam > img { height: 34px; }
+.footer-logo-unam > img {
+  height: 34px;
+}
 
 .footer-lema {
   max-width: 34ch;
@@ -80,19 +79,24 @@
 }
 
 .footer-enlace {
-
   color: var(--color-neutral-dark);
   font: var(--font-medium-regular);
   text-decoration: none;
 
-  &:hover { color: var(--color-black); text-decoration: underline; text-underline-offset: 3px; }
+  &:hover {
+    color: var(--color-black);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radio-xs); }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: var(--radio-xs);
+  }
 }
 
 .footer-pie {
-
   display: flex;
   flex-wrap: wrap;
   gap: var(--espacio-xs) var(--espacio-base);
@@ -106,29 +110,30 @@
   color: var(--color-neutral-dark);
   font: var(--font-small-regular);
 
-  & > p { margin: 0; }
-
+  & > p {
+    margin: 0;
+  }
 }
 
 @media (min-width: 744px) {
-
   .footer-contenido {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-inline: var(--espacio-lg);
   }
 
-  .footer-pie { padding-inline: var(--espacio-lg); }
-
+  .footer-pie {
+    padding-inline: var(--espacio-lg);
+  }
 }
 
 @media (min-width: 1128px) {
-
   .footer-contenido {
     grid-template-columns: 1.4fr 1fr 1fr 1fr;
     gap: var(--espacio-xxl);
     padding-inline: var(--espacio-xl);
   }
 
-  .footer-pie { padding-inline: var(--espacio-xl); }
-
+  .footer-pie {
+    padding-inline: var(--espacio-xl);
+  }
 }

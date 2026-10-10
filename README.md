@@ -208,3 +208,20 @@ Revisar las convenciones, ejecutar las comprobaciones adecuadas al cambio y
 actualizar la documentación si cambia un procedimiento. Los commits son breves,
 en español y sin trailers de atribución. Coordinar ramas, revisión y publicación
 con el equipo; un commit o push no equivale a un despliegue.
+
+## Legibilidad del código
+
+Ejecutar `npm run format` antes de entregar cambios y `npm run format:check` para
+comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llaves
+incluso en condiciones de una sola instrucción.
+
+La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
+textos se agrupan en `src/lib/home/homeContent.js`. Los hooks específicos viven
+junto al componente: `useSearchSuggestions` en SearchBar y `useHeaderMenu` /
+`useCompactSearch` en Header. Las consultas SQL están en `catalogoQueries.js`;
+`catalogo.js` conserva la coordinación y la caché.
+
+Los comentarios explican decisiones y comportamientos que deben conservarse:
+historial del modal, peticiones concurrentes, conteos de filtros, datos heredados
+y pausas del carrusel. La prioridad es poder seguir el flujo del código sin
+comprimirlo para cumplir un número de líneas.

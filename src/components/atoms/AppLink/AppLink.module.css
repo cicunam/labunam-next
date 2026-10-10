@@ -1,3 +1,13 @@
-.enlace { color: var(--color-brand-ink); font: var(--font-medium-semibold); text-underline-offset: 3px; }
-.enlace:hover { color: var(--color-black); }
-.enlace:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radio-xs); }
+.enlace {
+  color: var(--color-brand-ink);
+  font: var(--font-medium-semibold);
+  text-underline-offset: 3px;
+}
+.enlace:hover {
+  color: var(--color-black);
+}
+.enlace:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radio-xs);
+}

@@ -3,7 +3,6 @@
 }
 
 .catalogo .tira {
-
   position: sticky;
   top: 64px;
   z-index: 20;
@@ -12,29 +11,24 @@
 
   background: var(--superficie);
   box-shadow: 0 1px 0 var(--filete-suave);
-
 }
 
 .reticula {
-
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--espacio-lg) var(--espacio-base);
 
   margin: 0;
   padding: var(--espacio-base) 0 0;
-
 }
 
 .catalogo-vacio {
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--espacio-md);
 
   padding: var(--espacio-seccion) 0;
-
 }
 
 .catalogo-vacio-titulo {
@@ -50,7 +44,6 @@
 }
 
 .catalogo-vacio-accion {
-
   display: inline-flex;
   align-items: center;
   height: 48px;
@@ -62,33 +55,56 @@
   font: var(--font-medium-semibold);
   text-decoration: none;
 
-  &:hover { background: var(--color-brand-oscuro); }
+  &:hover {
+    background: var(--color-brand-oscuro);
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
 }
 
 @media (min-width: 744px) {
+  .catalogo .tira {
+    top: 80px;
+  }
 
-  .catalogo .tira { top: 80px; }
-
-  .reticula { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
+  .reticula {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 992px) {
-
-  .reticula { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
+  .reticula {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1128px) {
-
-  .reticula { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
+  .reticula {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
-.estado { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-block: 16px; }
-.cuenta { font: var(--font-medium-semibold); }
-.activos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.activos > a:last-child { color: var(--color-black); font: var(--font-small-semibold); text-underline-offset: 3px; }
+.estado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-block: 16px;
+}
+.cuenta {
+  font: var(--font-medium-semibold);
+}
+.activos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.activos > a:last-child {
+  color: var(--color-black);
+  font: var(--font-small-semibold);
+  text-underline-offset: 3px;
+}

@@ -8,4 +8,8 @@
   color: var(--color-black);
   font: var(--font-medium-regular);
 }
-.pildora[data-activa] { background: var(--color-black); color: var(--color-white); border-color: var(--color-black); }
+.pildora[data-activa] {
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}

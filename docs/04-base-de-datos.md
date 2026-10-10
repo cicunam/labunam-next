@@ -8,15 +8,16 @@
 reutilizables, no una conexión nueva por componente. Se crea cuando hace falta y
 sobrevive a recargas de módulos en desarrollo. Usa `mysql2/promise`.
 
-`src/lib/catalogo/catalogo.js` ejecuta seis consultas SELECT en `buildCatalog()`:
+`src/lib/catalogo/catalogoQueries.js` ejecuta seis consultas SELECT en `readCatalogRows()`:
 laboratorios y dependencias, estados, disciplinas, equipos, certificaciones y
 acreditaciones. `normalizeCatalog()` transforma filas SQL al modelo público.
-`loadCatalog()` añade la caché y evita duplicar cargas concurrentes.
+`buildCatalog()` coordina la lectura y normalización; `loadCatalog()` añade la caché y evita duplicar cargas concurrentes.
 
 | Archivo | Para qué sirve |
 | --- | --- |
 | `src/lib/normalizeCatalog/normalizeCatalog.js` | Limpieza y transformación de filas |
-| `src/lib/catalogo/catalogo.js` | Consultas y caché del conjunto |
+| `src/lib/catalogo/catalogoQueries.js` | Consultas SQL y lectura de filas |
+| `src/lib/catalogo/catalogo.js` | Construcción y caché del catálogo |
 | `src/lib/buscador/buscador.js` | Búsqueda y facetas sobre datos normalizados |
 
 No hay ORM ni migraciones en este proyecto. El esquema existente se consume en

@@ -22,19 +22,19 @@ async function atomic(path, data) {
 }
 function validate(id, value) {
   const lab = labs.find(l => String(l.idLab) === id);
-  if (!lab || !value || !['pendiente', 'sin-imagen', 'aprobado'].includes(value.estado)) throw Error('Selección inválida.');
+  if (!lab || !value || !['pendiente', 'sin-imagen', 'aprobado'].includes(value.estado)) {throw Error('Selección inválida.');}
   const allowed = new Set([...lab.imagenes, ...(lab.alternativasLogo || [])].map(i => i.id));
-  if (!Array.isArray(value.elegidas) || value.elegidas.length > 3 || new Set(value.elegidas).size !== value.elegidas.length || value.elegidas.some(i => !allowed.has(i))) throw Error('Imágenes inválidas.');
-  if (value.estado === 'aprobado' && (!value.elegidas.length || !value.elegidas.includes(value.principal))) throw Error('Elige una imagen principal.');
+  if (!Array.isArray(value.elegidas) || value.elegidas.length > 3 || new Set(value.elegidas).size !== value.elegidas.length || value.elegidas.some(i => !allowed.has(i))) {throw Error('Imágenes inválidas.');}
+  if (value.estado === 'aprobado' && (!value.elegidas.length || !value.elegidas.includes(value.principal))) {throw Error('Elige una imagen principal.');}
   return { estado: value.estado, elegidas: value.elegidas, principal: value.principal || '', actualizado: new Date().toISOString() };
 }
 async function download(url) {
   const response = await fetch(url, { redirect: 'error', signal: AbortSignal.timeout(20000) });
-  if (!response.ok || !response.headers.get('content-type')?.startsWith('image/')) throw Error('No se pudo descargar una imagen.');
+  if (!response.ok || !response.headers.get('content-type')?.startsWith('image/')) {throw Error('No se pudo descargar una imagen.');}
   const chunks = []; let length = 0;
   for await (const chunk of response.body) {
     length += chunk.length;
-    if (length > 20 * 1024 * 1024) throw Error('Imagen demasiado grande.');
+    if (length > 20 * 1024 * 1024) {throw Error('Imagen demasiado grande.');}
     chunks.push(chunk);
   }
   return Buffer.concat(chunks);
@@ -46,7 +46,7 @@ async function apply() {
   const applied = [], errors = [], unchanged = [];
   for (const lab of labs) {
     const selection = state[lab.idLab];
-    if (selection?.estado !== 'aprobado') continue;
+    if (selection?.estado !== 'aprobado') {continue;}
     operation = { ...operation, procesados: applied.length + errors.length + unchanged.length, laboratorio: lab.nombre };
     const images = [...selection.elegidas].sort((a, b) => Number(b === selection.principal) - Number(a === selection.principal));
     const existing = manifest[lab.idLab];
@@ -66,7 +66,7 @@ async function apply() {
         const meta = await sharp(bytes, { limitInputPixels: 40000000 }).metadata();
         const width = meta.autoOrient?.width || meta.width;
         for (const size of [480, 960, 1440]) {
-          if (size !== 480 && size > width) continue;
+          if (size !== 480 && size > width) {continue;}
           const filename = hash + '-' + size + '.webp';
           const pipeline = sharp(bytes, { limitInputPixels: 40000000 }).rotate();
           const resized = candidate.tipo === 'logo'
@@ -89,7 +89,7 @@ async function apply() {
 const server = createServer(async (req, res) => {
   const send = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); };
   try {
-    if (req.headers.host !== '127.0.0.1:' + port && req.headers.host !== 'localhost:' + port) return send(403, { error: 'Host no permitido.' });
+    if (req.headers.host !== '127.0.0.1:' + port && req.headers.host !== 'localhost:' + port) {return send(403, { error: 'Host no permitido.' });}
     if (req.method === 'GET' && req.url === '/estado') {
       const ultimo = JSON.parse(await readFile(join(stateDir, 'ultima-aplicacion.json'), 'utf8').catch(() => 'null'));
       return send(200, { ...operation, ultimo });
@@ -104,8 +104,8 @@ const server = createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': js ? 'text/javascript' : 'text/html', 'Cache-Control': 'no-store' });
       return res.end(await readFile(join(here, js ? 'app.js' : 'index.html')));
     }
-    if (req.method !== 'POST' || req.headers.origin !== 'http://' + req.headers.host) return send(403, { error: 'Petición no permitida.' });
-    if (busy) return send(409, { error: 'Espera a que termine la operación actual.' });
+    if (req.method !== 'POST' || req.headers.origin !== 'http://' + req.headers.host) {return send(403, { error: 'Petición no permitida.' });}
+    if (busy) {return send(409, { error: 'Espera a que termine la operación actual.' });}
     if (req.url === '/aplicar') {
       busy = true;
       operation = { estado: 'ejecutando', procesados: 0, total: labs.filter(l => state[l.idLab]?.estado === 'aprobado').length, laboratorio: '', inicio: new Date().toISOString() };
@@ -116,9 +116,9 @@ const server = createServer(async (req, res) => {
     }
     busy = true;
     try {
-      if (req.url !== '/guardar') return send(404, {});
+      if (req.url !== '/guardar') {return send(404, {});}
       let body = '';
-      for await (const chunk of req) { body += chunk; if (body.length > 20000) throw Error('Petición demasiado grande.'); }
+      for await (const chunk of req) { body += chunk; if (body.length > 20000) {throw Error('Petición demasiado grande.');} }
       const { id, seleccion } = JSON.parse(body);
       const next = { ...state, [id]: validate(String(id), seleccion) };
       await atomic(stateFile, next); state = next;

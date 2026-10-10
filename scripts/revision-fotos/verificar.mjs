@@ -10,24 +10,24 @@ let done=0;
 async function check(url){
  try{
   const r=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(12000)});
-  if(!r.ok||!r.headers.get('content-type')?.startsWith('image/'))throw Error();
+  if(!r.ok||!r.headers.get('content-type')?.startsWith('image/')){throw Error();}
   const chunks=[];let size=0;
-  for await(const c of r.body){size+=c.length;if(size>12e6)throw Error();chunks.push(c);}
+  for await(const c of r.body){size+=c.length;if(size>12e6){throw Error();}chunks.push(c);}
   const bytes=Buffer.concat(chunks),meta=await sharp(bytes,{limitInputPixels:40000000}).metadata();
   cache.set(url,{w:meta.width,h:meta.height,hash:createHash('sha256').update(bytes).digest('hex')});
  }catch{cache.set(url,null);}
- done++;if(done%30===0)console.log(done+'/'+urls.length+' imágenes comprobadas');
+ done++;if(done%30===0){console.log(done+'/'+urls.length+' imágenes comprobadas');}
 }
 let next=0;
-await Promise.all(Array.from({length:6},async()=>{while(next<urls.length)await check(urls[next++]);}));
+await Promise.all(Array.from({length:6},async()=>{while(next<urls.length){await check(urls[next++]);}}));
 const repeated=new Map();
 for(const l of labs){
  const hashes=new Set([...l.imagenes,...(l.alternativasLogo||[])].map(i=>cache.get(i.url)?.hash).filter(Boolean));
- for(const h of hashes)repeated.set(h,(repeated.get(h)||0)+1);
+ for(const h of hashes){repeated.set(h,(repeated.get(h)||0)+1);}
 }
 let removed=0;
 for(const l of labs){
- if(state[l.idLab]?.estado==='aprobado')continue;
+ if(state[l.idLab]?.estado==='aprobado'){continue;}
  const seen=new Set();
  const valid=i=>{
   const m=cache.get(i.url);

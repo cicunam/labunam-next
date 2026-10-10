@@ -1,1 +1,5 @@
-.icono { display: inline-block; flex: 0 0 auto; vertical-align: middle; }
+.icono {
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}

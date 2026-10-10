@@ -1,14 +1,11 @@
 .tira {
-
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--espacio-base);
-
 }
 
 .tira-filtros {
-
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
@@ -24,16 +21,22 @@
   font: var(--font-medium-semibold);
   cursor: pointer;
 
-  transition: box-shadow .2s ease, border-color .2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 
-  &:hover { border-color: var(--color-black); box-shadow: var(--sombra); }
+  &:hover {
+    border-color: var(--color-black);
+    box-shadow: var(--sombra);
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
 .tira-filtros-cuenta {
-
   display: grid;
   place-items: center;
   min-width: 20px;
@@ -44,11 +47,9 @@
   background: var(--color-brand);
   color: var(--color-sobre-brand);
   font: var(--font-tiny-bold);
-
 }
 
 .modal {
-
   width: min(568px, calc(100% - 32px));
   max-height: min(84vh, 720px);
   margin: auto;
@@ -60,20 +61,22 @@
   box-shadow: var(--sombra-alta);
   color: var(--color-black);
 
-  &::backdrop { background: rgb(0 0 0 / .5); }
+  &::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
 
   &[open] {
     display: flex;
     flex-direction: column;
   }
-
 }
 
 .modal-cabeza,
-.modal-pie { flex: 0 0 auto; }
+.modal-pie {
+  flex: 0 0 auto;
+}
 
 .modal-cabeza {
-
   display: flex;
   align-items: center;
   gap: var(--espacio-base);
@@ -81,11 +84,9 @@
   padding: var(--espacio-base) var(--espacio-lg);
 
   border-bottom: 1px solid var(--filete-suave);
-
 }
 
 .modal-cerrar {
-
   display: grid;
   place-items: center;
   width: 32px;
@@ -98,10 +99,14 @@
   color: var(--color-black);
   cursor: pointer;
 
-  &:hover { background: var(--superficie-fuerte); }
+  &:hover {
+    background: var(--superficie-fuerte);
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
 .modal-titulo {
@@ -127,9 +132,14 @@
   border: 0;
   border-bottom: 1px solid var(--filete-suave);
 
-  & + & { margin-top: var(--espacio-lg); }
+  & + & {
+    margin-top: var(--espacio-lg);
+  }
 
-  &:last-child { padding-bottom: 0; border-bottom: 0; }
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
 }
 
 .modal-grupo-titulo {
@@ -145,7 +155,6 @@
 }
 
 .modal-pie {
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -154,7 +163,6 @@
   padding: var(--espacio-base) var(--espacio-lg);
 
   border-top: 1px solid var(--filete-suave);
-
 }
 
 .modal-limpiar {
@@ -169,7 +177,6 @@
 }
 
 .modal-aplicar {
-
   height: 48px;
   padding: 0 var(--espacio-lg);
 
@@ -180,21 +187,54 @@
   font: var(--font-medium-semibold);
   cursor: pointer;
 
-  transition: background-color .2s ease, scale .15s var(--suave);
+  transition:
+    background-color 0.2s ease,
+    scale 0.15s var(--suave);
 
-  &:hover { background: var(--color-brand-oscuro); }
-  &:active { scale: .98; }
+  &:hover {
+    background: var(--color-brand-oscuro);
+  }
+  &:active {
+    scale: 0.98;
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
 }
 
-.formulario { display: flex; flex-direction: column; min-height: 0; }
-.tira { position: sticky; top: 64px; z-index: 20; padding-block: var(--espacio-xs); background: var(--superficie); box-shadow: 0 1px 0 var(--filete-suave); }
-@media (min-width: 744px) { .tira { top: 80px; } }
+.formulario {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.tira {
+  position: sticky;
+  top: 64px;
+  z-index: 20;
+  padding-block: var(--espacio-xs);
+  background: var(--superficie);
+  box-shadow: 0 1px 0 var(--filete-suave);
+}
+@media (min-width: 744px) {
+  .tira {
+    top: 80px;
+  }
+}
 
 @media (max-width: 743px) {
-  .tira { flex-wrap: wrap; gap: var(--espacio-xs); }
-  .tira > [data-tira] { flex-basis: 100%; }
-  .tira-filtros { height: 44px; width: 100%; justify-content: center; padding: 0 var(--espacio-md); }
+  .tira {
+    flex-wrap: wrap;
+    gap: var(--espacio-xs);
+  }
+  .tira > [data-tira] {
+    flex-basis: 100%;
+  }
+  .tira-filtros {
+    height: 44px;
+    width: 100%;
+    justify-content: center;
+    padding: 0 var(--espacio-md);
+  }
 }

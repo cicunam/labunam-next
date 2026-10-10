@@ -1,46 +1,53 @@
-import { query } from "../db/db";
+import { readCatalogRows } from "./catalogoQueries";
 import { normalizeCatalog } from "../normalizeCatalog/normalizeCatalog";
+
+/** Lee MySQL y transforma sus filas al catálogo público utilizado por la interfaz. */
 export async function buildCatalog() {
-    const banderas = Array.from({ length: 38 }, (_, i) => `s.dis${i + 1}`).join(", ");
-    const [filas, estados, disciplinas, equipos, certificaciones, acreditaciones] = await Promise.all([
-        query(`
-      SELECT s.idLab, s.labNombre, s.siglas, s.idTpLab, s.entidad AS idEstado,
-             s.calleNum, s.colonia, s.muniDeleg, s.cp, s.latitud, s.longitud,
-             s.webLab, s.palabrasClave, s.subDis, s.marcaAutorizaInfoWeb,
-             s.objInvesApli, s.objInvesBasica, s.objDocencia, s.objServicios,
-             COALESCE(s.fAprobacion, s.fActualiza, s.fAplica) AS fecha,
-             d.dependencia, d.iniciales, d.idEstado AS idEstadoDepen,
-             cd.dep_nombre_may_min AS dependenciaTitulo, ${banderas}
-      FROM r_seccion1 AS s
-      LEFT JOIN catDepen AS d ON d.idDepen = s.idDepen
-      LEFT JOIN catalogo_dependencias AS cd ON cd.dep_clave = d.dep_clave
-      WHERE s.activo = 1 AND s.idTpLab IN (1, 2, 3, 4)
-      ORDER BY s.labNombre`),
-        query("SELECT idEstado, estado FROM catEstados"),
-        query("SELECT idDis, disiplina FROM catDisiplina WHERE idDis BETWEEN 1 AND 38"),
-        query("SELECT idLab, nombre, tpPruebasServicio FROM r_equipoPrincipal ORDER BY idLab, idEquipoPrinci"),
-        query("SELECT idLab, certificacion AS nombre, organismo, fFin FROM r_certificaciones WHERE TRIM(certificacion) <> '' ORDER BY fFin DESC"),
-        query("SELECT idLab, acreditacion AS nombre, organismo, fFin FROM r_acreditaciones WHERE TRIM(acreditacion) <> '' ORDER BY fFin DESC"),
-    ]);
-    return normalizeCatalog({ filas, estados, disciplinas, equipos, certificaciones, acreditaciones });
+  const rows = await readCatalogRows();
+  return normalizeCatalog(rows);
 }
-let copia;
-let vence = 0;
-let pendiente;
+
+// Esta caché pertenece a un proceso Node; cada worker mantiene su propia copia.
+let cachedCatalog;
+let expiresAt = 0;
+let pendingCatalog;
+
+/**
+ * Devuelve el catálogo vigente y renueva una copia vencida cuando llega una petición.
+ * Si falla MySQL, conserva el último catálogo válido; sin respaldo devuelve un error público.
+ */
 export async function loadCatalog() {
-    if (copia && Date.now() < vence)
-        return copia;
-    if (pendiente)
-        return pendiente;
-    pendiente = buildCatalog().then((datos) => {
-        const segundos = Number(process.env.LABUNAM_CATALOGO_SEGUNDOS ?? 600);
-        vence = Date.now() + (Number.isFinite(segundos) && segundos > 0 ? segundos : 600) * 1000;
-        copia = datos;
-        return datos;
-    }).catch(() => {
-        if (copia)
-            return copia;
-        throw new Error("El catálogo no está disponible en este momento.");
-    }).finally(() => { pendiente = undefined; });
-    return pendiente;
+  if (cachedCatalog && Date.now() < expiresAt) {
+    return cachedCatalog;
+  }
+
+  // Compartir la promesa evita ejecutar seis consultas por cada petición simultánea.
+  if (pendingCatalog) {
+    return pendingCatalog;
+  }
+
+  pendingCatalog = refreshCatalog();
+  return pendingCatalog;
+}
+
+async function refreshCatalog() {
+  try {
+    const catalogo = await buildCatalog();
+    const configuredSeconds = Number(process.env.LABUNAM_CATALOGO_SEGUNDOS ?? 600);
+    const cacheSeconds =
+      Number.isFinite(configuredSeconds) && configuredSeconds > 0 ? configuredSeconds : 600;
+
+    // El plazo empieza al terminar la carga, no cuando se inició la consulta.
+    expiresAt = Date.now() + cacheSeconds * 1000;
+    cachedCatalog = catalogo;
+    return catalogo;
+  } catch {
+    // No renovamos la fecha al fallar: la siguiente petición podrá intentar recuperar MySQL.
+    if (cachedCatalog) {
+      return cachedCatalog;
+    }
+    throw new Error("El catálogo no está disponible en este momento.");
+  } finally {
+    pendingCatalog = undefined;
+  }
 }

@@ -33,8 +33,10 @@
 - Imports al archivo concreto, sin barriles `index.js`.
 - Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
   pertenecen a `src/lib/`, sin React.
-- Mantener componentes de hasta 150 líneas y props claras con valores predeterminados cuando corresponda. Extraer
-  responsabilidades cuando haga falta; no comprimir código para cumplir el límite.
+- Priorizar componentes con una responsabilidad y props claras. Las 150 líneas son una
+  referencia para revisar responsabilidades, no un límite: nunca comprimir JSX o quitar comentarios para cumplirlo.
+- Usar `npm run format` y conservar llaves en todos los `if`. Separar imports, preparación
+  de datos, eventos y JSX. Explicar en español las decisiones complejas y sus invariantes.
 - Server Components por defecto. Añadir una frontera cliente sólo si se necesita
   interacción. Conservar el renderizado servidor de catálogo y ficha individual.
 - CSS Modules junto al componente; globales sólo en `src/app/globals.css` para tokens,

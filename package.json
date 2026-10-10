@@ -14,7 +14,9 @@
     "test:e2e": "playwright test",
     "fotos": "node --env-file-if-exists=.env scripts/fotos.js",
     "fotos:revisar": "node scripts/revision-fotos/server.mjs",
-    "fotos:buscar": "node --env-file-if-exists=.env scripts/revision-fotos/buscar.mjs"
+    "fotos:buscar": "node --env-file-if-exists=.env scripts/revision-fotos/buscar.mjs",
+    "format": "prettier \"src/**/*.{js,jsx,css,json}\" \"public/js/*.js\" \"tests/**/*.js\" \"scripts/*.js\" \"*.{js,mjs,json}\" \".storybook/*.js\" --write",
+    "format:check": "prettier \"src/**/*.{js,jsx,css,json}\" \"public/js/*.js\" \"tests/**/*.js\" \"scripts/*.js\" \"*.{js,mjs,json}\" \".storybook/*.js\" --check"
   },
   "dependencies": {
     "mysql2": "^3.24.5",
@@ -28,6 +30,7 @@
     "@storybook/nextjs-vite": "^10.6.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "prettier": "3.9.9",
     "sharp": "^0.35.5",
     "storybook": "^10.6.1",
     "vitest": "^5.0.3"

@@ -10,9 +10,27 @@
   cursor: pointer;
   font: var(--font-medium-semibold);
 }
-.boton:hover:not(:disabled) { background: var(--color-brand-oscuro); }
-.boton:focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 3px; }
-.boton:disabled { opacity: .5; cursor: not-allowed; }
-.pequeno { min-height: 36px; padding: var(--espacio-sm) var(--espacio-base); }
-.mediano { min-height: 44px; padding: var(--espacio-md) var(--espacio-lg); }
-.grande { min-height: 52px; padding: var(--espacio-base) var(--espacio-xl); font: var(--font-large-semibold); }
+.boton:hover:not(:disabled) {
+  background: var(--color-brand-oscuro);
+}
+.boton:focus-visible {
+  outline: 2px solid var(--color-primary-dark);
+  outline-offset: 3px;
+}
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pequeno {
+  min-height: 36px;
+  padding: var(--espacio-sm) var(--espacio-base);
+}
+.mediano {
+  min-height: 44px;
+  padding: var(--espacio-md) var(--espacio-lg);
+}
+.grande {
+  min-height: 52px;
+  padding: var(--espacio-base) var(--espacio-xl);
+  font: var(--font-large-semibold);
+}

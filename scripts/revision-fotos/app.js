@@ -24,19 +24,19 @@ function render() {
 async function post(path, data) {
   const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
   const result = await response.json();
-  if (!response.ok) throw Error(result.error);
+  if (!response.ok) {throw Error(result.error);}
   return result;
 }
 async function save(lab, estado) {
-  if (busy) return;
+  if (busy) {return;}
   const elegidas = [...document.querySelectorAll('[name=elegida]:checked')].map(i => i.value);
   const principal = document.querySelector('[name=principal]:checked')?.value || (elegidas.length === 1 ? elegidas[0] : '');
-  if (estado === 'aprobado' && (!elegidas.length || elegidas.length > 3 || !elegidas.includes(principal))) return message('Selecciona entre una y tres imágenes e indica la principal.');
+  if (estado === 'aprobado' && (!elegidas.length || elegidas.length > 3 || !elegidas.includes(principal))) {return message('Selecciona entre una y tres imágenes e indica la principal.');}
   const seleccion = { estado, elegidas: estado === 'aprobado' ? elegidas : [], principal: estado === 'aprobado' ? principal : '' };
   busy = true;
   try {
     await post('/guardar', { id: lab.idLab, seleccion }); state[lab.idLab] = seleccion;
-    if ($('filtro').value === 'todos') index++;
+    if ($('filtro').value === 'todos') {index++;}
     render(); message('Revisión guardada en este equipo.');
   } catch (error) { message(error.message); } finally { busy = false; }
 }
@@ -57,10 +57,10 @@ async function progress() {
     if (busy) {
       message('Aplicando: ' + status.procesados + ' de ' + status.total + ' laboratorios. Ahora: ' + status.laboratorio);
       timer = setTimeout(progress, 1000);
-    } else if (status.estado === 'error') message(status.mensaje);
+    } else if (status.estado === 'error') {message(status.mensaje);}
     else {
       const result = status.resultado || status.ultimo;
-      if (result) message('Última aplicación: ' + result.aplicados.length + ' aplicados, ' + (result.sinCambios?.length || 0) + ' sin cambios, ' + result.errores.length + ' fallidos.' + (result.errores.length ? ' IDs pendientes: ' + result.errores.map(e => e.idLab).join(', ') : ' Puedes revisar el catálogo.'));
+      if (result) {message('Última aplicación: ' + result.aplicados.length + ' aplicados, ' + (result.sinCambios?.length || 0) + ' sin cambios, ' + result.errores.length + ' fallidos.' + (result.errores.length ? ' IDs pendientes: ' + result.errores.map(e => e.idLab).join(', ') : ' Puedes revisar el catálogo.'));}
     }
   } catch {
     message('No se pudo consultar el progreso. Reintentando…');
@@ -68,15 +68,15 @@ async function progress() {
   }
 }
 $('aplicar').onclick = async () => {
-  if (busy) return;
+  if (busy) {return;}
   const count = Object.values(state).filter(s => s.estado === 'aprobado').length;
-  if (!count) return message('Primero aprueba las imágenes de algún laboratorio.');
+  if (!count) {return message('Primero aprueba las imágenes de algún laboratorio.');}
   busy = true; $('aplicar').disabled = true; message('Iniciando importación…');
   try { await post('/aplicar', {}); await progress(); }
   catch (error) { message(error.message); busy = false; $('aplicar').disabled = false; }
 };
 async function load() {
-  if (busy) return;
+  if (busy) {return;}
   try {
     const data = await (await fetch('/api')).json(); labs = data.labs; state = data.state; index = 0;
     $('rastreo').textContent = data.progreso ? 'Búsqueda: ' + data.progreso.revisados + ' de ' + data.progreso.objetivo + ' laboratorios revisados.' : '';

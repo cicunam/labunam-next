@@ -1,8 +1,9 @@
 import { ActiveChip } from "./ActiveChip";
+
 const meta = {
-    title: "Moléculas/ActiveChip",
-    component: ActiveChip,
-    args: { href: "/laboratorios", etiqueta: "Búsqueda", valor: "rayos x" },
+  title: "Moléculas/ActiveChip",
+  component: ActiveChip,
+  args: { href: "/laboratorios", etiqueta: "Búsqueda", valor: "rayos x" },
 };
 export default meta;
 export const Busqueda = {};

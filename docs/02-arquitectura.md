@@ -42,8 +42,8 @@ la raíz. No usamos barriles `index.js`.
 
 Los CSS Modules de una página viven junto a su `page.jsx`: por ejemplo,
 `src/app/laboratorios/Laboratorios.module.css` y
-`src/app/laboratorios/[id]/Laboratorio.module.css`. `Inicio.module.css` permanece en
-`src/app/` porque corresponde a `/`; `globals.css` contiene los estilos compartidos.
+`src/app/laboratorios/[id]/Laboratorio.module.css`. Las secciones de portada tienen sus CSS Modules junto a cada organismo;
+`globals.css` contiene los estilos compartidos.
 
 `page.jsx` exporta por defecto un componente. `route.js` exporta funciones HTTP
 como `GET`. Una carpeta cualquiera no se convierte en página sin su archivo
@@ -95,7 +95,7 @@ la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 ## Cómo decidir dónde editar
 
-Texto de portada: `src/app/page.jsx`. Estilo de una tarjeta: su CSS Module.
+Orden de portada: `src/app/page.jsx`. Textos de redes y noticias de ejemplo: `src/lib/home/homeContent.js`. Estilo de una tarjeta: su CSS Module.
 Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/lib/catalogo/`.
 Interacción del carrusel: `public/js/carrusel.js` y su organismo; es una mejora
 sobre HTML de servidor y no exige convertir toda la portada a cliente.

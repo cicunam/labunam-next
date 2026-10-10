@@ -1,5 +1,4 @@
 .ficha {
-
   width: min(720px, calc(100% - 32px));
   max-height: min(88vh, 860px);
   margin: auto;
@@ -11,17 +10,17 @@
   box-shadow: var(--sombra-alta);
   color: var(--color-black);
 
-  &::backdrop { background: rgb(0 0 0 / .5); }
+  &::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
 
   &[open] {
     display: flex;
     flex-direction: column;
   }
-
 }
 
 .ficha-cerrar {
-
   position: absolute;
   top: var(--espacio-base);
   left: var(--espacio-base);
@@ -40,14 +39,17 @@
   color: var(--color-black);
   cursor: pointer;
 
-  &:hover { background: var(--superficie-fuerte); }
+  &:hover {
+    background: var(--superficie-fuerte);
+  }
 
-  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
 @media (max-width: 743px) {
-
   .ficha {
     width: 100%;
     max-width: none;
@@ -55,9 +57,15 @@
     height: 100%;
     border-radius: 0;
   }
-
 }
-.estado { padding: 64px var(--espacio-lg) var(--espacio-lg); }
+.estado {
+  padding: 64px var(--espacio-lg) var(--espacio-lg);
+}
 
-
-.pagina { max-width: 960px; margin: 24px auto 64px; border: 1px solid var(--filete-suave); border-radius: var(--radio-md); overflow: hidden; }
+.pagina {
+  max-width: 960px;
+  margin: 24px auto 64px;
+  border: 1px solid var(--filete-suave);
+  border-radius: var(--radio-md);
+  overflow: hidden;
+}
