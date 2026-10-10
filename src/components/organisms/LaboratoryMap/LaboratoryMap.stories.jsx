@@ -1,4 +1,4 @@
-import { LaboratoryMap } from "./LaboratoryMap";
+import LaboratoryMap from "./LaboratoryMap";
 
 const meta = {
   title: "Organismos/LaboratoryMap",

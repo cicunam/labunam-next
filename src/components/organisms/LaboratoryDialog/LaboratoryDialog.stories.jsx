@@ -1,4 +1,4 @@
-import { LaboratoryDialog } from "./LaboratoryDialog";
+import LaboratoryDialog from "./LaboratoryDialog";
 import { laboratorio } from "../fixtures/organismos.fixtures";
 
 const meta = {

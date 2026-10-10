@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import { formatCounts, redes } from "@/lib/presentacion/presentacion";
-import { Gallery } from "../../molecules/Gallery/Gallery";
-import { Tab } from "../../molecules/Tab/Tab";
-import { Badge } from "../../atoms/Badge/Badge";
+import Gallery from "../../molecules/Gallery/Gallery";
+import Tab from "../../molecules/Tab/Tab";
+import Badge from "../../atoms/Badge/Badge";
 import styles from "./LaboratoryDetails.module.css";
 
 const pestanas = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
-export function LaboratoryDetails({ laboratorio: lab, pagina = false }) {
+const LaboratoryDetails = ({ laboratorio: lab, pagina = false }) => {
   const [activa, setActive] = useState(0);
   const Titulo = pagina ? "h1" : "h2";
   const contenido = [
@@ -123,4 +123,6 @@ export function LaboratoryDetails({ laboratorio: lab, pagina = false }) {
       </footer>
     </>
   );
-}
+};
+
+export default LaboratoryDetails;

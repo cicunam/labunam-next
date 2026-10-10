@@ -18,7 +18,7 @@ const trazos = {
   buscar: "M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15M16 16l5 5",
   cerrar: "M6 6l12 12M18 6L6 18",
 };
-export function Icon({ nombre, etiqueta, tamano = 24 }) {
+const Icon = ({ nombre, etiqueta, tamano = 24 }) => {
   return (
     <svg
       className={styles.icono}
@@ -40,4 +40,6 @@ export function Icon({ nombre, etiqueta, tamano = 24 }) {
       />
     </svg>
   );
-}
+};
+
+export default Icon;

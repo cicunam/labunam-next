@@ -16,7 +16,7 @@ const redes = [
   { tipo: "universitarios", texto: "Laboratorios universitarios" },
   { tipo: "unidades", texto: "Unidades de apoyo" },
 ];
-export function Header() {
+const Header = () => {
   const ruta = usePathname();
   const compacto = useCompactSearch(ruta);
   const { abierto, boton, panel, toggleMenu, closeMenu } = useHeaderMenu();
@@ -146,4 +146,6 @@ export function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

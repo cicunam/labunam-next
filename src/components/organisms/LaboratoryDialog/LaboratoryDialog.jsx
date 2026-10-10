@@ -2,15 +2,11 @@
 
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { fetchLaboratorioDetails } from "@/lib/ficha/ficha";
-import { Icon } from "../../atoms/Icon/Icon";
+import Icon from "../../atoms/Icon/Icon";
 import styles from "./LaboratoryDialog.module.css";
 
-const LaboratoryDetails = lazy(() =>
-  import("../LaboratoryDetails/LaboratoryDetails").then((modulo) => ({
-    default: modulo.LaboratoryDetails,
-  })),
-);
-export function LaboratoryDialog({ loadDetails = fetchLaboratorioDetails, inicial = null }) {
+const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails"));
+const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, inicial = null }) => {
   const dialogo = useRef(null);
   const disparador = useRef(null);
   const memoria = useRef(new Map());
@@ -165,4 +161,6 @@ export function LaboratoryDialog({ loadDetails = fetchLaboratorioDetails, inicia
       {ficha}
     </dialog>
   );
-}
+};
+
+export default LaboratoryDialog;

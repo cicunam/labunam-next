@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "./AppLink.module.css";
 
-export function AppLink({ href, className = "", ...props }) {
+const AppLink = ({ href, className = "", ...props }) => {
   return (
     <Link
       {...props}
@@ -9,4 +9,6 @@ export function AppLink({ href, className = "", ...props }) {
       className={`${styles.enlace} ${className}`}
     />
   );
-}
+};
+
+export default AppLink;

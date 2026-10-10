@@ -1,4 +1,4 @@
-import { Tab } from "./Tab";
+import Tab from "./Tab";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 

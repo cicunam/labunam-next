@@ -1,4 +1,4 @@
-import { LaboratoryCard } from "./LaboratoryCard";
+import LaboratoryCard from "./LaboratoryCard";
 import { laboratorio } from "../fixtures/organismos.fixtures";
 
 const meta = {

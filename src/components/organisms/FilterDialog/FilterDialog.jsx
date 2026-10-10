@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FilterOption } from "../../molecules/FilterOption/FilterOption";
-import { Icon } from "../../atoms/Icon/Icon";
+import FilterOption from "../../molecules/FilterOption/FilterOption";
+import Icon from "../../atoms/Icon/Icon";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 import styles from "./FilterDialog.module.css";
 
-export function FilterDialog({ criterios, filtros, total, children }) {
+const FilterDialog = ({ criterios, filtros, total, children }) => {
   const dialogo = useRef(null);
   const barra = useRef(null);
   const peticion = useRef(null);
@@ -266,4 +266,6 @@ export function FilterDialog({ criterios, filtros, total, children }) {
       </dialog>
     </div>
   );
-}
+};
+
+export default FilterDialog;

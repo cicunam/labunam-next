@@ -2,7 +2,7 @@ import Link from "next/link";
 import Script from "next/script";
 import styles from "./Carousel.module.css";
 
-export function Carousel({ slides }) {
+const Carousel = ({ slides }) => {
   const items = slides.length > 1 ? [...slides, ...slides, ...slides] : slides;
   return (
     <>
@@ -85,4 +85,6 @@ export function Carousel({ slides }) {
       />
     </>
   );
-}
+};
+
+export default Carousel;

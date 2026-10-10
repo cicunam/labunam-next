@@ -1,5 +1,5 @@
 import { grupos } from "@/lib/grupos/grupos";
-import { DisciplineSection } from "./DisciplineSection";
+import DisciplineSection from "./DisciplineSection";
 
 const meta = {
   title: "Organismos/DisciplineSection",

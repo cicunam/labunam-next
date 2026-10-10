@@ -1,4 +1,4 @@
-import { ActiveChip } from "./ActiveChip";
+import ActiveChip from "./ActiveChip";
 
 const meta = {
   title: "Moléculas/ActiveChip",

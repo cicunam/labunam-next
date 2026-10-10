@@ -1,6 +1,6 @@
 import styles from "./FilterOption.module.css";
 
-export function FilterOption({ nombre, valor, etiqueta, total, seleccionada, onChange }) {
+const FilterOption = ({ nombre, valor, etiqueta, total, seleccionada, onChange }) => {
   const deshabilitada = total === 0 && !seleccionada;
   return (
     <label
@@ -26,4 +26,6 @@ export function FilterOption({ nombre, valor, etiqueta, total, seleccionada, onC
       )}
     </label>
   );
-}
+};
+
+export default FilterOption;

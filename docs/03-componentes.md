@@ -13,6 +13,18 @@ Primero busca si ya existe algo reutilizable. Los componentes y funciones nuevos
 se nombran en inglés; las entidades y campos del dominio, textos visibles y URLs
 se mantienen en español. No es necesario traducir props existentes al tocar estilos.
 
+## Declaración y exportación
+
+Usamos arrow functions con nombre para componentes y `export default Nombre;` al
+final del archivo. Al importarlos, no se usan llaves y se conserva el nombre del
+componente. Esta convención también aplica a páginas y layouts, incluidos los
+componentes de servidor `async`.
+
+Los hooks y las funciones auxiliares pueden conservar declaraciones `function` y
+exportaciones nombradas. Los exports de Next (`metadata`, `generateMetadata`,
+`dynamic`, `GET`, etc.) conservan sus nombres y su formato requerido. Las historias
+de Storybook también conservan su metadata por defecto y sus historias nombradas.
+
 ## Ejemplo completo: una nota informativa
 
 Este ejemplo no tiene estado ni eventos y no necesita `"use client"`. Crea:
@@ -28,9 +40,11 @@ En `InfoNote.jsx`:
 
 ```jsx
 import styles from "./InfoNote.module.css";
-export function InfoNote({ text }) {
-    return <p className={styles.note}>{text}</p>;
-}
+const InfoNote = ({ text }) => {
+  return <p className={styles.note}>{text}</p>;
+};
+
+export default InfoNote;
 ```
 
 `text` es la prop donde pasamos el texto; el ejemplo espera una cadena. La función devuelve JSX; `className`
@@ -56,9 +70,9 @@ de esta nota en el CSS global.
 En una página u organismo:
 
 ```jsx
-import { InfoNote } from "@/components/atoms/InfoNote/InfoNote";
+import InfoNote from "@/components/atoms/InfoNote/InfoNote";
 // Dentro del JSX del componente:
-<InfoNote text="Selecciona una opción para continuar."/>;
+<InfoNote text="Selecciona una opción para continuar." />;
 ```
 
 El import llega al archivo concreto. No crees `index.js` para reexportarlo.
@@ -71,19 +85,33 @@ Por ejemplo, un organismo genérico `Disclosure` podría alternar contenido:
 ```jsx
 "use client";
 import { useId, useState } from "react";
-export function Disclosure({ title, children }) {
-    const [open, setOpen] = useState(false);
-    const contentId = useId();
-    function toggleOpen() {
-        setOpen((current) => !current);
-    }
-    return <section>
-    <button type="button" aria-expanded={open} aria-controls={contentId} onClick={toggleOpen}>
-      {title}
-    </button>
-    <div id={contentId} hidden={!open}>{children}</div>
-  </section>;
-}
+const Disclosure = ({ title, children }) => {
+  const [open, setOpen] = useState(false);
+  const contentId = useId();
+  function toggleOpen() {
+    setOpen((current) => !current);
+  }
+  return (
+    <section>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={contentId}
+        onClick={toggleOpen}
+      >
+        {title}
+      </button>
+      <div
+        id={contentId}
+        hidden={!open}
+      >
+        {children}
+      </div>
+    </section>
+  );
+};
+
+export default Disclosure;
 ```
 
 `children` es el contenido entre las etiquetas del componente. `useId` evita IDs
@@ -132,3 +160,9 @@ if (pendingCatalog) {
 
 La portada (`src/app/page.jsx`) muestra cómo componer secciones de servidor y
 pasar sólo los datos necesarios a los componentes interactivos.
+
+ESLint verifica esta convención con `npm run lint`: componentes arrow y
+`export default Nombre;` como última instrucción. Las historias de Storybook,
+los hooks, las utilidades y los endpoints quedan fuera de esta regla de componentes.
+Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
+antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.

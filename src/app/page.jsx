@@ -6,18 +6,18 @@ import { grupos } from "@/lib/grupos/grupos";
 import { homeNetworks } from "@/lib/home/homeContent";
 
 // Secciones de la portada
-import { SearchBar } from "@/components/organisms/SearchBar/SearchBar";
-import { LaboratoryNetworks } from "@/components/organisms/LaboratoryNetworks/LaboratoryNetworks";
-import { RecentLaboratories } from "@/components/organisms/RecentLaboratories/RecentLaboratories";
-import { DisciplineSection } from "@/components/organisms/DisciplineSection/DisciplineSection";
-import { NewsSection } from "@/components/organisms/NewsSection/NewsSection";
-import { LaboratoryMap } from "@/components/organisms/LaboratoryMap/LaboratoryMap";
-import { About } from "@/components/organisms/About/About";
-import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
+import SearchBar from "@/components/organisms/SearchBar/SearchBar";
+import LaboratoryNetworks from "@/components/organisms/LaboratoryNetworks/LaboratoryNetworks";
+import RecentLaboratories from "@/components/organisms/RecentLaboratories/RecentLaboratories";
+import DisciplineSection from "@/components/organisms/DisciplineSection/DisciplineSection";
+import NewsSection from "@/components/organisms/NewsSection/NewsSection";
+import LaboratoryMap from "@/components/organisms/LaboratoryMap/LaboratoryMap";
+import About from "@/components/organisms/About/About";
+import LaboratoryDialog from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+const HomePage = async () => {
   // Los conteos y las fotos se preparan en servidor; el cliente recibe sólo lo que muestra.
   const [catalogo, fotos] = await Promise.all([loadCatalog(), readPhotos()]);
   const tipos = homeNetworks.map(({ tipo }) => tipo);
@@ -53,4 +53,6 @@ export default async function HomePage() {
       <LaboratoryDialog />
     </>
   );
-}
+};
+
+export default HomePage;

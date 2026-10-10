@@ -3,7 +3,7 @@ import styles from "./LaboratoryNetworks.module.css";
 import { homeNetworks } from "@/lib/home/homeContent";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 
-export function LaboratoryNetworks({ totales }) {
+const LaboratoryNetworks = ({ totales }) => {
   return (
     <section
       className={`contenido ${styles.redes}`}
@@ -39,4 +39,6 @@ export function LaboratoryNetworks({ totales }) {
       </ul>
     </section>
   );
-}
+};
+
+export default LaboratoryNetworks;

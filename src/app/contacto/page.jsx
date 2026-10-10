@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { Contact } from "@/components/organisms/Contact/Contact";
+import Contact from "@/components/organisms/Contact/Contact";
 
 export const metadata = {
   title: "Contacto",
   description:
     "Consulta los canales de contacto de LabUNAM y la Coordinación de la Investigación Científica de la UNAM.",
 };
-export default async function ContactPage({ searchParams }) {
+const ContactPage = async ({ searchParams }) => {
   const { laboratorio } = await searchParams;
   if (laboratorio === undefined) {
     return <Contact />;
@@ -30,4 +30,6 @@ export default async function ContactPage({ searchParams }) {
       }}
     />
   );
-}
+};
+
+export default ContactPage;

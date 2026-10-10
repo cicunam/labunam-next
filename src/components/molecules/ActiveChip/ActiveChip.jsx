@@ -1,8 +1,8 @@
-import { AppLink } from "../../atoms/AppLink/AppLink";
-import { Icon } from "../../atoms/Icon/Icon";
+import AppLink from "../../atoms/AppLink/AppLink";
+import Icon from "../../atoms/Icon/Icon";
 import styles from "./ActiveChip.module.css";
 
-export function ActiveChip({ href, etiqueta, valor }) {
+const ActiveChip = ({ href, etiqueta, valor }) => {
   return (
     <AppLink
       href={href}
@@ -16,4 +16,6 @@ export function ActiveChip({ href, etiqueta, valor }) {
       />
     </AppLink>
   );
-}
+};
+
+export default ActiveChip;

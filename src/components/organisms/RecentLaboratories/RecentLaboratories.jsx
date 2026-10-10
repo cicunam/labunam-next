@@ -1,9 +1,9 @@
 import Link from "next/link";
 import styles from "./RecentLaboratories.module.css";
-import { LaboratoryCard } from "../LaboratoryCard/LaboratoryCard";
+import LaboratoryCard from "../LaboratoryCard/LaboratoryCard";
 import { getPhotos } from "@/lib/fotos/fotos";
 
-export function RecentLaboratories({ recientes, fotos, total }) {
+const RecentLaboratories = ({ recientes, fotos, total }) => {
   return (
     <section
       className={`contenido ${styles.destacados}`}
@@ -34,4 +34,6 @@ export function RecentLaboratories({ recientes, fotos, total }) {
       </div>
     </section>
   );
-}
+};
+
+export default RecentLaboratories;

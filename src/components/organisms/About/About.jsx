@@ -1,6 +1,6 @@
 import styles from "./About.module.css";
 
-export function About() {
+const About = () => {
   return (
     <section
       className={`contenido ${styles.institucional}`}
@@ -82,4 +82,6 @@ export function About() {
       </div>
     </section>
   );
-}
+};
+
+export default About;

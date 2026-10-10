@@ -1,6 +1,6 @@
 import styles from "./Button.module.css";
 
-export function Button({ tamano = "mediano", className = "", type = "button", ...props }) {
+const Button = ({ tamano = "mediano", className = "", type = "button", ...props }) => {
   return (
     <button
       {...props}
@@ -8,4 +8,6 @@ export function Button({ tamano = "mediano", className = "", type = "button", ..
       className={`${styles.boton} ${styles[tamano]} ${className}`}
     />
   );
-}
+};
+
+export default Button;

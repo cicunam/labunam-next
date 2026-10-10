@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { grupos } from "@/lib/grupos/grupos";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
-import { Icon } from "../../atoms/Icon/Icon";
+import Icon from "../../atoms/Icon/Icon";
 import styles from "./DisciplineBar.module.css";
 
-export function DisciplineBar({ criterios }) {
+const DisciplineBar = ({ criterios }) => {
   return (
     <div
       className={styles["tira-marco"]}
@@ -47,4 +47,6 @@ export function DisciplineBar({ criterios }) {
       </button>
     </div>
   );
-}
+};
+
+export default DisciplineBar;

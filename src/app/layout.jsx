@@ -1,5 +1,5 @@
-import { Header } from "@/components/organisms/Header/Header";
-import { Footer } from "@/components/organisms/Footer/Footer";
+import Header from "@/components/organisms/Header/Header";
+import Footer from "@/components/organisms/Footer/Footer";
 import "./globals.css";
 
 export const metadata = {
@@ -7,7 +7,7 @@ export const metadata = {
   description:
     "Sistema de Enlace de los Laboratorios Nacionales, Universitarios y Unidades de Apoyo de la UNAM.",
 };
-export default function RootLayout({ children }) {
+const RootLayout = ({ children }) => {
   return (
     <html lang="es">
       <body>
@@ -17,4 +17,6 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

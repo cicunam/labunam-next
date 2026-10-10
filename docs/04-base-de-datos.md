@@ -31,10 +31,12 @@ Para mostrar datos ya disponibles desde una página de servidor:
 ```jsx
 import { loadCatalog } from "@/lib/catalogo/catalogo";
 // Ejemplo didáctico de page.jsx, no una ruta ya instalada.
-export default async function LaboratoryCountPage() {
-    const { laboratorios } = await loadCatalog();
-    return <p>Laboratorios disponibles: {laboratorios.length}</p>;
-}
+const LaboratoryCountPage = async () => {
+  const { laboratorios } = await loadCatalog();
+  return <p>Laboratorios disponibles: {laboratorios.length}</p>;
+};
+
+export default LaboratoryCountPage;
 ```
 
 La función es `async` porque espera datos; `await` obtiene el resultado antes de

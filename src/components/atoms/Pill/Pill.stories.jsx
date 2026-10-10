@@ -1,4 +1,4 @@
-import { Pill } from "./Pill";
+import Pill from "./Pill";
 
 const meta = {
   title: "Átomos/Pill",

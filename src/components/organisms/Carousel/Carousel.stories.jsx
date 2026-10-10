@@ -1,4 +1,4 @@
-import { Carousel } from "./Carousel";
+import Carousel from "./Carousel";
 
 const meta = {
   title: "Organismos/Carousel",

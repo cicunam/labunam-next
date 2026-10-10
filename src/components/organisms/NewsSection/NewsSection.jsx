@@ -1,8 +1,8 @@
 import styles from "./NewsSection.module.css";
-import { Carousel } from "../Carousel/Carousel";
+import Carousel from "../Carousel/Carousel";
 import { homeNews } from "@/lib/home/homeContent";
 
-export function NewsSection() {
+const NewsSection = () => {
   return (
     <section
       className={`contenido ${styles.noticias}`}
@@ -18,4 +18,6 @@ export function NewsSection() {
       <Carousel slides={homeNews} />
     </section>
   );
-}
+};
+
+export default NewsSection;

@@ -1,6 +1,6 @@
-import { FilterDialog } from "./FilterDialog";
+import FilterDialog from "./FilterDialog";
 import { filtros } from "../fixtures/organismos.fixtures";
-import { DisciplineBar } from "../DisciplineBar/DisciplineBar";
+import DisciplineBar from "../DisciplineBar/DisciplineBar";
 
 const meta = {
   title: "Organismos/FilterDialog",

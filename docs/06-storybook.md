@@ -22,18 +22,18 @@ Siguiendo el [ejemplo de componente](03-componentes.md), escribe
 `src/components/atoms/InfoNote/InfoNote.stories.jsx`:
 
 ```jsx
-import { InfoNote } from "./InfoNote";
+import InfoNote from "./InfoNote";
 const meta = {
-    title: "Átomos/InfoNote",
-    component: InfoNote,
-    args: { text: "Selecciona una opción para continuar." },
+  title: "Átomos/InfoNote",
+  component: InfoNote,
+  args: { text: "Selecciona una opción para continuar." },
 };
 export default meta;
 export const Default = {};
 export const LongText = {
-    args: {
-        text: "Puedes consultar la información del laboratorio y revisar sus servicios antes de iniciar una solicitud de contacto.",
-    },
+  args: {
+    text: "Puedes consultar la información del laboratorio y revisar sus servicios antes de iniciar una solicitud de contacto.",
+  },
 };
 ```
 

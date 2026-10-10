@@ -1,9 +1,9 @@
-import { Input } from "../../atoms/Input/Input";
-import { Button } from "../../atoms/Button/Button";
-import { AppLink } from "../../atoms/AppLink/AppLink";
+import Input from "../../atoms/Input/Input";
+import Button from "../../atoms/Button/Button";
+import AppLink from "../../atoms/AppLink/AppLink";
 import styles from "./Contact.module.css";
 
-export function Contact({ laboratorio: lab }) {
+const Contact = ({ laboratorio: lab }) => {
   return (
     <section
       className={`contenido ${styles.contacto}`}
@@ -135,4 +135,6 @@ export function Contact({ laboratorio: lab }) {
       </div>
     </section>
   );
-}
+};
+
+export default Contact;

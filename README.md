@@ -211,6 +211,10 @@ con el equipo; un commit o push no equivale a un despliegue.
 
 ## Legibilidad del código
 
+Los componentes, páginas y layouts se declaran como arrow functions con nombre y
+se exportan al final con `export default Nombre;`. Se importan sin llaves, conservando
+el mismo nombre. Hooks y utilidades usan exportaciones nombradas.
+
 Ejecutar `npm run format` antes de entregar cambios y `npm run format:check` para
 comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llaves
 incluso en condiciones de una sola instrucción.
@@ -225,3 +229,9 @@ Los comentarios explican decisiones y comportamientos que deben conservarse:
 historial del modal, peticiones concurrentes, conteos de filtros, datos heredados
 y pausas del carrusel. La prioridad es poder seguir el flujo del código sin
 comprimirlo para cumplir un número de líneas.
+
+ESLint verifica esta convención con `npm run lint`: componentes arrow y
+`export default Nombre;` como última instrucción. Las historias de Storybook,
+los hooks, las utilidades y los endpoints quedan fuera de esta regla de componentes.
+Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
+antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.

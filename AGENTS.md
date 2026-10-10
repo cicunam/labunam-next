@@ -30,6 +30,9 @@
   Una carpeta por módulo en `src/lib/`, con pruebas y fixtures junto al módulo.
 - Componentes y funciones en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
+- Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
+  `export default Component;` al final. Importarlos sin llaves y conservar el nombre.
+  Hooks y utilidades mantienen exportaciones nombradas; respetar los exports propios de Next.
 - Imports al archivo concreto, sin barriles `index.js`.
 - Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
   pertenecen a `src/lib/`, sin React.

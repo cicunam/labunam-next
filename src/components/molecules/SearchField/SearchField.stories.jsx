@@ -1,5 +1,5 @@
-import { SearchField } from "./SearchField";
-import { Input } from "../../atoms/Input/Input";
+import SearchField from "./SearchField";
+import Input from "../../atoms/Input/Input";
 
 const meta = {
   title: "Moléculas/SearchField",

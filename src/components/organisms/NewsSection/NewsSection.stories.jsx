@@ -1,4 +1,4 @@
-import { NewsSection } from "./NewsSection";
+import NewsSection from "./NewsSection";
 
 const meta = {
   title: "Organismos/NewsSection",

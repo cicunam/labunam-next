@@ -3,7 +3,7 @@ import styles from "./DisciplineSection.module.css";
 import { grupos } from "@/lib/grupos/grupos";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
-export function DisciplineSection({ areas }) {
+const DisciplineSection = ({ areas }) => {
   return (
     <section
       className={`contenido ${styles.disciplinas} ${styles["banda-tinte"]}`}
@@ -30,4 +30,6 @@ export function DisciplineSection({ areas }) {
       </ul>
     </section>
   );
-}
+};
+
+export default DisciplineSection;

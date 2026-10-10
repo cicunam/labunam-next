@@ -1,5 +1,5 @@
 import { fn } from "storybook/test";
-import { Button } from "./Button";
+import Button from "./Button";
 
 const meta = {
   title: "Átomos/Button",

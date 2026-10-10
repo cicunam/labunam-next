@@ -1,4 +1,4 @@
-import { LaboratoryNetworks } from "./LaboratoryNetworks";
+import LaboratoryNetworks from "./LaboratoryNetworks";
 
 const meta = {
   title: "Organismos/LaboratoryNetworks",

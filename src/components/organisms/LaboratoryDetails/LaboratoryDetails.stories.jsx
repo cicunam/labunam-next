@@ -1,4 +1,4 @@
-import { LaboratoryDetails } from "./LaboratoryDetails";
+import LaboratoryDetails from "./LaboratoryDetails";
 import { laboratorio } from "../fixtures/organismos.fixtures";
 
 const meta = {

@@ -1,6 +1,6 @@
 import styles from "./Tab.module.css";
 
-export function Tab({ id, panelId, seleccionada, className = "", ...props }) {
+const Tab = ({ id, panelId, seleccionada, className = "", ...props }) => {
   return (
     <button
       {...props}
@@ -13,4 +13,6 @@ export function Tab({ id, panelId, seleccionada, className = "", ...props }) {
       className={`${styles.pestana} ${className}`}
     />
   );
-}
+};
+
+export default Tab;

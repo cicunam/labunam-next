@@ -1,15 +1,15 @@
 import { redes } from "@/lib/presentacion/presentacion";
 import { getCapabilities, getCapabilityExcerpt } from "@/lib/capacidades/capacidades";
-import { Icon } from "../../atoms/Icon/Icon";
+import Icon from "../../atoms/Icon/Icon";
 import styles from "./LaboratoryCard.module.css";
 
-export function LaboratoryCard({
+const LaboratoryCard = ({
   laboratorio: lab,
   foto,
   prioritaria = false,
   coincidencias = [],
   busqueda = "",
-}) {
+}) => {
   const capacidades = getCapabilities(lab.servicios, lab.equipos, coincidencias);
   const area = lab.grupos?.length === 1 ? lab.grupos[0] : "general";
   const coincidencia = capacidades.coincide ? capacidades.items[0] : undefined;
@@ -90,4 +90,6 @@ export function LaboratoryCard({
       </div>
     </article>
   );
-}
+};
+
+export default LaboratoryCard;

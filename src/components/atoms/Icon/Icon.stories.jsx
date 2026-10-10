@@ -1,4 +1,4 @@
-import { Icon } from "./Icon";
+import Icon from "./Icon";
 
 const meta = {
   title: "Átomos/Icon",

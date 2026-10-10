@@ -1,4 +1,4 @@
-import { AppLink } from "./AppLink";
+import AppLink from "./AppLink";
 
 const meta = {
   title: "Átomos/AppLink",

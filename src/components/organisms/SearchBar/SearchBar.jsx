@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useSearchSuggestions } from "./useSearchSuggestions";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 import { normalizeText } from "@/lib/texto/texto";
-import { Icon } from "../../atoms/Icon/Icon";
+import Icon from "../../atoms/Icon/Icon";
 import styles from "./SearchBar.module.css";
 
-export function SearchBar({ titulo, criterios = {}, sedes, sugerencias, frecuentes = [] }) {
+const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = [] }) => {
   const {
     q,
     activa,
@@ -227,4 +227,6 @@ export function SearchBar({ titulo, criterios = {}, sedes, sugerencias, frecuent
       </div>
     </div>
   );
-}
+};
+
+export default SearchBar;

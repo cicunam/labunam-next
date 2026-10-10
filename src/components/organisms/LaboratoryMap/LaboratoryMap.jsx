@@ -6,7 +6,7 @@ import estados from "@/lib/mapa/estados.json";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 import styles from "./LaboratoryMap.module.css";
 
-export function LaboratoryMap({ sedes = [] }) {
+const LaboratoryMap = ({ sedes = [] }) => {
   const id = useId();
   const disponibles = estados.map((estado) => ({
     ...estado,
@@ -140,4 +140,6 @@ export function LaboratoryMap({ sedes = [] }) {
       </div>
     </section>
   );
-}
+};
+
+export default LaboratoryMap;

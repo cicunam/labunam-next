@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { loadCatalog } from "@/lib/catalogo/catalogo";
 import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
-import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
-import { AppLink } from "@/components/atoms/AppLink/AppLink";
+import LaboratoryDialog from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
+import AppLink from "@/components/atoms/AppLink/AppLink";
 import styles from "./Laboratorio.module.css";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
     description: `${lab.nombre}. ${lab.entidad}. ${lab.sedeNombre}. Consulta sus servicios, equipamiento y ubicación.`,
   };
 }
-export default async function LaboratoryPage({ params }) {
+const LaboratoryPage = async ({ params }) => {
   const lab = await findLaboratorio((await params).id);
   const {
     idLab,
@@ -60,4 +60,6 @@ export default async function LaboratoryPage({ params }) {
       />
     </div>
   );
-}
+};
+
+export default LaboratoryPage;

@@ -1,4 +1,4 @@
-import { RecentLaboratories } from "./RecentLaboratories";
+import RecentLaboratories from "./RecentLaboratories";
 
 const meta = {
   title: "Organismos/RecentLaboratories",

@@ -1,6 +1,6 @@
 import styles from "./Gallery.module.css";
 
-export function Gallery({ imagenes, etiqueta = "Galería" }) {
+const Gallery = ({ imagenes, etiqueta = "Galería" }) => {
   const fotos = imagenes.slice(0, 3);
   if (!fotos.length) {
     return <p className={styles.vacia}>Sin imágenes disponibles.</p>;
@@ -33,4 +33,6 @@ export function Gallery({ imagenes, etiqueta = "Galería" }) {
       )}
     </div>
   );
-}
+};
+
+export default Gallery;

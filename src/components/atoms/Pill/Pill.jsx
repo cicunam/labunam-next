@@ -1,6 +1,6 @@
 import styles from "./Pill.module.css";
 
-export function Pill({ activa = false, className = "", ...props }) {
+const Pill = ({ activa = false, className = "", ...props }) => {
   return (
     <span
       {...props}
@@ -8,4 +8,6 @@ export function Pill({ activa = false, className = "", ...props }) {
       className={`${styles.pildora} ${className}`}
     />
   );
-}
+};
+
+export default Pill;

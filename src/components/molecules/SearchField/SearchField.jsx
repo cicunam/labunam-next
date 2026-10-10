@@ -1,6 +1,6 @@
 import styles from "./SearchField.module.css";
 
-export function SearchField({ etiqueta, controlId, ancho = false, children }) {
+const SearchField = ({ etiqueta, controlId, ancho = false, children }) => {
   return (
     <div className={`${styles.segmento} ${ancho ? styles.ancho : ""}`}>
       <label
@@ -12,4 +12,6 @@ export function SearchField({ etiqueta, controlId, ancho = false, children }) {
       <div className={styles.control}>{children}</div>
     </div>
   );
-}
+};
+
+export default SearchField;

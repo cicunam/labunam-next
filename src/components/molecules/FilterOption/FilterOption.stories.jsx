@@ -1,4 +1,4 @@
-import { FilterOption } from "./FilterOption";
+import FilterOption from "./FilterOption";
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 

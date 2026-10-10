@@ -1,4 +1,4 @@
-import { Input } from "./Input";
+import Input from "./Input";
 
 const meta = {
   title: "Átomos/Input",
