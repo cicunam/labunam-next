@@ -1,33 +1,33 @@
-.campo {
+.input {
   width: 100%;
   min-width: 0;
-  padding: var(--espacio-md);
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-sm);
-  background: var(--superficie);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   color: var(--color-black);
   font: var(--font-medium-regular);
 }
-.campo::placeholder {
+.input::placeholder {
   color: var(--color-neutral-dark);
   opacity: 1;
 }
-.campo:focus-visible {
+.input:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-.campo:disabled {
+.input:disabled {
   opacity: 0.5;
 }
-.campo[aria-invalid="true"] {
-  border-color: var(--color-tipo-nacionales);
+.input[aria-invalid="true"] {
+  border-color: var(--color-type-nacionales);
 }
-.integrado {
+.integrated {
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
-.integrado:focus-visible {
+.integrated:focus-visible {
   outline-offset: 3px;
 }

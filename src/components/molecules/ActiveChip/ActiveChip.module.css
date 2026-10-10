@@ -1,15 +1,15 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--espacio-sm);
+  gap: var(--space-sm);
   min-height: 32px;
-  padding: var(--espacio-sm) var(--espacio-md);
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-full);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
   color: var(--color-black);
   font: var(--font-small-semibold);
   text-decoration: none;
 }
 .chip:hover {
-  background: var(--superficie-suave);
+  background: var(--surface-soft);
 }

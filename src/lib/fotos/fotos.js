@@ -38,7 +38,7 @@ export function getPhotos(id, manifiesto, areas = []) {
     {
       src: `/assets/respaldos/${area?.clave ?? "general"}.svg`,
       alt: `Sin fotografía disponible. Ilustración ${area ? "de " + area.etiqueta : "general de laboratorio"}.`,
-      tipo: "ilustracion",
+      tipo: "illustration",
     },
   ];
 }

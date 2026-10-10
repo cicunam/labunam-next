@@ -1,31 +1,31 @@
-.insignia {
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px var(--espacio-md);
-  border: 1px solid var(--filete-suave);
-  border-radius: var(--radio-full);
-  background: var(--superficie);
+  padding: 5px var(--space-md);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-full);
+  background: var(--surface);
   color: var(--color-black);
   font: var(--font-tiny-semibold);
 }
-.insignia::before {
+.badge::before {
   content: "";
   width: 6px;
   height: 6px;
   flex: 0 0 auto;
-  border-radius: var(--radio-full);
-  background: var(--punto);
+  border-radius: var(--radius-full);
+  background: var(--dot);
 }
-.rojo {
-  --punto: var(--color-tipo-nacionales);
+.network {
+  --dot: var(--color-type-nacionales);
 }
-.azul {
-  --punto: var(--color-tipo-universitarios);
+.blue {
+  --dot: var(--color-type-universitarios);
 }
-.verde {
-  --punto: var(--color-tipo-unidades);
+.green {
+  --dot: var(--color-type-unidades);
 }
-.neutro {
-  --punto: var(--color-neutral);
+.neutral {
+  --dot: var(--color-neutral);
 }

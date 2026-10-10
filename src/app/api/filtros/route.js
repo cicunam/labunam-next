@@ -5,11 +5,11 @@ import { prepareFilters } from "@/lib/filtros/filtros";
 export async function GET(request) {
   try {
     const catalogo = await loadCatalog();
-    const criterios = normalizeCriteria(
+    const criteria = normalizeCriteria(
       catalogo.laboratorios,
       Object.fromEntries(new URL(request.url).searchParams),
     );
-    return Response.json(prepareFilters(catalogo, criterios));
+    return Response.json(prepareFilters(catalogo, criteria));
   } catch {
     return Response.json({ error: "No se pudieron actualizar los conteos." }, { status: 503 });
   }

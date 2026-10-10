@@ -12,7 +12,7 @@ const RootLayout = ({ children }) => {
     <html lang="es">
       <body>
         <Header />
-        <main id="contenido">{children}</main>
+        <main id="content">{children}</main>
         <Footer />
       </body>
     </html>

@@ -5,16 +5,16 @@ import { homeNews } from "@/lib/home/homeContent";
 const NewsSection = () => {
   return (
     <section
-      className={`contenido ${styles.noticias}`}
-      aria-labelledby="noticias-titulo"
+      className={`content ${styles.news}`}
+      aria-labelledby="news-title"
     >
       <h2
-        id="noticias-titulo"
-        className="banda-titulo"
+        id="news-title"
+        className="band-title"
       >
         Noticias
       </h2>
-      <p className="banda-entrada">Contenido de ejemplo para revisión editorial.</p>
+      <p className="band-entry">Contenido de ejemplo para revisión editorial.</p>
       <Carousel slides={homeNews} />
     </section>
   );

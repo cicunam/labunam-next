@@ -1,73 +1,73 @@
-.contacto {
+.contact {
   padding-block: 40px 64px;
 }
-.cabecera {
+.header {
   max-width: 650px;
   margin-bottom: 40px;
 }
-.cabecera h1 {
+.header h1 {
   font: var(--font-title-huge);
   color: var(--color-primary-dark);
   letter-spacing: var(--tracking-huge);
 }
-.cabecera p {
+.header p {
   margin-top: 12px;
   color: var(--color-neutral-dark);
 }
-.columnas {
+.columns {
   display: grid;
   gap: 40px;
 }
-.informacion,
-.formulario {
+.information,
+.form {
   min-width: 0;
 }
-.columnas h2 {
+.columns h2 {
   font: var(--font-title-medium);
   margin-bottom: 16px;
 }
-.informacion p,
-.informacion address {
+.information p,
+.information address {
   margin-bottom: 16px;
   color: var(--color-neutral-dark);
   font-style: normal;
 }
-.informacion h2:not(:first-child) {
+.information h2:not(:first-child) {
   margin-top: 40px;
 }
-.informacion a {
+.information a {
   color: var(--color-primary-dark);
   text-underline-offset: 4px;
 }
-.formulario {
-  border: 1px solid var(--filete-suave);
-  border-radius: var(--radio-md);
+.form {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   padding: 24px;
 }
-.formulario > p {
+.form > p {
   margin-bottom: 24px;
   color: var(--color-neutral-dark);
 }
-.formulario fieldset {
+.form fieldset {
   border: 0;
   display: grid;
   gap: 20px;
 }
-.formulario label {
+.form label {
   display: grid;
   gap: 8px;
   font: var(--font-medium-semibold);
 }
-.formulario textarea {
+.form textarea {
   resize: vertical;
   min-width: 0;
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 12px;
   font: var(--font-large-regular);
-  background: var(--superficie-suave);
+  background: var(--surface-soft);
 }
-.oculto {
+.hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -75,17 +75,17 @@
   clip-path: inset(50%);
 }
 @media (min-width: 744px) {
-  .columnas {
+  .columns {
     grid-template-columns: 1fr 1fr;
     gap: 64px;
   }
 }
 
-.formulario select {
+.form select {
   width: 100%;
   min-width: 0;
   padding: 12px;
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font: var(--font-medium-regular);
 }

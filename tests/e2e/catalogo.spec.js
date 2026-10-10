@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 test("catálogo real, filtros vacíos y retícula adaptable", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia&tipo=nacionales");
   await expect(page.locator("[data-total]")).toHaveText("7 laboratorios");
-  await expect(page.locator("[data-ficha]")).toHaveCount(7);
+  await expect(page.locator("[data-details]")).toHaveCount(7);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole("button", { name: "Filtros", exact: true }).click();
   const modal = page.getByRole("dialog", { name: "Filtros", exact: true });
@@ -30,7 +30,7 @@ test("ficha solicita JSON una vez, navega pestañas y devuelve el foco", async (
     }
   });
   await page.goto("/laboratorios?q=microscopia&tipo=nacionales");
-  const tarjeta = page.locator("[data-ficha]").first();
+  const tarjeta = page.locator("[data-details]").first();
   await tarjeta.click();
   const ficha = page.getByRole("dialog");
   await expect(ficha.getByRole("tab", { name: "Servicios", exact: true })).toBeVisible();
@@ -99,7 +99,7 @@ test("API sólo expone campos públicos y valida identificadores", async ({ requ
   expect((await request.get("/api/laboratorios/invalido")).status()).toBe(400);
   expect((await request.get("/api/laboratorios/999999999")).status()).toBe(404);
   await page.goto("/laboratorios?tipo=internacionales");
-  const id = await page.locator("[data-ficha]").first().getAttribute("data-ficha");
+  const id = await page.locator("[data-details]").first().getAttribute("data-details");
   const respuesta = await request.get(`/api/laboratorios/${id}`);
   expect(respuesta.status()).toBe(200);
   expect(Object.keys(await respuesta.json()).sort()).toEqual(
@@ -130,7 +130,7 @@ test("una ficha fallida puede reintentarse sin conservar el error", async ({ pag
     }
   });
   await page.goto("/laboratorios?tipo=internacionales");
-  const tarjeta = page.locator("[data-ficha]").first();
+  const tarjeta = page.locator("[data-details]").first();
   await tarjeta.click();
   await expect(page.getByRole("dialog").getByRole("alert")).toContainText(
     "No se pudo cargar la ficha",
@@ -176,8 +176,8 @@ test("ancla sugerencias al campo en móvil y permite seleccionarlas", async ({ p
     expect(suggestions.x + suggestions.width).toBeLessThanOrEqual(page.viewportSize().width);
     if (page.viewportSize().width < 744) {
       expect(suggestions.y - input.y - input.height).toBeLessThan(40);
-      const red = await page.getByRole("combobox", { name: "Red", exact: true }).boundingBox();
-      expect(suggestions.y).toBeLessThan(red.y + red.height);
+      const network = await page.getByRole("combobox", { name: "Red", exact: true }).boundingBox();
+      expect(suggestions.y).toBeLessThan(network.y + network.height);
     }
     const opcion = lista.getByRole("option").first();
     const texto = await opcion.locator("span").first().textContent();

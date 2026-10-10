@@ -1,10 +1,10 @@
 import styles from "./Badge.module.css";
 
-const Badge = ({ tono = "neutro", className = "", ...props }) => {
+const Badge = ({ tone = "neutral", className = "", ...props }) => {
   return (
     <span
       {...props}
-      className={`${styles.insignia} ${styles[tono]} ${className}`}
+      className={`${styles.badge} ${styles[tone]} ${className}`}
     />
   );
 };

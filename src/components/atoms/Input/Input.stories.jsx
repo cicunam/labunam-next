@@ -3,26 +3,30 @@ import Input from "./Input";
 const meta = {
   title: "Átomos/Input",
   component: Input,
-  args: { id: "campo-ejemplo", placeholder: "Laboratorio, técnica o equipo" },
+  args: { id: "example-input", placeholder: "Laboratorio, técnica o equipo" },
   decorators: [
     (Story) => (
       <div style={{ width: "min(300px, 80vw)" }}>
-        <label htmlFor="campo-ejemplo">Qué buscas</label>
+        <label htmlFor="example-input">Qué buscas</label>
         <Story />
       </div>
     ),
   ],
 };
 export default meta;
-export const Vacio = {};
-export const ConValor = { args: { defaultValue: "Microscopía" } };
-export const Deshabilitado = { args: { disabled: true } };
-export const Invalido = {
-  args: { "aria-invalid": true, "aria-describedby": "error-campo" },
+const Empty = {};
+export { Empty };
+const WithValue = { args: { defaultValue: "Microscopía" } };
+export { WithValue };
+const Disabled = { args: { disabled: true } };
+export { Disabled };
+const Invalid = {
+  args: { "aria-invalid": true, "aria-describedby": "input-error" },
   render: (args) => (
     <div>
       <Input {...args} />
-      <p id="error-campo">Escribe un término de búsqueda.</p>
+      <p id="input-error">Escribe un término de búsqueda.</p>
     </div>
   ),
 };
+export { Invalid };

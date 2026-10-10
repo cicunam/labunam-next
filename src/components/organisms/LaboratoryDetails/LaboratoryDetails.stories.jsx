@@ -12,7 +12,9 @@ const meta = {
       </div>
     ),
   ],
-  args: { laboratorio, pagina: true },
+
+  args: { laboratorio, isPage: true },
 };
 export default meta;
-export const Principal = {};
+const Default = {};
+export { Default };

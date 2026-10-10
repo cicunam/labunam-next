@@ -1,75 +1,75 @@
-.disciplinas {
-  padding-block: var(--espacio-seccion);
+.disciplines {
+  padding-block: var(--space-section);
 }
 
-.banda-tinte {
+.band-tint {
   position: relative;
-  background: var(--superficie-tinte);
+  background: var(--surface-tint);
 }
 
-.banda-tinte::before,
-.banda-tinte::after {
+.band-tint::before,
+.band-tint::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   height: 48px;
 
-  background: var(--superficie-tinte);
+  background: var(--surface-tint);
 
-  -webkit-mask: var(--onda) 0 0 / 100% 100% no-repeat;
-  mask: var(--onda) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: var(--wave) 0 0 / 100% 100% no-repeat;
+  mask: var(--wave) 0 0 / 100% 100% no-repeat;
 
   pointer-events: none;
 }
 
-.banda-tinte::before {
+.band-tint::before {
   top: -47px;
 }
-.banda-tinte::after {
+.band-tint::after {
   bottom: -47px;
   scale: 1 -1;
 }
 
-.banda-tinte-rasa::after {
+.band-tint-flat::after {
   display: none;
 }
 
 @media (max-width: 743px) {
-  .banda-tinte::before,
-  .banda-tinte::after {
+  .band-tint::before,
+  .band-tint::after {
     height: 24px;
   }
 
-  .banda-tinte::before {
+  .band-tint::before {
     top: -23px;
   }
-  .banda-tinte::after {
+  .band-tint::after {
     bottom: -23px;
   }
 }
 
-.disciplinas-lista {
+.disciplines-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--espacio-md) var(--espacio-base);
+  gap: var(--space-md) var(--space-base);
 
-  margin: var(--espacio-lg) 0 0;
+  margin: var(--space-lg) 0 0;
   padding: 0;
   list-style: none;
 }
 
-.disciplina {
+.discipline {
   display: flex;
   flex-direction: column;
   gap: 2px;
 
-  padding: var(--espacio-sm) 0;
+  padding: var(--space-sm) 0;
 
   color: inherit;
   text-decoration: none;
 
-  &:hover .disciplina-nombre {
+  &:hover .discipline-name {
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -77,28 +77,28 @@
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 3px;
-    border-radius: var(--radio-xs);
+    border-radius: var(--radius-xs);
   }
 }
 
-.disciplina-nombre {
+.discipline-name {
   color: var(--color-black);
   font: var(--font-medium-semibold);
 }
 
-.disciplina-cuenta {
+.discipline-count {
   color: var(--color-neutral-dark);
   font: var(--font-small-regular);
 }
 
 @media (min-width: 744px) {
-  .disciplinas-lista {
+  .disciplines-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1128px) {
-  .disciplinas-lista {
+  .disciplines-list {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }

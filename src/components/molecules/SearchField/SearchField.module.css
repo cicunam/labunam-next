@@ -1,21 +1,21 @@
-.segmento {
+.segment {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1px;
   min-width: 0;
   min-height: 52px;
-  padding: var(--espacio-sm) var(--espacio-lg);
-  border-radius: var(--radio-xl);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-xl);
 }
-.segmento:hover {
-  background: var(--superficie-suave);
+.segment:hover {
+  background: var(--surface-soft);
 }
-.segmento:focus-within {
-  background: var(--superficie);
-  box-shadow: var(--sombra);
+.segment:focus-within {
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
-.etiqueta {
+.label {
   color: var(--color-black);
   font: var(--font-small-semibold);
   cursor: pointer;
@@ -23,7 +23,7 @@
 .control {
   display: flex;
   align-items: center;
-  gap: var(--espacio-sm);
+  gap: var(--space-sm);
   min-width: 0;
 }
 .control > select {
@@ -41,11 +41,11 @@
   outline-offset: 3px;
 }
 @media (min-width: 744px) {
-  .segmento {
+  .segment {
     flex: 1 1 0;
     min-height: 56px;
   }
-  .ancho {
+  .width {
     flex: 2 1 0;
   }
 }

@@ -5,13 +5,13 @@ import { expect, userEvent, within } from "storybook/test";
 const meta = {
   title: "Moléculas/Tab",
   component: Tab,
-  args: { id: "pestana", panelId: "panel", seleccionada: true, children: "Servicios" },
+  args: { id: "pestana", panelId: "panel", selected: true, children: "Servicios" },
 };
 export default meta;
-export const Grupo = {
+const Group = {
   render: function TabGroup() {
-    const [activa, setActive] = useState(0);
-    const nombres = ["Servicios", "Equipamiento", "Distinciones"];
+    const [activeIndex, setActive] = useState(0);
+    const names = ["Servicios", "Equipamiento", "Distinciones"];
     return (
       <div>
         <div
@@ -19,44 +19,44 @@ export const Grupo = {
           aria-label="Información"
           style={{ display: "flex", gap: 24, maxWidth: "90vw", overflowX: "auto" }}
         >
-          {nombres.map((nombre, posicion) => (
+          {names.map((name, position) => (
             <Tab
-              key={nombre}
-              id={`pestana-${posicion}`}
-              panelId={`panel-${posicion}`}
-              seleccionada={activa === posicion}
-              onClick={() => setActive(posicion)}
+              key={name}
+              id={`tab-${position}`}
+              panelId={`panel-${position}`}
+              selected={activeIndex === position}
+              onClick={() => setActive(position)}
               onKeyDown={(event) => {
-                let siguiente = posicion;
+                let nextIndex = position;
                 if (event.key === "ArrowRight") {
-                  siguiente = (posicion + 1) % nombres.length;
+                  nextIndex = (position + 1) % names.length;
                 } else if (event.key === "ArrowLeft") {
-                  siguiente = (posicion + nombres.length - 1) % nombres.length;
+                  nextIndex = (position + names.length - 1) % names.length;
                 } else if (event.key === "Home") {
-                  siguiente = 0;
+                  nextIndex = 0;
                 } else if (event.key === "End") {
-                  siguiente = nombres.length - 1;
+                  nextIndex = names.length - 1;
                 } else {
                   return;
                 }
                 event.preventDefault();
-                setActive(siguiente);
+                setActive(nextIndex);
                 event.currentTarget.parentElement
                   ?.querySelectorAll("[role=tab]")
-                  [siguiente].focus();
+                  [nextIndex].focus();
               }}
             >
-              {nombre}
+              {name}
             </Tab>
           ))}
         </div>
-        {nombres.map((nombre, posicion) => (
+        {names.map((name, position) => (
           <div
-            key={nombre}
-            id={`panel-${posicion}`}
+            key={name}
+            id={`panel-${position}`}
             role="tabpanel"
-            aria-labelledby={`pestana-${posicion}`}
-            hidden={activa !== posicion}
+            aria-labelledby={`tab-${position}`}
+            hidden={activeIndex !== position}
             tabIndex={0}
           >
             Sin información registrada todavía.
@@ -75,3 +75,4 @@ export const Grupo = {
     );
   },
 };
+export { Group };

@@ -8,7 +8,7 @@
   function initialize(root) {
     const track = root.querySelector("[data-slides]");
     const slides = [...root.querySelectorAll("[data-slide]")];
-    const pages = [...root.querySelectorAll("[data-pagina]")];
+    const pages = [...root.querySelectorAll("[data-page]")];
     const count = pages.length;
     if (!track || !count) {
       return;
@@ -47,7 +47,7 @@
       if (previous !== index % count) {
         resetProgress();
       }
-      slides.forEach((slide, i) => slide.toggleAttribute("data-activo", i === index));
+      slides.forEach((slide, i) => slide.toggleAttribute("data-active", i === index));
       pages.forEach((page, i) => page.setAttribute("aria-pressed", String(i === index % count)));
     }
     function jump(i) {
@@ -75,11 +75,11 @@
       const target = Math.max(0, Math.min(slides.length - 1, i));
       track.scrollTo({ left: position(target), behavior: motion.matches ? "instant" : "smooth" });
     }
-    root.querySelectorAll("[data-paso]").forEach((button) => {
+    root.querySelectorAll("[data-step]").forEach((button) => {
       button.disabled = count < 2;
       listen(button, "click", () => {
         settle();
-        show(index + Number(button.dataset.paso));
+        show(index + Number(button.dataset.step));
       });
     });
     pages.forEach((button, i) => listen(button, "click", () => show(offset + i)));
@@ -227,7 +227,7 @@
       }
       autoplayFrame = requestAnimationFrame(tick);
     }
-    root.dataset.listo = "";
+    root.dataset.ready = "";
     jump(offset);
     autoplayFrame = requestAnimationFrame(tick);
     const resize = new ResizeObserver(() => {
@@ -254,7 +254,7 @@
         mounted.delete(root);
       }
     });
-    document.querySelectorAll("[data-carrusel]").forEach((root) => {
+    document.querySelectorAll("[data-carousel]").forEach((root) => {
       if (!mounted.has(root)) {
         initialize(root);
       }

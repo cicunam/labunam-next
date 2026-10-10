@@ -1,24 +1,25 @@
 import styles from "./FilterOption.module.css";
 
-const FilterOption = ({ nombre, valor, etiqueta, total, seleccionada, onChange }) => {
-  const deshabilitada = total === 0 && !seleccionada;
+const FilterOption = ({ name, value, label, total, selected, onChange }) => {
+  const disabled = total === 0 && !selected;
   return (
     <label
-      className={styles.opcion}
-      data-vacia={deshabilitada || undefined}
+      className={styles.option}
+      data-empty={disabled || undefined}
     >
       <input
         type="radio"
-        name={nombre}
-        value={valor}
-        checked={seleccionada}
-        disabled={deshabilitada}
+        name={name}
+        value={value}
+        checked={selected}
+        disabled={disabled}
         onChange={onChange}
       />
-      <span>{etiqueta}</span>
+
+      <span>{label}</span>
       {total !== undefined && (
         <span
-          className={styles.cuenta}
+          className={styles.count}
           aria-label={`${total} resultados`}
         >
           {total}

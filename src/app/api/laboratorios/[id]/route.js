@@ -14,29 +14,29 @@ export async function GET(_request, { params }) {
     }
     const {
       idLab,
-      nombre,
+      nombre: name,
       tipo,
       entidad,
       sedeNombre,
-      ubicacion,
-      mapa,
+      ubicacion: location,
+      mapa: mapUrl,
       servicios,
       equipos,
       distinciones,
-      sitio,
+      sitio: website,
     } = lab;
     return Response.json({
       idLab,
-      nombre,
+      nombre: name,
       tipo,
       entidad,
       sedeNombre,
-      ubicacion,
-      mapa,
+      ubicacion: location,
+      mapa: mapUrl,
       servicios,
       equipos,
       distinciones,
-      sitio,
+      sitio: website,
       galeria: getPhotos(idLab, await readPhotos(), lab.grupos),
     });
   } catch {

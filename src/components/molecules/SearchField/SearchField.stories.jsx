@@ -4,7 +4,7 @@ import Input from "../../atoms/Input/Input";
 const meta = {
   title: "Moléculas/SearchField",
   component: SearchField,
-  args: { etiqueta: "Qué buscas", controlId: "consulta", children: null },
+  args: { label: "Qué buscas", controlId: "query", children: null },
   decorators: [
     (Story) => (
       <div style={{ width: "min(360px, 90vw)" }}>
@@ -14,12 +14,12 @@ const meta = {
   ],
 };
 export default meta;
-export const Texto = {
+const Text = {
   args: {
     children: (
       <Input
-        integrado
-        id="consulta"
+        integrated
+        id="query"
         name="q"
         type="search"
         placeholder="Laboratorio, técnica o equipo"
@@ -27,13 +27,14 @@ export const Texto = {
     ),
   },
 };
-export const Selector = {
+export { Text };
+const Select = {
   args: {
-    etiqueta: "Red",
-    controlId: "red",
+    label: "Red",
+    controlId: "network",
     children: (
       <select
-        id="red"
+        id="network"
         name="tipo"
       >
         <option value="">Todas las redes</option>
@@ -42,3 +43,4 @@ export const Selector = {
     ),
   },
 };
+export { Select };

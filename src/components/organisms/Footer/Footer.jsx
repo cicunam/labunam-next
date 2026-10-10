@@ -4,8 +4,8 @@ import styles from "./Footer.module.css";
 const Footer = () => {
   return (
     <footer className={styles["footer"]}>
-      <div className={styles["footer-contenido"]}>
-        <div className={styles["footer-marca"]}>
+      <div className={styles["footer-content"]}>
+        <div className={styles["footer-brand"]}>
           <Link
             href="/"
             className={styles["footer-logo"]}
@@ -17,7 +17,7 @@ const Footer = () => {
               alt="LabUNAM"
             />
           </Link>
-          <p className={styles["footer-lema"]}>
+          <p className={styles["footer-tagline"]}>
             Sistema de Enlace de los Laboratorios Nacionales, Universitarios y Unidades de Apoyo de
             la UNAM.
           </p>
@@ -37,16 +37,16 @@ const Footer = () => {
         </div>
 
         <section
-          className={styles["footer-columna"]}
-          aria-labelledby="footer-contacto"
+          className={styles["footer-column"]}
+          aria-labelledby="footer-contact"
         >
           <h2
-            id="footer-contacto"
-            className={styles["footer-titulo"]}
+            id="footer-contact"
+            className={styles["footer-title"]}
           >
             Contacto
           </h2>
-          <address className={styles["footer-direccion"]}>
+          <address className={styles["footer-address"]}>
             Circuito de la Investigación Científica S/N
             <br />
             Ciudad Universitaria, Alcaldía Coyoacán
@@ -55,7 +55,7 @@ const Footer = () => {
           </address>
           <a
             href="https://www.cic.unam.mx/"
-            className={styles["footer-enlace"]}
+            className={styles["footer-link"]}
             target="_blank"
             rel="noopener"
           >
@@ -64,20 +64,20 @@ const Footer = () => {
         </section>
 
         <nav
-          className={styles["footer-columna"]}
-          aria-labelledby="footer-vinculos"
+          className={styles["footer-column"]}
+          aria-labelledby="footer-links"
         >
           <h2
-            id="footer-vinculos"
-            className={styles["footer-titulo"]}
+            id="footer-links"
+            className={styles["footer-title"]}
           >
             Vínculos rápidos
           </h2>
-          <ul className={styles["footer-lista"]}>
+          <ul className={styles["footer-list"]}>
             <li>
               <Link
                 href="/laboratorios?tipo=nacionales"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
               >
                 Laboratorios nacionales
               </Link>
@@ -85,7 +85,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/laboratorios?tipo=universitarios"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
               >
                 Laboratorios universitarios
               </Link>
@@ -93,7 +93,7 @@ const Footer = () => {
             <li>
               <Link
                 href="/laboratorios?tipo=unidades"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
               >
                 Unidades de apoyo
               </Link>
@@ -101,7 +101,7 @@ const Footer = () => {
             <li>
               <a
                 href="https://avisos-privacidad.cic.unam.mx/"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -111,7 +111,7 @@ const Footer = () => {
             <li>
               <a
                 href="https://avisos-privacidad.cic.unam.mx/?vMenuAvisoPriv=CCTV"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -121,7 +121,7 @@ const Footer = () => {
             <li>
               <a
                 href="https://labunam.unam.mx/creditos.php"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -132,20 +132,20 @@ const Footer = () => {
         </nav>
 
         <nav
-          className={styles["footer-columna"]}
+          className={styles["footer-column"]}
           aria-labelledby="footer-unam"
         >
           <h2
             id="footer-unam"
-            className={styles["footer-titulo"]}
+            className={styles["footer-title"]}
           >
             UNAM
           </h2>
-          <ul className={styles["footer-lista"]}>
+          <ul className={styles["footer-list"]}>
             <li>
               <a
                 href="http://www.unamenlinea.unam.mx/marco"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -155,7 +155,7 @@ const Footer = () => {
             <li>
               <a
                 href="http://www.unamenlinea.unam.mx/"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -165,7 +165,7 @@ const Footer = () => {
             <li>
               <a
                 href="http://www.transparencia.unam.mx/"
-                className={styles["footer-enlace"]}
+                className={styles["footer-link"]}
                 target="_blank"
                 rel="noopener"
               >
@@ -176,7 +176,7 @@ const Footer = () => {
         </nav>
       </div>
 
-      <div className={styles["footer-pie"]}>
+      <div className={styles["footer-footer"]}>
         <p>
           Hecho en México. Universidad Nacional Autónoma de México (UNAM), todos los derechos
           reservados {new Date().getFullYear()}.

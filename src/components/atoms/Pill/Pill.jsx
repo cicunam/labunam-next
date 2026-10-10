@@ -1,11 +1,11 @@
 import styles from "./Pill.module.css";
 
-const Pill = ({ activa = false, className = "", ...props }) => {
+const Pill = ({ active = false, className = "", ...props }) => {
   return (
     <span
       {...props}
-      data-activa={activa || undefined}
-      className={`${styles.pildora} ${className}`}
+      data-active={active || undefined}
+      className={`${styles.pill} ${className}`}
     />
   );
 };

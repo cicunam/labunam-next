@@ -31,7 +31,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
 | Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
-| Carrusel | `src/components/organisms/Carousel/`, `public/js/carrusel.js` |
+| Carrusel | `src/components/organisms/Carousel/`, `public/js/carousel.js` |
 | Selección y presentación de imágenes | `src/lib/selectPhotos/selectPhotos.js`, `src/lib/fotos/fotos.js` |
 | Procesamiento de originales | `scripts/fotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
@@ -75,7 +75,7 @@ son locales y no definen la configuración del servidor de la UNAM.
 - El catálogo carga seis consultas de sólo lectura y comparte una promesa entre
   peticiones concurrentes. La caché vive por proceso (600 segundos por defecto,
   configurable con `LABUNAM_CATALOGO_SEGUNDOS`), no es persistencia compartida.
-- `public/js/carrusel.js` mejora HTML de servidor y administra montaje/limpieza
+- `public/js/carousel.js` mejora HTML de servidor y administra montaje/limpieza
   durante navegación Next. Probar entrada/salida de la página y no sólo una carga.
 - `manifiesto.json` contiene originales y tiene prioridad por laboratorio sobre
   `manifiesto-web.json`. Dentro de una selección, las fotos preceden a los logos.

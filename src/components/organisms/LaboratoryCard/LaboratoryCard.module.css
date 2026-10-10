@@ -1,17 +1,17 @@
-.tarjeta {
+.card {
   position: relative;
   min-width: 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 430px;
 }
 .visual {
-  --tinta: #406c8e;
-  --fondo: #e4edf4;
+  --ink: #406c8e;
+  --background: #e4edf4;
   position: relative;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: var(--radio-md);
-  background: var(--fondo);
+  border-radius: var(--radius-md);
+  background: var(--background);
 }
 .visual > img {
   width: 100%;
@@ -19,55 +19,55 @@
   object-fit: cover;
   transition: transform 0.35s ease;
 }
-.visual[data-tipo-imagen="logo"] {
+.visual[data-image-type="logo"] {
   background: #fff;
-  border: 1px solid var(--filete-suave);
+  border: 1px solid var(--border-soft);
 }
-.visual[data-tipo-imagen="logo"] > img {
+.visual[data-image-type="logo"] > img {
   object-fit: contain;
   padding: 42px 26px 26px;
 }
 .visual[data-area="biologia"],
 .visual[data-area="sostenibilidad"] {
-  --tinta: #3c7769;
-  --fondo: #e2eee5;
+  --ink: #3c7769;
+  --background: #e2eee5;
 }
 .visual[data-area="salud"] {
-  --tinta: #367e87;
-  --fondo: #e0eff0;
+  --ink: #367e87;
+  --background: #e0eff0;
 }
 .visual[data-area="quimica"] {
-  --tinta: #73628d;
-  --fondo: #ece6f2;
+  --ink: #73628d;
+  --background: #ece6f2;
 }
 .visual[data-area="fisica"],
 .visual[data-area="computo"] {
-  --tinta: #4b669a;
-  --fondo: #e3eaf6;
+  --ink: #4b669a;
+  --background: #e3eaf6;
 }
 .visual[data-area="materiales"],
 .visual[data-area="ingenieria"] {
-  --tinta: #9a7050;
-  --fondo: #f1e8db;
+  --ink: #9a7050;
+  --background: #f1e8db;
 }
 .visual[data-area="tierra"] {
-  --tinta: #667d53;
-  --fondo: #e9eddf;
+  --ink: #667d53;
+  --background: #e9eddf;
 }
 .visual[data-area="humanidades"] {
-  --tinta: #95646a;
-  --fondo: #f2e5e6;
+  --ink: #95646a;
+  --background: #f2e5e6;
 }
-.ilustracion {
+.illustration {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  color: var(--tinta);
+  color: var(--ink);
   background: radial-gradient(ellipse at 15% 10%, #ffffffb8, transparent 65%);
 }
-.ilustracion::before,
-.ilustracion::after {
+.illustration::before,
+.illustration::after {
   content: "";
   position: absolute;
   width: 80%;
@@ -76,15 +76,15 @@
   opacity: 0.12;
   border-radius: 50%;
 }
-.ilustracion::before {
+.illustration::before {
   left: -35%;
   bottom: -40%;
 }
-.ilustracion::after {
+.illustration::after {
   right: -40%;
   top: -30%;
 }
-.orbita {
+.orbit {
   position: absolute;
   width: 72%;
   aspect-ratio: 1;
@@ -92,7 +92,7 @@
   opacity: 0.14;
   border-radius: 50%;
 }
-.orbita::after {
+.orbit::after {
   content: "";
   position: absolute;
   top: 14%;
@@ -102,7 +102,7 @@
   border-radius: 50%;
   background: currentColor;
 }
-.simbolo {
+.symbol {
   display: grid;
   place-items: center;
   width: 49%;
@@ -112,7 +112,7 @@
   box-shadow: 0 12px 40px #26435a08;
   transition: transform 0.35s ease;
 }
-.insignia {
+.badge {
   position: absolute;
   top: 14px;
   left: 14px;
@@ -120,28 +120,28 @@
   align-items: center;
   gap: 6px;
   padding: 5px 10px;
-  border-radius: var(--radio-full);
-  background: var(--superficie);
+  border-radius: var(--radius-full);
+  background: var(--surface);
   color: var(--color-black);
   font: var(--font-tiny-semibold);
 }
-.insignia::before {
+.badge::before {
   content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--punto, var(--color-neutral));
+  background: var(--dot, var(--color-neutral));
 }
-.insignia[data-tipo="nacionales"] {
-  --punto: var(--color-tipo-nacionales);
+.badge[data-type="nacionales"] {
+  --dot: var(--color-type-nacionales);
 }
-.insignia[data-tipo="universitarios"] {
-  --punto: var(--color-tipo-universitarios);
+.badge[data-type="universitarios"] {
+  --dot: var(--color-type-universitarios);
 }
-.insignia[data-tipo="unidades"] {
-  --punto: var(--color-tipo-unidades);
+.badge[data-type="unidades"] {
+  --dot: var(--color-type-unidades);
 }
-.flecha {
+.arrow {
   position: absolute;
   right: 14px;
   bottom: 14px;
@@ -149,19 +149,19 @@
   place-items: center;
   width: 32px;
   height: 32px;
-  background: var(--superficie);
+  background: var(--surface);
   border-radius: 50%;
   color: var(--color-primary-dark);
   font-size: 20px;
 }
-.contenido {
+.content {
   padding-top: 14px;
 }
-.titulo {
+.title {
   margin: 0 0 6px;
   font: var(--font-title-tiny);
 }
-.disparador {
+.trigger {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -175,21 +175,21 @@
   text-align: left;
   cursor: pointer;
 }
-.disparador::after {
+.trigger::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: var(--radio-md);
+  border-radius: var(--radius-md);
 }
-.disparador:focus-visible {
+.trigger:focus-visible {
   outline: none;
 }
-.disparador:focus-visible::after {
+.trigger:focus-visible::after {
   outline: 2px solid var(--color-primary);
   outline-offset: 4px;
 }
-.entidad,
-.detalle {
+.entity,
+.detail {
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -197,24 +197,24 @@
   color: var(--color-neutral-dark);
   font: var(--font-medium-regular);
 }
-.detalle {
+.detail {
   margin-top: 5px;
   font-size: 12px;
 }
-.detalle[data-coincidencia="true"] {
+.detail[data-match="true"] {
   color: var(--color-primary-dark);
 }
-.tarjeta:hover .visual > img,
-.tarjeta:focus-within .visual > img {
+.card:hover .visual > img,
+.card:focus-within .visual > img {
   transform: scale(1.025);
 }
-.tarjeta:hover .simbolo,
-.tarjeta:focus-within .simbolo {
+.card:hover .symbol,
+.card:focus-within .symbol {
   transform: scale(1.05);
 }
 @media (prefers-reduced-motion: reduce) {
   .visual > img,
-  .simbolo {
+  .symbol {
     transition: none;
   }
 }

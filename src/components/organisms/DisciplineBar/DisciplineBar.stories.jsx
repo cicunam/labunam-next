@@ -6,12 +6,12 @@ const meta = {
   title: "Organismos/DisciplineBar",
   component: DisciplineBar,
   parameters: { layout: "fullscreen" },
-  args: { criterios: { disciplina: "biologia" } },
+  args: { criteria: { disciplina: "biologia" } },
   decorators: [
     (Story) => (
       <FilterDialog
-        criterios={{}}
-        filtros={filtros}
+        criteria={{}}
+        filters={filtros}
         total={3}
       >
         <Story />
@@ -20,4 +20,5 @@ const meta = {
   ],
 };
 export default meta;
-export const Principal = {};
+const Default = {};
+export { Default };

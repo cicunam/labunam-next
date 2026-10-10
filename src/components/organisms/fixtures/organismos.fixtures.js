@@ -10,8 +10,8 @@ export const laboratorio = {
   servicios: ["Microscopía óptica", "Análisis de materiales"],
   equipos: ["Microscopio"],
   distinciones: [],
-  galeria: ["laboratorio-abc.jpeg", "mision.png", "vision.png"].map((imagen) => ({
-    src: `/assets/images/${imagen}`,
+  galeria: ["laboratorio-abc.jpeg", "mision.png", "vision.png"].map((image) => ({
+    src: `/assets/images/${image}`,
     alt: "",
   })),
 };

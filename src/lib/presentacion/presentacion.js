@@ -1,15 +1,15 @@
 export const redes = {
-  nacionales: { nombre: "Laboratorios nacionales", singular: "Laboratorio nacional", tono: "rojo" },
+  nacionales: { nombre: "Laboratorios nacionales", singular: "Laboratorio nacional", tone: "red" },
   universitarios: {
     nombre: "Laboratorios universitarios",
     singular: "Laboratorio universitario",
-    tono: "azul",
+    tone: "blue",
   },
-  unidades: { nombre: "Unidades de apoyo", singular: "Unidad de apoyo", tono: "verde" },
+  unidades: { nombre: "Unidades de apoyo", singular: "Unidad de apoyo", tone: "green" },
   internacionales: {
     nombre: "Laboratorios internacionales",
     singular: "Laboratorio internacional",
-    tono: "neutro",
+    tone: "neutral",
   },
 };
 export function getCatalogUrl(criterios, cambios = {}) {

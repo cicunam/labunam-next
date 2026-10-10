@@ -6,9 +6,9 @@ const meta = {
   parameters: { layout: "fullscreen" },
 };
 export default meta;
-export const Principal = {
+const Default = {
   args: {
-    sedes: [
+    locations: [
       { clave: "ciudad-de-mexico", total: 24 },
       { clave: "queretaro", total: 8 },
       { clave: "yucatan", total: 3 },
@@ -16,4 +16,6 @@ export const Principal = {
     ],
   },
 };
-export const SinRegistros = { args: { sedes: [] } };
+export { Default };
+const WithoutRecords = { args: { locations: [] } };
+export { WithoutRecords };

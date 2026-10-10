@@ -9,19 +9,19 @@ test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({
     );
   }
   await expect(
-    page.getByRole("region", { name: "Recién incorporados" }).locator("[data-ficha]"),
+    page.getByRole("region", { name: "Recién incorporados" }).locator("[data-details]"),
   ).toHaveCount(4);
 });
 test("quitar el chip de rayos x recupera el catálogo completo", async ({ page }) => {
   await page.goto("/laboratorios?q=rayos%20x");
-  expect(await page.locator("[data-ficha]").count()).toBeGreaterThan(0);
+  expect(await page.locator("[data-details]").count()).toBeGreaterThan(0);
   await page.getByRole("link", { name: "Quitar q: rayos x" }).click();
   await expect(page.locator("[data-total]")).toContainText(/6\d\d laboratorios/);
-  expect(await page.locator("[data-ficha]").count()).toBeGreaterThan(600);
+  expect(await page.locator("[data-details]").count()).toBeGreaterThan(600);
 });
 test("filtrar por sede actualiza URL y reduce resultados", async ({ page }) => {
   await page.goto("/laboratorios");
-  const inicial = await page.locator("[data-ficha]").count();
+  const inicial = await page.locator("[data-details]").count();
   await page.getByRole("button", { name: "Filtros", exact: true }).click();
   const modal = page.getByRole("dialog", { name: "Filtros" });
   await modal
@@ -31,11 +31,11 @@ test("filtrar por sede actualiza URL y reduce resultados", async ({ page }) => {
   await expect(modal.getByRole("button", { name: /^Ver \d+ laboratorio/ })).toBeEnabled();
   await modal.getByRole("button", { name: /^Ver \d+ laboratorio/ }).click();
   await expect(page).toHaveURL(/sede=ciudad-de-mexico/);
-  expect(await page.locator("[data-ficha]").count()).toBeLessThan(inicial);
+  expect(await page.locator("[data-details]").count()).toBeLessThan(inicial);
 });
 test("ficha tiene URL propia, título, metadatos y pestañas", async ({ page }) => {
   await page.goto("/laboratorios?tipo=internacionales");
-  const tarjeta = page.locator("[data-ficha]").first();
+  const tarjeta = page.locator("[data-details]").first();
   const titulo = await tarjeta.textContent();
   await tarjeta.click();
   await expect(
@@ -87,9 +87,9 @@ test("solicitud de servicio conserva el laboratorio y explica el envío pendient
   page,
 }) => {
   await page.goto("/laboratorios?tipo=internacionales");
-  const tarjeta = page.locator("[data-ficha]").first();
+  const tarjeta = page.locator("[data-details]").first();
   const nombre = await tarjeta.textContent();
-  const id = await tarjeta.getAttribute("data-ficha");
+  const id = await tarjeta.getAttribute("data-details");
   await tarjeta.click();
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
   await expect(page).toHaveURL(new RegExp(`/contacto\\?laboratorio=${id}$`));
@@ -111,7 +111,7 @@ test("solicitud de servicio conserva el laboratorio y explica el envío pendient
 });
 test("cerrar el modal conserva posición y filtros", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia");
-  const tarjeta = page.locator("[data-ficha]").last();
+  const tarjeta = page.locator("[data-details]").last();
   await tarjeta.scrollIntoViewIfNeeded();
   await tarjeta.evaluate((elemento) =>
     elemento.addEventListener(

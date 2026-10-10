@@ -6,6 +6,7 @@ const meta = {
   parameters: { layout: "fullscreen" },
 };
 export default meta;
-export const Principal = {
-  args: { totales: { nacionales: 12, universitarios: 24, unidades: 36 } },
+const Default = {
+  args: { counts: { nacionales: 12, universitarios: 24, unidades: 36 } },
 };
+export { Default };

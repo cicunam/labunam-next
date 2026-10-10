@@ -6,7 +6,7 @@ const meta = {
   args: { children: "Laboratorio nacional" },
 };
 export default meta;
-export const Nacional = { args: { tono: "rojo", children: "Laboratorio nacional" } };
-export const Universitario = { args: { tono: "azul", children: "Laboratorio universitario" } };
-export const Unidad = { args: { tono: "verde", children: "Unidad de apoyo" } };
-export const Internacional = { args: { tono: "neutro", children: "Laboratorio internacional" } };
+export const Nacional = { args: { tone: "red", children: "Laboratorio nacional" } };
+export const Universitario = { args: { tone: "blue", children: "Laboratorio universitario" } };
+export const Unidad = { args: { tone: "green", children: "Unidad de apoyo" } };
+export const Internacional = { args: { tone: "neutral", children: "Laboratorio internacional" } };

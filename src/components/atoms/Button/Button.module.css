@@ -1,36 +1,36 @@
-.boton {
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--espacio-sm);
+  gap: var(--space-sm);
   border: 0;
-  border-radius: var(--radio-full);
+  border-radius: var(--radius-full);
   background: var(--color-brand);
-  color: var(--color-sobre-brand);
+  color: var(--color-on-brand);
   cursor: pointer;
   font: var(--font-medium-semibold);
 }
-.boton:hover:not(:disabled) {
-  background: var(--color-brand-oscuro);
+.button:hover:not(:disabled) {
+  background: var(--color-brand-dark);
 }
-.boton:focus-visible {
+.button:focus-visible {
   outline: 2px solid var(--color-primary-dark);
   outline-offset: 3px;
 }
-.boton:disabled {
+.button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.pequeno {
+.small {
   min-height: 36px;
-  padding: var(--espacio-sm) var(--espacio-base);
+  padding: var(--space-sm) var(--space-base);
 }
-.mediano {
+.medium {
   min-height: 44px;
-  padding: var(--espacio-md) var(--espacio-lg);
+  padding: var(--space-md) var(--space-lg);
 }
-.grande {
+.large {
   min-height: 52px;
-  padding: var(--espacio-base) var(--espacio-xl);
+  padding: var(--space-base) var(--space-xl);
   font: var(--font-large-semibold);
 }

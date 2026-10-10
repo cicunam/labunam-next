@@ -1,10 +1,10 @@
 import styles from "./Input.module.css";
 
-const Input = ({ integrado = false, className = "", ...props }) => {
+const Input = ({ integrated = false, className = "", ...props }) => {
   return (
     <input
       {...props}
-      className={`${styles.campo} ${integrado ? styles.integrado : ""} ${className}`}
+      className={`${styles.input} ${integrated ? styles.integrated : ""} ${className}`}
     />
   );
 };

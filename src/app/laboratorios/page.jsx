@@ -15,58 +15,59 @@ import styles from "./Laboratorios.module.css";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Laboratorios" };
 const LaboratoriesPage = async ({ searchParams }) => {
-  const parametros = await searchParams;
-  const [catalogo, fotos] = await Promise.all([loadCatalog(), readPhotos()]);
-  const criterios = normalizeCriteria(
+  const parameters = await searchParams;
+  const [catalogo, photos] = await Promise.all([loadCatalog(), readPhotos()]);
+  const criteria = normalizeCriteria(
     catalogo.laboratorios,
-    Object.fromEntries(Object.entries(parametros).filter(([, v]) => typeof v === "string")),
+    Object.fromEntries(Object.entries(parameters).filter(([, v]) => typeof v === "string")),
   );
-  const resultados = filterLaboratorios(catalogo.laboratorios, criterios);
-  const { filtros, total } = prepareFilters(catalogo, criterios);
-  const titulo = criterios.tipo ? redes[criterios.tipo].nombre : "Laboratorios de la UNAM";
-  const etiquetas = Object.fromEntries(
+  const results = filterLaboratorios(catalogo.laboratorios, criteria);
+  const { filtros, total } = prepareFilters(catalogo, criteria);
+  const title = criteria.tipo ? redes[criteria.tipo].nombre : "Laboratorios de la UNAM";
+  const labels = Object.fromEntries(
     filtros.flatMap((filtro) =>
       filtro.opciones.map((o) => [`${filtro.eje}:${o.clave}`, o.etiqueta]),
     ),
   );
-  const activos = Object.entries(criterios).filter(([, valor]) => valor);
+  const activeFilters = Object.entries(criteria).filter(([, value]) => value);
   return (
     <>
       <SearchBar
-        key={getCatalogUrl(criterios)}
-        titulo={titulo}
-        criterios={criterios}
-        sedes={catalogo.sedes}
-        sugerencias={catalogo.sugerencias}
+        key={getCatalogUrl(criteria)}
+        title={title}
+        criteria={criteria}
+        locations={catalogo.sedes}
+        suggestions={catalogo.sugerencias}
       />
+
       <section
-        className={`contenido ${styles.catalogo}`}
+        className={`content ${styles.catalog}`}
         aria-label="Resultados de la búsqueda"
       >
         <FilterDialog
-          key={getCatalogUrl(criterios)}
-          criterios={criterios}
-          filtros={filtros}
+          key={getCatalogUrl(criteria)}
+          criteria={criteria}
+          filters={filtros}
           total={total}
         >
-          <DisciplineBar criterios={criterios} />
+          <DisciplineBar criteria={criteria} />
         </FilterDialog>
-        <div className={styles.estado}>
+        <div className={styles.status}>
           <p
-            className={styles.cuenta}
+            className={styles.count}
             data-total
           >
             {total} {total === 1 ? "laboratorio" : "laboratorios"}
           </p>
-          {activos.length > 0 && (
-            <div className={styles.activos}>
-              {activos.map(([eje, valor]) => (
+          {activeFilters.length > 0 && (
+            <div className={styles.active}>
+              {activeFilters.map(([eje, value]) => (
                 <ActiveChip
                   key={eje}
-                  href={getCatalogUrl(criterios, { [eje]: "" })}
-                  etiqueta={eje}
-                  valor={
-                    eje === "tipo" ? redes[valor].nombre : (etiquetas[`${eje}:${valor}`] ?? valor)
+                  href={getCatalogUrl(criteria, { [eje]: "" })}
+                  label={eje}
+                  value={
+                    eje === "tipo" ? redes[value].nombre : (labels[`${eje}:${value}`] ?? value)
                   }
                 />
               ))}
@@ -75,28 +76,28 @@ const LaboratoriesPage = async ({ searchParams }) => {
           )}
         </div>
         {total ? (
-          <div className={styles.reticula}>
-            {resultados.map((lab, i) => (
+          <div className={styles.grid}>
+            {results.map((lab, i) => (
               <LaboratoryCard
-                prioritaria={i === 0}
+                priority={i === 0}
                 key={lab.idLab}
                 laboratorio={lab}
-                coincidencias={lab.coincidencias}
-                busqueda={criterios.q}
-                foto={getPhotos(lab.idLab, fotos, lab.grupos)[0]}
+                matches={lab.coincidencias}
+                query={criteria.q}
+                photo={getPhotos(lab.idLab, photos, lab.grupos)[0]}
               />
             ))}
           </div>
         ) : (
-          <div className={styles["catalogo-vacio"]}>
-            <h2 className={styles["catalogo-vacio-titulo"]}>
+          <div className={styles["catalog-empty"]}>
+            <h2 className={styles["catalog-empty-title"]}>
               Ningún laboratorio coincide con esta búsqueda
             </h2>
-            <p className={styles["catalogo-vacio-texto"]}>
+            <p className={styles["catalog-empty-text"]}>
               Prueba con otras palabras, cambia de disciplina o quita algún filtro.
             </p>
             <Link
-              className={styles["catalogo-vacio-accion"]}
+              className={styles["catalog-empty-action"]}
               href="/laboratorios"
             >
               Quitar los filtros

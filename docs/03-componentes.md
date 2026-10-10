@@ -9,9 +9,11 @@
 - **Organismo:** reúne contenido o comportamiento del dominio, como una tarjeta
   de laboratorio, el diálogo de filtros o una sección de contacto.
 
-Primero busca si ya existe algo reutilizable. Los componentes y funciones nuevos
+Primero busca si ya existe algo reutilizable. Los componentes, props y funciones nuevos
 se nombran en inglés; las entidades y campos del dominio, textos visibles y URLs
-se mantienen en español. No es necesario traducir props existentes al tocar estilos.
+se mantienen en español. Los props de interfaz se escriben en inglés (`label`, `size`, `selected`, `criteria`).
+Se conserva `laboratorio` como entidad y sus campos en español; por ejemplo,
+`<ActiveChip label="Sede" value={laboratorio.sedeNombre} />`.
 
 ## Declaración y exportación
 
@@ -166,3 +168,8 @@ ESLint verifica esta convención con `npm run lint`: componentes arrow y
 los hooks, las utilidades y los endpoints quedan fuera de esta regla de componentes.
 Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
 antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.
+
+La convención de inglés incluye valores de variantes (`tone="neutral"`,
+`size="small"`), clases CSS (`.badge`, `.button`), variables, tokens y atributos
+técnicos. Los textos visibles y comentarios permanecen en español. Los nombres
+y campos de entidades también conservan su contrato, por ejemplo `laboratorio.nombre`.

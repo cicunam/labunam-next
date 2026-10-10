@@ -8,15 +8,15 @@ import {
 } from "@/lib/sugerencias/sugerencias";
 
 /** Gestiona sugerencias, historial local y teclado; no consulta el catálogo. */
-export function useSearchSuggestions({ criterios, sugerencias }) {
-  const [q, setQ] = useState(criterios.q ?? "");
-  const [recientes, setRecentSearches] = useState([]);
-  const [abierto, setOpen] = useState(false);
-  const [activa, setActive] = useState(-1);
+export function useSearchSuggestions({ criteria, suggestions }) {
+  const [q, setQ] = useState(criteria.q ?? "");
+  const [recentSearches, setRecentSearches] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActive] = useState(-1);
   const input = useRef(null);
   const form = useRef(null);
-  const opciones = getSearchOptions(q, sugerencias, recientes);
-  const visible = abierto && opciones.length > 0;
+  const options = getSearchOptions(q, suggestions, recentSearches);
+  const visible = open && options.length > 0;
   useEffect(() => {
     // El atajo / sólo actúa fuera de campos editables y diálogos abiertos.
     function handleKeyDown(event) {
@@ -48,11 +48,11 @@ export function useSearchSuggestions({ criterios, sugerencias }) {
   }, []);
   // requestSubmit lee el formulario antes del siguiente render de React.
   // Escribimos la sugerencia en el input para enviar el texto elegido, no el anterior.
-  function selectSuggestion(texto) {
+  function selectSuggestion(text) {
     if (input.current) {
-      input.current.value = texto;
+      input.current.value = text;
     }
-    saveRecentSearch(texto);
+    saveRecentSearch(text);
     setOpen(false);
     form.current?.requestSubmit();
   }
@@ -80,27 +80,27 @@ export function useSearchSuggestions({ criterios, sugerencias }) {
       setActive(-1);
       return;
     }
-    if (["ArrowDown", "ArrowUp"].includes(event.key) && opciones.length) {
+    if (["ArrowDown", "ArrowUp"].includes(event.key) && options.length) {
       event.preventDefault();
       setOpen(true);
-      const siguiente =
-        (activa + (event.key === "ArrowDown" ? 1 : -1) + opciones.length) % opciones.length;
-      setActive(siguiente);
-      document.getElementById(`busqueda-opcion-${siguiente}`)?.scrollIntoView({ block: "nearest" });
+      const nextIndex =
+        (activeIndex + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      setActive(nextIndex);
+      document.getElementById(`search-option-${nextIndex}`)?.scrollIntoView({ block: "nearest" });
     }
-    if (event.key === "Enter" && visible && activa >= 0) {
+    if (event.key === "Enter" && visible && activeIndex >= 0) {
       event.preventDefault();
-      selectSuggestion(opciones[activa].texto);
+      selectSuggestion(options[activeIndex].texto);
     }
   }
 
   return {
     q,
-    recientes,
-    activa,
+    recentSearches,
+    activeIndex,
     input,
     form,
-    opciones,
+    options,
     visible,
     selectSuggestion,
     handleSearchChange,

@@ -7,6 +7,7 @@ const meta = {
   parameters: { layout: "fullscreen" },
 };
 export default meta;
-export const Principal = {
-  args: { areas: Object.fromEntries(grupos.map((grupo, index) => [grupo.clave, index + 1])) },
+const Default = {
+  args: { areaCounts: Object.fromEntries(grupos.map((grupo, index) => [grupo.clave, index + 1])) },
 };
+export { Default };

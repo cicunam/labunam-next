@@ -7,4 +7,5 @@ const meta = {
 };
 export default meta;
 export const Normal = {};
-export const Activa = { args: { activa: true } };
+const Active = { args: { active: true } };
+export { Active };

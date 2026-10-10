@@ -6,9 +6,9 @@ const preview = {
     a11y: { test: "error" },
     viewport: {
       options: {
-        movil: { name: "Móvil · 375 px", styles: { width: "375px", height: "812px" } },
-        tableta: { name: "Tableta · 1024 px", styles: { width: "1024px", height: "768px" } },
-        escritorio: { name: "Escritorio · 1400 px", styles: { width: "1400px", height: "900px" } },
+        mobile: { name: "Móvil · 375 px", styles: { width: "375px", height: "812px" } },
+        tablet: { name: "Tableta · 1024 px", styles: { width: "1024px", height: "768px" } },
+        desktop: { name: "Escritorio · 1400 px", styles: { width: "1400px", height: "900px" } },
       },
     },
   },

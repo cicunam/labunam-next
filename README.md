@@ -81,7 +81,7 @@ agrupa su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
 Los imports apuntan al archivo concreto, sin barriles `index.js`.
 
-Componentes y funciones se nombran en inglés; entidades y campos del dominio,
+Componentes, props, variables internas, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del dominio,
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
 en español. La fuente Inter se sirve desde `public/assets/fonts`, con su licencia
 OFL, sin depender de una descarga de Google.

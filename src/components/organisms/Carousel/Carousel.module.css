@@ -1,7 +1,7 @@
 .carousel {
-  --carousel-ancho: 88%;
-  --carousel-radio: 20px;
-  --carousel-suave: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --carousel-width: 88%;
+  --carousel-radius: 20px;
+  --carousel-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   display: flex;
   flex-direction: column;
@@ -10,11 +10,11 @@
   width: 100%;
 }
 
-.carousel-escenario {
+.carousel-stage {
   position: relative;
 }
 
-.carousel-pista {
+.carousel-track {
   position: relative;
   touch-action: pan-y pinch-zoom;
   cursor: grab;
@@ -40,18 +40,18 @@
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 4px;
-    border-radius: var(--carousel-radio);
+    border-radius: var(--carousel-radius);
   }
 }
 
 .carousel-slide {
   position: relative;
-  flex: 0 0 var(--carousel-ancho);
+  flex: 0 0 var(--carousel-width);
 
   aspect-ratio: 4 / 5;
   max-height: 460px;
 
-  border-radius: var(--carousel-radio);
+  border-radius: var(--carousel-radius);
   overflow: hidden;
   isolation: isolate;
 
@@ -60,22 +60,22 @@
 
   background:
     linear-gradient(to top, rgb(1 42 86 / 0.88) 0%, rgb(1 42 86 / 0.45) 45%, rgb(1 42 86 / 0) 75%),
-    var(--carousel-imagen) center / cover no-repeat,
+    var(--carousel-image) center / cover no-repeat,
     var(--color-primary-dark);
 
   opacity: 0.55;
   scale: 0.96;
   transition:
     opacity 0.45s ease,
-    scale 0.55s var(--carousel-suave);
+    scale 0.55s var(--carousel-soft);
 
-  &[data-activo] {
+  &[data-active] {
     opacity: 1;
     scale: 1;
   }
 }
 
-.carousel-contenido {
+.carousel-content {
   position: absolute;
   inset: 0;
 
@@ -92,11 +92,11 @@
   &:focus-visible {
     outline: 3px solid var(--color-accent);
     outline-offset: -6px;
-    border-radius: var(--carousel-radio);
+    border-radius: var(--carousel-radius);
   }
 }
 
-.carousel-titulo {
+.carousel-title {
   max-width: 22ch;
   margin: 0;
   font: var(--font-title-small);
@@ -105,7 +105,7 @@
   text-wrap: balance;
 }
 
-.carousel-texto {
+.carousel-text {
   max-width: 48ch;
   margin: 0;
   font: var(--font-large-regular);
@@ -120,12 +120,12 @@
   border-bottom: 2px solid var(--color-accent);
   transition: border-color 0.2s ease;
 
-  .carousel-contenido:hover & {
+  .carousel-content:hover & {
     border-color: var(--color-white);
   }
 }
 
-.carousel-flecha {
+.carousel-arrow {
   position: absolute;
   top: 50%;
   z-index: 2;
@@ -148,7 +148,7 @@
 
   transition:
     background-color 0.2s ease,
-    scale 0.2s var(--carousel-suave),
+    scale 0.2s var(--carousel-soft),
     opacity 0.2s ease;
 
   &:hover {
@@ -168,23 +168,23 @@
     display: none;
   }
 
-  &.anterior {
+  &.previous {
     left: 12px;
   }
-  &.siguiente {
+  &.next {
     right: 12px;
   }
 }
 
 @media (min-width: 768px) {
-  .carousel[data-listo] .carousel-flecha:not(:disabled) {
+  .carousel[data-ready] .carousel-arrow:not(:disabled) {
     display: grid;
   }
 }
 
 @media (min-width: 768px) {
   .carousel {
-    --carousel-ancho: min(72%, 1040px);
+    --carousel-width: min(72%, 1040px);
     gap: 16px;
   }
 
@@ -193,51 +193,51 @@
     max-height: 480px;
   }
 
-  .carousel-contenido {
+  .carousel-content {
     padding: 40px 44px;
     gap: 10px;
   }
 
-  .carousel-titulo {
+  .carousel-title {
     font: var(--font-title-large);
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
-  .carousel-texto {
+  .carousel-text {
     font: var(--font-huge-regular);
     line-height: 1.4;
   }
 
-  .carousel-flecha.anterior {
-    left: max(12px, calc((100% - var(--carousel-ancho)) / 2 - 22px));
+  .carousel-arrow.previous {
+    left: max(12px, calc((100% - var(--carousel-width)) / 2 - 22px));
   }
-  .carousel-flecha.siguiente {
-    right: max(12px, calc((100% - var(--carousel-ancho)) / 2 - 22px));
+  .carousel-arrow.next {
+    right: max(12px, calc((100% - var(--carousel-width)) / 2 - 22px));
   }
 }
 
 @media (min-width: 1200px) {
-  .carousel-titulo {
+  .carousel-title {
     font: var(--font-title-huge);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .carousel-pista,
-  .carousel[data-listo] .carousel-pista,
+  .carousel-track,
+  .carousel[data-ready] .carousel-track,
   .carousel-slide,
-  .carousel-flecha {
+  .carousel-arrow {
     transition: none;
     scroll-behavior: auto;
   }
 }
 
-.carousel.compacto {
-  --carousel-ancho: 100%;
-  --carousel-radio: 20px;
+.carousel.compact {
+  --carousel-width: 100%;
+  --carousel-radius: 20px;
   gap: 10px;
 
-  & .carousel-pista {
+  & .carousel-track {
     gap: 16px;
   }
 
@@ -253,23 +253,23 @@
         rgb(1 42 86 / 0.25) 38%,
         rgb(1 42 86 / 0) 60%
       ),
-      var(--carousel-imagen) center / cover no-repeat,
+      var(--carousel-image) center / cover no-repeat,
       var(--color-primary-dark);
   }
 
-  & .carousel-contenido {
+  & .carousel-content {
     padding: 18px 20px;
     gap: 4px;
   }
 
-  & .carousel-texto {
+  & .carousel-text {
     max-width: 40ch;
     font: var(--font-large-semibold);
     line-height: 1.35;
     opacity: 1;
   }
 
-  & .carousel-flecha {
+  & .carousel-arrow {
     width: 40px;
     height: 40px;
 
@@ -278,46 +278,46 @@
       height: 20px;
     }
 
-    &.anterior {
+    &.previous {
       left: 12px;
     }
-    &.siguiente {
+    &.next {
       right: 12px;
     }
   }
 }
 
-.carousel[data-estatico] .pagination > .pagina::after {
+.carousel[data-static] .pagination > .page::after {
   animation: none;
 }
 
 @media (min-width: 768px) {
-  .carousel.compacto {
-    --carousel-ancho: 100%;
+  .carousel.compact {
+    --carousel-width: 100%;
     gap: 12px;
 
     & .carousel-slide {
       aspect-ratio: 4 / 3;
     }
-    & .carousel-contenido {
+    & .carousel-content {
       padding: 22px 24px;
     }
-    & .carousel-flecha.anterior {
+    & .carousel-arrow.previous {
       left: 14px;
     }
-    & .carousel-flecha.siguiente {
+    & .carousel-arrow.next {
       right: 14px;
     }
   }
 }
 
-.controles {
+.controls {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
-.controles button {
+.controls button {
   position: relative;
   overflow: hidden;
   padding: 0;
@@ -328,11 +328,11 @@
   background: transparent;
   cursor: pointer;
 }
-.controles button[aria-pressed="true"] {
+.controls button[aria-pressed="true"] {
   background: var(--color-primary-dark);
   width: 40px;
 }
-.controles button[aria-pressed="true"]::after {
+.controls button[aria-pressed="true"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -340,32 +340,32 @@
   transform: scaleX(var(--carousel-progress, 0));
   transform-origin: left;
 }
-.controles button:focus-visible {
+.controls button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
-.carousel-flecha {
+.carousel-arrow {
   font-size: 28px;
 }
 
-.carousel-pista::before,
-.carousel-pista::after {
+.carousel-track::before,
+.carousel-track::after {
   content: "";
-  flex: 0 0 max(0px, calc((100% - var(--carousel-ancho)) / 2 - 16px));
+  flex: 0 0 max(0px, calc((100% - var(--carousel-width)) / 2 - 16px));
 }
 
-.carousel-pista[data-dragging],
-.carousel-pista[data-resetting] {
+.carousel-track[data-dragging],
+.carousel-track[data-resetting] {
   scroll-snap-type: none;
 }
-.carousel-pista[data-dragging],
-.carousel-pista[data-dragging] a {
+.carousel-track[data-dragging],
+.carousel-track[data-dragging] a {
   cursor: grabbing;
 }
-.carousel-pista a {
+.carousel-track a {
   -webkit-user-drag: none;
   cursor: inherit;
 }
-.carousel:not([data-listo]) [data-copy] {
+.carousel:not([data-ready]) [data-copy] {
   display: none;
 }

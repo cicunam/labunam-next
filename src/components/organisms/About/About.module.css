@@ -1,48 +1,48 @@
-.institucional {
-  padding-block: var(--espacio-seccion);
+.about {
+  padding-block: var(--space-section);
   margin-bottom: clamp(32px, 5vw, 64px);
-  background: var(--superficie-tinte);
+  background: var(--surface-tint);
 }
-.columnas {
+.columns {
   display: grid;
   gap: 32px;
 }
-.columnas p {
+.columns p {
   margin-top: 16px;
   color: var(--color-neutral-dark);
 }
-.columnas img {
+.columns img {
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
-  border-radius: var(--radio-md);
+  border-radius: var(--radius-md);
 }
-.par {
+.pair {
   display: grid;
   gap: 32px;
   margin-top: 32px;
   padding-top: 32px;
-  border-top: 1px solid var(--filete-suave);
+  border-top: 1px solid var(--border-soft);
 }
-.par h3 {
+.pair h3 {
   font: var(--font-title-small);
 }
-.par ul {
+.pair ul {
   padding-left: 20px;
   color: var(--color-neutral-dark);
 }
-.par li {
+.pair li {
   margin-top: 12px;
 }
 @media (min-width: 744px) {
-  .columnas {
+  .columns {
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     gap: 48px;
   }
-  .columnas img {
+  .columns img {
     aspect-ratio: 4 / 5;
   }
-  .par {
+  .pair {
     grid-template-columns: 1fr 1fr;
   }
 }

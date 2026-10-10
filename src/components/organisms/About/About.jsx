@@ -3,14 +3,14 @@ import styles from "./About.module.css";
 const About = () => {
   return (
     <section
-      className={`contenido ${styles.institucional}`}
-      aria-labelledby="institucional-titulo"
+      className={`content ${styles.about}`}
+      aria-labelledby="about-title"
     >
-      <div className={styles.columnas}>
+      <div className={styles.columns}>
         <div>
           <h2
-            id="institucional-titulo"
-            className="banda-titulo"
+            id="about-title"
+            className="band-title"
           >
             ¿Qué es LabUNAM?
           </h2>
@@ -37,7 +37,7 @@ const About = () => {
           decoding="async"
         />
       </div>
-      <div className={styles.par}>
+      <div className={styles.pair}>
         <div>
           <h3>Misión</h3>
           <ul>

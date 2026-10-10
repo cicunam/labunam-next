@@ -6,27 +6,27 @@ import estados from "@/lib/mapa/estados.json";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 import styles from "./LaboratoryMap.module.css";
 
-const LaboratoryMap = ({ sedes = [] }) => {
+const LaboratoryMap = ({ locations = [] }) => {
   const id = useId();
-  const disponibles = estados.map((estado) => ({
+  const available = estados.map((estado) => ({
     ...estado,
-    total: sedes.find((sede) => sede.clave === estado.clave)?.total ?? 0,
+    total: locations.find((sede) => sede.clave === estado.clave)?.total ?? 0,
   }));
-  const [seleccion, setSelection] = useState("");
-  const inicial = [...disponibles].sort((a, b) => b.total - a.total)[0];
-  const activo = disponibles.find((estado) => estado.clave === seleccion) ?? inicial;
-  const conLaboratorios = disponibles.filter((estado) => estado.total > 0).length;
+  const [selection, setSelection] = useState("");
+  const initial = [...available].sort((a, b) => b.total - a.total)[0];
+  const activeItem = available.find((estado) => estado.clave === selection) ?? initial;
+  const withLaboratorios = available.filter((estado) => estado.total > 0).length;
 
-  function handleStateKey(event, clave) {
+  function handleStateKey(event, key) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      setSelection(clave);
+      setSelection(key);
     }
   }
 
   return (
     <section
-      className={`contenido ${styles.section}`}
+      className={`content ${styles.section}`}
       aria-labelledby={`${id}-title`}
     >
       <div className={styles.heading}>
@@ -34,15 +34,15 @@ const LaboratoryMap = ({ sedes = [] }) => {
           <p className={styles.eyebrow}>Ciencia cerca de ti</p>
           <h2
             id={`${id}-title`}
-            className="banda-titulo"
+            className="band-title"
           >
             Encuentra laboratorios por estado
           </h2>
-          <p className="banda-entrada">
+          <p className="band-entry">
             Explora el mapa y descubre dónde están nuestras capacidades científicas.
           </p>
         </div>
-        <span className={styles.presence}>{conLaboratorios} estados con laboratorios</span>
+        <span className={styles.presence}>{withLaboratorios} estados con laboratorios</span>
       </div>
       <div className={styles.layout}>
         <div className={styles.mapArea}>
@@ -52,14 +52,14 @@ const LaboratoryMap = ({ sedes = [] }) => {
             role="group"
             aria-label="Mapa de laboratorios por estado"
           >
-            {disponibles.map((estado) => (
+            {available.map((estado) => (
               <g
                 key={estado.id}
                 role="button"
                 tabIndex={0}
                 className={styles.state}
                 data-available={estado.total > 0}
-                aria-pressed={activo.clave === estado.clave}
+                aria-pressed={activeItem.clave === estado.clave}
                 aria-label={`${estado.etiqueta}: ${estado.total} laboratorios`}
                 onClick={() => setSelection(estado.clave)}
                 onKeyDown={(event) => handleStateKey(event, estado.clave)}
@@ -92,10 +92,10 @@ const LaboratoryMap = ({ sedes = [] }) => {
           <label htmlFor={`${id}-state`}>Selecciona un estado</label>
           <select
             id={`${id}-state`}
-            value={activo.clave}
+            value={activeItem.clave}
             onChange={(event) => setSelection(event.target.value)}
           >
-            {disponibles.map((estado) => (
+            {available.map((estado) => (
               <option
                 key={estado.clave}
                 value={estado.clave}
@@ -109,24 +109,24 @@ const LaboratoryMap = ({ sedes = [] }) => {
             aria-live="polite"
             aria-atomic="true"
           >
-            <p className={styles.count}>{activo.total}</p>
+            <p className={styles.count}>{activeItem.total}</p>
             <p className={styles.caption}>
-              {activo.total === 1 ? "laboratorio en" : "laboratorios en"}
+              {activeItem.total === 1 ? "laboratorio en" : "laboratorios en"}
             </p>
-            <h3>{activo.etiqueta}</h3>
-            {!activo.total && (
+            <h3>{activeItem.etiqueta}</h3>
+            {!activeItem.total && (
               <p className={styles.noResults}>
                 Todavía no hay laboratorios registrados en este estado. Explora otro estado del
                 mapa.
               </p>
             )}
           </div>
-          {activo.total > 0 && (
+          {activeItem.total > 0 && (
             <Link
               className={styles.cta}
-              href={getCatalogUrl({ sede: activo.clave })}
+              href={getCatalogUrl({ sede: activeItem.clave })}
             >
-              Ver laboratorios en {activo.etiqueta}
+              Ver laboratorios en {activeItem.etiqueta}
               <span aria-hidden="true">↗</span>
             </Link>
           )}

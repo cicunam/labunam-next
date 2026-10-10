@@ -3,35 +3,36 @@ import styles from "./LaboratoryNetworks.module.css";
 import { homeNetworks } from "@/lib/home/homeContent";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 
-const LaboratoryNetworks = ({ totales }) => {
+const LaboratoryNetworks = ({ counts }) => {
   return (
     <section
-      className={`contenido ${styles.redes}`}
-      aria-labelledby="redes-titulo"
+      className={`content ${styles.networks}`}
+      aria-labelledby="networks-title"
     >
       <h2
-        id="redes-titulo"
-        className="banda-titulo"
+        id="networks-title"
+        className="band-title"
       >
         Tres redes, una universidad
       </h2>
-      <p className="banda-entrada">Explora la infraestructura de investigación de la UNAM.</p>
-      <ul className={styles["redes-lista"]}>
-        {homeNetworks.map(({ tipo, imagen, descripcion }) => (
+      <p className="band-entry">Explora la infraestructura de investigación de la UNAM.</p>
+      <ul className={styles["networks-list"]}>
+        {homeNetworks.map(({ tipo, image, description }) => (
           <li key={tipo}>
             <Link
-              className={styles.red}
+              className={styles.network}
               href={getCatalogUrl({ tipo })}
-              data-tipo={tipo}
+              data-type={tipo}
             >
               <span
-                className={styles["red-foto"]}
-                style={{ "--foto": `url(/assets/images/${imagen})` }}
+                className={styles["network-photo"]}
+                style={{ "--photo": `url(/assets/images/${image})` }}
               />
-              <span className={styles["red-cuerpo"]}>
-                <span className={styles["red-titulo"]}>{redes[tipo].nombre}</span>
-                <span className={styles["red-cuenta"]}>{totales[tipo]} laboratorios</span>
-                <span className={styles["red-texto"]}>{descripcion}</span>
+
+              <span className={styles["network-body"]}>
+                <span className={styles["network-title"]}>{redes[tipo].nombre}</span>
+                <span className={styles["network-count"]}>{counts[tipo]} laboratorios</span>
+                <span className={styles["network-text"]}>{description}</span>
               </span>
             </Link>
           </li>

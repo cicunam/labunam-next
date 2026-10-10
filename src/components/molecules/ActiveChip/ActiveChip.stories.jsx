@@ -3,8 +3,9 @@ import ActiveChip from "./ActiveChip";
 const meta = {
   title: "Moléculas/ActiveChip",
   component: ActiveChip,
-  args: { href: "/laboratorios", etiqueta: "Búsqueda", valor: "rayos x" },
+  args: { href: "/laboratorios", label: "Búsqueda", value: "rayos x" },
 };
 export default meta;
-export const Busqueda = {};
-export const Sede = { args: { etiqueta: "Sede", valor: "Ciudad de México" } };
+const Search = {};
+export { Search };
+export const Sede = { args: { label: "Sede", value: "Ciudad de México" } };

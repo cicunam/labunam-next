@@ -6,19 +6,19 @@ import styles from "./Contact.module.css";
 const Contact = ({ laboratorio: lab }) => {
   return (
     <section
-      className={`contenido ${styles.contacto}`}
-      aria-labelledby="contacto-titulo"
+      className={`content ${styles.contact}`}
+      aria-labelledby="contact-title"
     >
-      <header className={styles.cabecera}>
-        <h1 id="contacto-titulo">{lab ? "Solicitar un servicio" : "Contacto"}</h1>
+      <header className={styles.header}>
+        <h1 id="contact-title">{lab ? "Solicitar un servicio" : "Contacto"}</h1>
         <p>
           {lab
             ? "Cuéntanos qué necesitas para tu proyecto."
-            : "Encuentra el canal adecuado para tu consulta."}
+            : "Encuentra el canal adecuado para tu query."}
         </p>
       </header>
-      <div className={styles.columnas}>
-        <div className={styles.informacion}>
+      <div className={styles.columns}>
+        <div className={styles.information}>
           {lab ? (
             <>
               <h2>{lab.nombre}</h2>
@@ -66,46 +66,46 @@ const Contact = ({ laboratorio: lab }) => {
             </>
           )}
         </div>
-        <div className={styles.formulario}>
+        <div className={styles.form}>
           <h2>{lab ? "Tu solicitud" : "Escríbenos"}</h2>
-          <p id="contacto-aviso">
+          <p id="contact-notice">
             {lab
               ? "El envío de solicitudes aún no está disponible. No se enviará información al laboratorio. Puedes consultar sus canales de contacto en su sitio web, cuando esté disponible."
               : "El envío de mensajes aún no está disponible. Mientras tanto, puedes consultar los canales de contacto en el sitio de la CIC."}
           </p>
           <fieldset
             disabled
-            aria-describedby="contacto-aviso"
+            aria-describedby="contact-notice"
           >
-            <legend className={styles.oculto}>Datos del mensaje</legend>
-            <label htmlFor="contacto-nombre">
+            <legend className={styles.hidden}>Datos del mensaje</legend>
+            <label htmlFor="contact-name">
               Nombre
               <Input
-                id="contacto-nombre"
+                id="contact-name"
                 autoComplete="name"
               />
             </label>
-            <label htmlFor="contacto-correo">
+            <label htmlFor="contact-email">
               Correo electrónico
               <Input
-                id="contacto-correo"
+                id="contact-email"
                 type="email"
                 autoComplete="email"
               />
             </label>
             {lab && (
               <>
-                <label htmlFor="contacto-institucion">
+                <label htmlFor="contact-institution">
                   Institución o empresa
                   <Input
-                    id="contacto-institucion"
+                    id="contact-institution"
                     autoComplete="organization"
                   />
                 </label>
-                <label htmlFor="contacto-servicio">
+                <label htmlFor="contact-service">
                   Servicio de interés
                   <select
-                    id="contacto-servicio"
+                    id="contact-service"
                     defaultValue=""
                   >
                     <option value="">Selecciona un servicio</option>
@@ -122,10 +122,10 @@ const Contact = ({ laboratorio: lab }) => {
                 </label>
               </>
             )}
-            <label htmlFor="contacto-mensaje">
+            <label htmlFor="contact-message">
               {lab ? "¿Qué necesitas para tu proyecto?" : "Mensaje"}
               <textarea
-                id="contacto-mensaje"
+                id="contact-message"
                 rows={5}
               />
             </label>

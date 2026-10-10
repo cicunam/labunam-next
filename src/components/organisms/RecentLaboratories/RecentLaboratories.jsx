@@ -3,32 +3,32 @@ import styles from "./RecentLaboratories.module.css";
 import LaboratoryCard from "../LaboratoryCard/LaboratoryCard";
 import { getPhotos } from "@/lib/fotos/fotos";
 
-const RecentLaboratories = ({ recientes, fotos, total }) => {
+const RecentLaboratories = ({ recentLaboratorios, photos, total }) => {
   return (
     <section
-      className={`contenido ${styles.destacados}`}
-      aria-labelledby="destacados-titulo"
+      className={`content ${styles.featured}`}
+      aria-labelledby="featured-title"
     >
-      <div className={styles["destacados-cabeza"]}>
+      <div className={styles["featured-header"]}>
         <h2
-          id="destacados-titulo"
-          className="banda-titulo"
+          id="featured-title"
+          className="band-title"
         >
           Recién incorporados
         </h2>
         <Link
-          className={styles["destacados-todos"]}
+          className={styles["featured-all"]}
           href="/laboratorios"
         >
           Ver los {total}
         </Link>
       </div>
-      <div className={styles.reticula}>
-        {recientes.map((lab) => (
+      <div className={styles.grid}>
+        {recentLaboratorios.map((lab) => (
           <LaboratoryCard
             key={lab.idLab}
             laboratorio={lab}
-            foto={getPhotos(lab.idLab, fotos, lab.grupos)[0]}
+            photo={getPhotos(lab.idLab, photos, lab.grupos)[0]}
           />
         ))}
       </div>

@@ -6,39 +6,39 @@ import Icon from "../../atoms/Icon/Icon";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 import styles from "./FilterDialog.module.css";
 
-const FilterDialog = ({ criterios, filtros, total, children }) => {
-  const dialogo = useRef(null);
-  const barra = useRef(null);
-  const peticion = useRef(null);
+const FilterDialog = ({ criteria, filters, total, children }) => {
+  const dialog = useRef(null);
+  const bar = useRef(null);
+  const request = useRef(null);
   // La selección es un borrador: consultar conteos no cambia la URL hasta aplicar los filtros.
-  const [seleccion, setSelection] = useState(criterios);
-  const [datos, setData] = useState({ filtros, total });
-  const [pendiente, setPending] = useState(false);
+  const [selection, setSelection] = useState(criteria);
+  const [data, setData] = useState({ filtros: filters, total });
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
-    const pista = barra.current?.querySelector("[data-pista]");
-    const flechas = barra.current?.querySelectorAll("[data-mover]");
-    if (!pista || !flechas) {
+    const track = bar.current?.querySelector("[data-track]");
+    const arrows = bar.current?.querySelectorAll("[data-move]");
+    if (!track || !arrows) {
       return;
     }
-    const eventos = new AbortController();
+    const events = new AbortController();
     let drag = null;
     let suppressClick = false;
-    pista.addEventListener("dragstart", (event) => event.preventDefault(), {
-      signal: eventos.signal,
+    track.addEventListener("dragstart", (event) => event.preventDefault(), {
+      signal: events.signal,
     });
-    pista.addEventListener(
+    track.addEventListener(
       "pointerdown",
       (event) => {
         if (event.pointerType === "touch" || event.button !== 0 || !event.isPrimary) {
           return;
         }
         suppressClick = false;
-        drag = { id: event.pointerId, x: event.clientX, scroll: pista.scrollLeft, moved: false };
+        drag = { id: event.pointerId, x: event.clientX, scroll: track.scrollLeft, moved: false };
       },
-      { signal: eventos.signal },
+      { signal: events.signal },
     );
-    pista.addEventListener(
+    track.addEventListener(
       "pointermove",
       (event) => {
         if (!drag || event.pointerId !== drag.id) {
@@ -50,27 +50,27 @@ const FilterDialog = ({ criterios, filtros, total, children }) => {
         }
         drag.moved = true;
         suppressClick = true;
-        pista.dataset.dragging = "";
-        pista.setPointerCapture(event.pointerId);
+        track.dataset.dragging = "";
+        track.setPointerCapture(event.pointerId);
         event.preventDefault();
-        pista.scrollLeft = drag.scroll - delta;
+        track.scrollLeft = drag.scroll - delta;
       },
-      { signal: eventos.signal },
+      { signal: events.signal },
     );
     function finishDrag(event) {
       if (!drag || event.pointerId !== drag.id) {
         return;
       }
       drag = null;
-      delete pista.dataset.dragging;
-      if (pista.hasPointerCapture(event.pointerId)) {
-        pista.releasePointerCapture(event.pointerId);
+      delete track.dataset.dragging;
+      if (track.hasPointerCapture(event.pointerId)) {
+        track.releasePointerCapture(event.pointerId);
       }
     }
-    window.addEventListener("pointerup", finishDrag, { signal: eventos.signal });
-    window.addEventListener("pointercancel", finishDrag, { signal: eventos.signal });
-    pista.addEventListener("lostpointercapture", finishDrag, { signal: eventos.signal });
-    pista.addEventListener(
+    window.addEventListener("pointerup", finishDrag, { signal: events.signal });
+    window.addEventListener("pointercancel", finishDrag, { signal: events.signal });
+    track.addEventListener("lostpointercapture", finishDrag, { signal: events.signal });
+    track.addEventListener(
       "click",
       (event) => {
         if (!suppressClick) {
@@ -80,122 +80,125 @@ const FilterDialog = ({ criterios, filtros, total, children }) => {
         event.stopPropagation();
         suppressClick = false;
       },
-      { capture: true, signal: eventos.signal },
+      { capture: true, signal: events.signal },
     );
     function update() {
-      flechas?.forEach((flecha) => {
-        flecha.hidden =
-          flecha.dataset.mover === "-1"
-            ? pista.scrollLeft < 8
-            : pista.scrollWidth - pista.clientWidth - pista.scrollLeft < 8;
+      arrows?.forEach((arrow) => {
+        arrow.hidden =
+          arrow.dataset.move === "-1"
+            ? track.scrollLeft < 8
+            : track.scrollWidth - track.clientWidth - track.scrollLeft < 8;
       });
     }
-    flechas.forEach((flecha) =>
-      flecha.addEventListener(
+    arrows.forEach((arrow) =>
+      arrow.addEventListener(
         "click",
         () =>
-          pista.scrollBy({
-            left: Number(flecha.dataset.mover) * pista.clientWidth * 0.8,
+          track.scrollBy({
+            left: Number(arrow.dataset.move) * track.clientWidth * 0.8,
             behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
               ? "instant"
               : "smooth",
           }),
-        { signal: eventos.signal },
+        { signal: events.signal },
       ),
     );
-    pista.addEventListener("scroll", update, { signal: eventos.signal, passive: true });
+    track.addEventListener("scroll", update, { signal: events.signal, passive: true });
     const resize = new ResizeObserver(update);
-    resize.observe(pista);
+    resize.observe(track);
     update();
-    const activo = pista.querySelector('[aria-current="page"]');
-    if (activo) {
-      pista.scrollTo({
-        left: Math.max(0, activo.offsetLeft - pista.clientWidth / 2),
+    const activeItem = track.querySelector('[aria-current="page"]');
+    if (activeItem) {
+      track.scrollTo({
+        left: Math.max(0, activeItem.offsetLeft - track.clientWidth / 2),
         behavior: "instant",
       });
     }
     update();
     return () => {
-      eventos.abort();
+      events.abort();
       resize.disconnect();
-      peticion.current?.abort();
+      request.current?.abort();
     };
   }, []);
-  async function updateSelection(nueva) {
-    setSelection(nueva);
+  async function updateSelection(nextSelection) {
+    setSelection(nextSelection);
     setPending(true);
     setError("");
     // Una elección nueva cancela la consulta anterior para no mostrar conteos atrasados.
-    peticion.current?.abort();
-    const control = new AbortController();
-    peticion.current = control;
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
     try {
-      const respuesta = await fetch(getCatalogUrl(nueva).replace("/laboratorios", "/api/filtros"), {
-        signal: control.signal,
-      });
-      if (!respuesta.ok) {
+      const response = await fetch(
+        getCatalogUrl(nextSelection).replace("/laboratorios", "/api/filtros"),
+        {
+          signal: controller.signal,
+        },
+      );
+      if (!response.ok) {
         throw new Error();
       }
-      setData(await respuesta.json());
+      setData(await response.json());
     } catch {
-      if (!control.signal.aborted) {
+      if (!controller.signal.aborted) {
         setError("No se pudieron actualizar los conteos. Puedes aplicar los filtros.");
       }
     } finally {
-      if (!control.signal.aborted) {
+      if (!controller.signal.aborted) {
         setPending(false);
       }
     }
   }
   return (
     <div
-      ref={barra}
-      className={styles.tira}
+      ref={bar}
+      className={styles.strip}
     >
       {children}
       <button
         type="button"
-        className={styles["tira-filtros"]}
+        className={styles["strip-filters"]}
         aria-label="Filtros"
         aria-haspopup="dialog"
-        onClick={() => dialogo.current?.showModal()}
+        onClick={() => dialog.current?.showModal()}
       >
         <Icon
-          nombre="todas"
-          tamano={16}
+          name="all"
+          size={16}
         />
         Filtros
-        {Object.values(criterios).filter(Boolean).length > 0 && (
-          <span className={styles["tira-filtros-cuenta"]}>
-            {Object.values(criterios).filter(Boolean).length}
+        {Object.values(criteria).filter(Boolean).length > 0 && (
+          <span className={styles["strip-filters-count"]}>
+            {Object.values(criteria).filter(Boolean).length}
           </span>
         )}
       </button>
       <dialog
-        ref={dialogo}
+        ref={dialog}
         className={styles.modal}
-        aria-labelledby="filtros-titulo"
+        aria-labelledby="filters-title"
         onClick={(event) => {
           if (event.target === event.currentTarget) {
-            dialogo.current?.close();
+            dialog.current?.close();
           }
         }}
       >
-        <header className={styles["modal-cabeza"]}>
+        <header className={styles["modal-header"]}>
           <button
             type="button"
-            className={styles["modal-cerrar"]}
+            className={styles["modal-close"]}
             aria-label="Cerrar filtros"
-            onClick={() => dialogo.current?.close()}
+            onClick={() => dialog.current?.close()}
           >
             <Icon
-              nombre="cerrar"
-              tamano={16}
+              name="close"
+              size={16}
             />
           </button>
           <h2
-            id="filtros-titulo"
-            className={styles["modal-titulo"]}
+            id="filters-title"
+            className={styles["modal-title"]}
           >
             Filtros
           </h2>
@@ -203,40 +206,41 @@ const FilterDialog = ({ criterios, filtros, total, children }) => {
         <form
           method="get"
           action="/laboratorios"
-          className={styles.formulario}
+          className={styles.form}
         >
           {["q", "tipo"].map((eje) => (
             <input
               key={eje}
               type="hidden"
               name={eje}
-              value={seleccion[eje] ?? ""}
+              value={selection[eje] ?? ""}
             />
           ))}
-          <div className={styles["modal-cuerpo"]}>
-            {datos.filtros.map((filtro) => (
+          <div className={styles["modal-body"]}>
+            {data.filtros.map((filtro) => (
               <fieldset
                 key={filtro.eje}
-                className={styles["modal-grupo"]}
+                className={styles["modal-group"]}
               >
-                <legend className={styles["modal-grupo-titulo"]}>{filtro.etiqueta}</legend>
-                <div className={styles["modal-opciones"]}>
+                <legend className={styles["modal-group-title"]}>{filtro.etiqueta}</legend>
+                <div className={styles["modal-options"]}>
                   <FilterOption
-                    nombre={filtro.eje}
-                    valor=""
-                    etiqueta="Cualquiera"
-                    seleccionada={!seleccion[filtro.eje]}
-                    onChange={() => updateSelection({ ...seleccion, [filtro.eje]: "" })}
+                    name={filtro.eje}
+                    value=""
+                    label="Cualquiera"
+                    selected={!selection[filtro.eje]}
+                    onChange={() => updateSelection({ ...selection, [filtro.eje]: "" })}
                   />
-                  {filtro.opciones.map((opcion) => (
+
+                  {filtro.opciones.map((option) => (
                     <FilterOption
-                      key={opcion.clave}
-                      nombre={filtro.eje}
-                      valor={opcion.clave}
-                      etiqueta={opcion.etiqueta}
-                      total={opcion.total}
-                      seleccionada={seleccion[filtro.eje] === opcion.clave}
-                      onChange={() => updateSelection({ ...seleccion, [filtro.eje]: opcion.clave })}
+                      key={option.clave}
+                      name={filtro.eje}
+                      value={option.clave}
+                      label={option.etiqueta}
+                      total={option.total}
+                      selected={selection[filtro.eje] === option.clave}
+                      onChange={() => updateSelection({ ...selection, [filtro.eje]: option.clave })}
                     />
                   ))}
                 </div>
@@ -244,22 +248,22 @@ const FilterDialog = ({ criterios, filtros, total, children }) => {
             ))}
             {error && <p role="alert">{error}</p>}
           </div>
-          <footer className={styles["modal-pie"]}>
+          <footer className={styles["modal-footer"]}>
             <button
               type="button"
-              className={styles["modal-limpiar"]}
+              className={styles["modal-clear"]}
               onClick={() => updateSelection({})}
             >
               Limpiar todo
             </button>
             <button
               type="submit"
-              className={styles["modal-aplicar"]}
-              disabled={pendiente}
+              className={styles["modal-apply"]}
+              disabled={pending}
             >
-              {pendiente
+              {pending
                 ? "Actualizando…"
-                : `Ver ${datos.total} ${datos.total === 1 ? "laboratorio" : "laboratorios"}`}
+                : `Ver ${data.total} ${data.total === 1 ? "laboratorio" : "laboratorios"}`}
             </button>
           </footer>
         </form>

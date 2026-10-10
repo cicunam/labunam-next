@@ -6,8 +6,9 @@ const meta = {
   args: { href: "/laboratorios", children: "Ver laboratorios" },
 };
 export default meta;
-export const Interno = {};
-export const Externo = {
+const Internal = {};
+export { Internal };
+const External = {
   args: {
     href: "https://www.unam.mx/",
     children: "Universidad Nacional Autónoma de México",
@@ -15,3 +16,4 @@ export const Externo = {
     rel: "noopener",
   },
 };
+export { External };

@@ -6,22 +6,26 @@ const meta = {
   title: "Moléculas/FilterOption",
   component: FilterOption,
   args: {
-    nombre: "sede",
-    valor: "sonora",
-    etiqueta: "Sonora",
+    name: "sede",
+    value: "sonora",
+    label: "Sonora",
     total: 4,
-    seleccionada: false,
+    selected: false,
     onChange: fn(),
   },
 };
 export default meta;
-export const Disponible = {};
-export const Seleccionada = { args: { seleccionada: true } };
-export const SinResultados = { args: { total: 0 } };
-export const SeleccionadaSinResultados = { args: { total: 0, seleccionada: true } };
-export const Grupo = {
+const Available = {};
+export { Available };
+const Selected = { args: { selected: true } };
+export { Selected };
+const WithoutResults = { args: { total: 0 } };
+export { WithoutResults };
+const SelectedWithoutResults = { args: { total: 0, selected: true } };
+export { SelectedWithoutResults };
+const Group = {
   render: function OptionGroup() {
-    const [valor, setValue] = useState("");
+    const [value, setValue] = useState("");
     return (
       <fieldset style={{ border: 0 }}>
         <legend>Sede</legend>
@@ -29,12 +33,14 @@ export const Grupo = {
           {[
             { valor: "", etiqueta: "Cualquiera", total: 12 },
             { valor: "sonora", etiqueta: "Sonora", total: 4 },
-          ].map((opcion) => (
+          ].map((option) => (
             <FilterOption
-              key={opcion.valor}
-              {...opcion}
-              nombre="sede"
-              seleccionada={valor === opcion.valor}
+              key={option.valor}
+              value={option.valor}
+              label={option.etiqueta}
+              total={option.total}
+              name="sede"
+              selected={value === option.valor}
               onChange={(event) => setValue(event.target.value)}
             />
           ))}
@@ -48,3 +54,4 @@ export const Grupo = {
     await expect(canvas.getByRole("radio", { name: /Sonora/ })).toBeChecked();
   },
 };
+export { Group };

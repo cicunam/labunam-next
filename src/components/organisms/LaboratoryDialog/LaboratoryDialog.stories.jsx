@@ -8,18 +8,21 @@ const meta = {
   args: { loadDetails: async () => laboratorio },
   render: (args) => (
     <>
-      {!args.inicial && <button data-ficha="1">Abrir ficha de demostración</button>}
+      {!args.initialLaboratorio && <button data-details="1">Abrir ficha de demostración</button>}
       <LaboratoryDialog {...args} />
     </>
   ),
 };
 export default meta;
-export const Principal = {};
-export const ErrorDeCarga = {
+const Default = {};
+export { Default };
+const LoadingError = {
   args: {
     loadDetails: async () => {
       throw new Error("Fallo simulado");
     },
   },
 };
-export const Pagina = { args: { inicial: laboratorio } };
+export { LoadingError };
+const Page = { args: { initialLaboratorio: laboratorio } };
+export { Page };

@@ -6,82 +6,82 @@ import Icon from "../../atoms/Icon/Icon";
 import styles from "./LaboratoryDialog.module.css";
 
 const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails"));
-const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, inicial = null }) => {
-  const dialogo = useRef(null);
-  const disparador = useRef(null);
-  const memoria = useRef(new Map());
-  const peticion = useRef(0);
-  const enHistorial = useRef(false);
-  const [lab, setLab] = useState(inicial);
+const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, initialLaboratorio = null }) => {
+  const dialog = useRef(null);
+  const trigger = useRef(null);
+  const cache = useRef(new Map());
+  const request = useRef(0);
+  const hasHistoryEntry = useRef(false);
+  const [lab, setLab] = useState(initialLaboratorio);
   const [error, setError] = useState("");
   useEffect(() => {
-    if (inicial) {
+    if (initialLaboratorio) {
       return;
     }
-    let vigente = true;
+    let current = true;
     async function show(id) {
       // Si se abre otra ficha antes de terminar esta petición, ignoramos su respuesta.
       // El contador también invalida resultados al cerrar el diálogo.
-      const turno = ++peticion.current;
+      const requestId = ++request.current;
       setLab(null);
       setError("");
-      dialogo.current?.showModal();
+      dialog.current?.showModal();
       // Guardamos promesas para compartir cargas. Un fallo se elimina para permitir reintentos.
-      if (!memoria.current.has(id)) {
-        memoria.current.set(
+      if (!cache.current.has(id)) {
+        cache.current.set(
           id,
           loadDetails(id).catch((error) => {
-            memoria.current.delete(id);
+            cache.current.delete(id);
             throw error;
           }),
         );
       }
       try {
-        const datos = await memoria.current.get(id);
-        if (vigente && turno === peticion.current) {
-          setLab(datos);
+        const data = await cache.current.get(id);
+        if (current && requestId === request.current) {
+          setLab(data);
         }
       } catch {
-        if (vigente && turno === peticion.current) {
+        if (current && requestId === request.current) {
           setError("No se pudo cargar la ficha. Ciérrala y vuelve a intentarlo.");
         }
       }
     }
     function open(event) {
-      const boton = event.target.closest("[data-ficha]");
-      const id = Number(boton?.dataset.ficha);
-      if (!boton || !Number.isSafeInteger(id) || id <= 0) {
+      const button = event.target.closest("[data-details]");
+      const id = Number(button?.dataset.details);
+      if (!button || !Number.isSafeInteger(id) || id <= 0) {
         return;
       }
-      disparador.current = boton;
+      trigger.current = button;
       // Cambiamos la URL sin desmontar el catálogo: conserva filtros y scroll.
       // Una recarga completa de esta URL sí renderiza la página de la ficha.
       window.history.pushState({ fichaLabunam: id }, "", `/laboratorios/${id}`);
-      enHistorial.current = true;
+      hasHistoryEntry.current = true;
       void show(id);
     }
     // Atrás cierra el modal; Adelante recupera la ficha usando la marca del historial.
     function syncHistory() {
       const id = window.history.state?.fichaLabunam;
-      enHistorial.current = Number.isSafeInteger(id) && id > 0;
-      if (enHistorial.current) {
+      hasHistoryEntry.current = Number.isSafeInteger(id) && id > 0;
+      if (hasHistoryEntry.current) {
         void show(id);
       } else {
-        peticion.current++;
-        dialogo.current?.close();
+        request.current++;
+        dialog.current?.close();
       }
     }
     document.addEventListener("click", open);
     window.addEventListener("popstate", syncHistory);
     syncHistory();
     return () => {
-      vigente = false;
+      current = false;
       document.removeEventListener("click", open);
       window.removeEventListener("popstate", syncHistory);
     };
-  }, [loadDetails, inicial]);
+  }, [loadDetails, initialLaboratorio]);
   function closeDialog() {
-    dialogo.current?.close();
+    dialog.current?.close();
   }
 
   function handleBackdropClick(event) {
@@ -91,20 +91,20 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, inicial = nul
   }
 
   function handleClose() {
-    peticion.current++;
+    request.current++;
     // Sólo deshacemos la entrada que creó el modal; evita retroceder dos veces con Atrás.
-    if (enHistorial.current) {
-      enHistorial.current = false;
+    if (hasHistoryEntry.current) {
+      hasHistoryEntry.current = false;
       window.history.back();
     }
-    disparador.current?.focus({ preventScroll: true });
+    trigger.current?.focus({ preventScroll: true });
   }
 
-  const ficha = (
+  const details = (
     <>
       {!lab ? (
-        <div className={styles.estado}>
-          <h2 id="ficha-titulo">Ficha del laboratorio</h2>
+        <div className={styles.status}>
+          <h2 id="details-title">Ficha del laboratorio</h2>
           <p role={error ? "alert" : "status"}>{error || "Cargando…"}</p>
         </div>
       ) : (
@@ -112,7 +112,7 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, inicial = nul
           <Suspense
             fallback={
               <p
-                id="ficha-titulo"
+                id="details-title"
                 role="status"
               >
                 Cargando ficha…
@@ -122,43 +122,44 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, inicial = nul
             <LaboratoryDetails
               key={lab.idLab}
               laboratorio={lab}
-              pagina={Boolean(inicial)}
+              isPage={Boolean(initialLaboratorio)}
             />
           </Suspense>
         </>
       )}
     </>
   );
-  if (inicial) {
+
+  if (initialLaboratorio) {
     return (
       <article
-        className={styles.pagina}
-        aria-labelledby="ficha-titulo"
+        className={styles.page}
+        aria-labelledby="details-title"
       >
-        {ficha}
+        {details}
       </article>
     );
   }
   return (
     <dialog
-      ref={dialogo}
-      className={styles.ficha}
-      aria-labelledby="ficha-titulo"
+      ref={dialog}
+      className={styles.details}
+      aria-labelledby="details-title"
       onClose={handleClose}
       onClick={handleBackdropClick}
     >
       <button
         type="button"
-        className={styles["ficha-cerrar"]}
+        className={styles["details-close"]}
         aria-label="Cerrar ficha"
         onClick={closeDialog}
       >
         <Icon
-          nombre="cerrar"
-          tamano={16}
+          name="close"
+          size={16}
         />
       </button>
-      {ficha}
+      {details}
     </dialog>
   );
 };

@@ -19,35 +19,37 @@ export const dynamic = "force-dynamic";
 
 const HomePage = async () => {
   // Los conteos y las fotos se preparan en servidor; el cliente recibe sólo lo que muestra.
-  const [catalogo, fotos] = await Promise.all([loadCatalog(), readPhotos()]);
+  const [catalogo, photos] = await Promise.all([loadCatalog(), readPhotos()]);
   const tipos = homeNetworks.map(({ tipo }) => tipo);
-  const totales = countFacet(catalogo.laboratorios, {}, "tipo", tipos);
+  const counts = countFacet(catalogo.laboratorios, {}, "tipo", tipos);
   const areas = countFacet(
     catalogo.laboratorios,
     {},
     "disciplina",
     grupos.map((grupo) => grupo.clave),
   );
-  const recientes = [...catalogo.laboratorios]
+  const recentSearches = [...catalogo.laboratorios]
     .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.idLab - a.idLab)
     .slice(0, 4);
 
   return (
     <>
       <SearchBar
-        titulo="Encuentra el laboratorio que necesitas"
-        sedes={catalogo.sedes}
-        sugerencias={catalogo.sugerencias}
-        frecuentes={["Microscopía", "Rayos X", "Cromatografía"]}
+        title="Encuentra el laboratorio que necesitas"
+        locations={catalogo.sedes}
+        suggestions={catalogo.sugerencias}
+        popularSearches={["Microscopía", "Rayos X", "Cromatografía"]}
       />
-      <LaboratoryNetworks totales={totales} />
+
+      <LaboratoryNetworks counts={counts} />
       <RecentLaboratories
-        recientes={recientes}
-        fotos={fotos}
+        recentLaboratorios={recentSearches}
+        photos={photos}
         total={catalogo.laboratorios.length}
       />
-      <DisciplineSection areas={areas} />
-      <LaboratoryMap sedes={catalogo.sedes} />
+
+      <DisciplineSection areaCounts={areas} />
+      <LaboratoryMap locations={catalogo.sedes} />
       <NewsSection />
       <About />
       <LaboratoryDialog />

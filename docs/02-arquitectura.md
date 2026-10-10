@@ -97,7 +97,7 @@ la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 Orden de portada: `src/app/page.jsx`. Textos de redes y noticias de ejemplo: `src/lib/home/homeContent.js`. Estilo de una tarjeta: su CSS Module.
 Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/lib/catalogo/`.
-Interacción del carrusel: `public/js/carrusel.js` y su organismo; es una mejora
+Interacción del carrusel: `public/js/carousel.js` y su organismo; es una mejora
 sobre HTML de servidor y no exige convertir toda la portada a cliente.
 
 Antes de añadir una dependencia o cambiar la estrategia de renderizado, consulta

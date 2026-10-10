@@ -1,35 +1,35 @@
 import styles from "./Gallery.module.css";
 
-const Gallery = ({ imagenes, etiqueta = "Galería" }) => {
-  const fotos = imagenes.slice(0, 3);
-  if (!fotos.length) {
-    return <p className={styles.vacia}>Sin imágenes disponibles.</p>;
+const Gallery = ({ images, label = "Galería" }) => {
+  const photos = images.slice(0, 3);
+  if (!photos.length) {
+    return <p className={styles.empty}>Sin imágenes disponibles.</p>;
   }
   return (
     <div
-      className={styles.galeria}
+      className={styles.gallery}
       role="group"
-      aria-label={etiqueta}
-      data-cantidad={fotos.length}
-      data-respaldo={fotos[0]?.tipo === "ilustracion"}
+      aria-label={label}
+      data-count={photos.length}
+      data-fallback={photos[0]?.tipo === "illustration"}
     >
-      {fotos.map((foto, posicion) => (
+      {photos.map((photo, position) => (
         <img
-          key={`${foto.src}-${posicion}`}
-          className={styles.foto}
-          data-tipo-imagen={foto.tipo}
-          src={foto.src}
-          srcSet={foto.srcSet}
-          alt={foto.alt}
+          key={`${photo.src}-${position}`}
+          className={styles.photo}
+          data-image-type={photo.tipo}
+          src={photo.src}
+          srcSet={photo.srcSet}
+          alt={photo.alt}
           sizes={
-            posicion === 0 ? "(min-width: 744px) 480px, 67vw" : "(min-width: 744px) 240px, 33vw"
+            position === 0 ? "(min-width: 744px) 480px, 67vw" : "(min-width: 744px) 240px, 33vw"
           }
           loading="lazy"
           decoding="async"
         />
       ))}
-      {fotos[0]?.tipo === "ilustracion" && (
-        <span className={styles.aviso}>Sin fotografía disponible</span>
+      {photos[0]?.tipo === "illustration" && (
+        <span className={styles.notice}>Sin fotografía disponible</span>
       )}
     </div>
   );

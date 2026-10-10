@@ -6,39 +6,41 @@ import { useHeaderMenu } from "./useHeaderMenu";
 import { useCompactSearch } from "./useCompactSearch";
 import styles from "./Header.module.css";
 
-const enlaces = [
-  { href: "/", texto: "Inicio" },
-  { href: "/laboratorios", texto: "Laboratorios" },
-  { href: "/contacto", texto: "Contacto" },
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/laboratorios", label: "Laboratorios" },
+  { href: "/contacto", label: "Contacto" },
 ];
+
 const redes = [
-  { tipo: "nacionales", texto: "Laboratorios nacionales" },
-  { tipo: "universitarios", texto: "Laboratorios universitarios" },
-  { tipo: "unidades", texto: "Unidades de apoyo" },
+  { tipo: "nacionales", label: "Laboratorios nacionales" },
+  { tipo: "universitarios", label: "Laboratorios universitarios" },
+  { tipo: "unidades", label: "Unidades de apoyo" },
 ];
+
 const Header = () => {
-  const ruta = usePathname();
-  const compacto = useCompactSearch(ruta);
-  const { abierto, boton, panel, toggleMenu, closeMenu } = useHeaderMenu();
+  const pathname = usePathname();
+  const compact = useCompactSearch(pathname);
+  const { open, button, panel, toggleMenu, closeMenu } = useHeaderMenu();
 
   function focusSearch() {
-    document.querySelector("#busqueda-q")?.focus({ preventScroll: true });
+    document.querySelector("#search-q")?.focus({ preventScroll: true });
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
   }
 
   function isActive(href) {
-    return ruta === href || (href !== "/" && ruta.startsWith(`${href}/`));
+    return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
   }
   return (
-    <header className={styles.encabezado}>
+    <header className={styles.header}>
       <a
-        className={styles.saltar}
-        href="#contenido"
+        className={styles.skip}
+        href="#content"
       >
         Saltar al contenido
       </a>
-      <div className={styles["encabezado-barra"]}>
+      <div className={styles["header-bar"]}>
         <a
           href="https://www.unam.mx/"
           className={`${styles.logo} ${styles["logo-unam"]}`}
@@ -65,42 +67,42 @@ const Header = () => {
         </Link>
         <button
           type="button"
-          className={styles.pildora}
-          data-visible={compacto || undefined}
+          className={styles.pill}
+          data-visible={compact || undefined}
           aria-label="Abrir el buscador"
           onClick={focusSearch}
         >
           Buscar laboratorios <span aria-hidden="true">⌕</span>
         </button>
-        <div className={styles["encabezado-acciones"]}>
+        <div className={styles["header-actions"]}>
           <nav
-            className={styles["menu-directo"]}
+            className={styles["menu-direct"]}
             aria-label="Principal"
           >
-            {enlaces.map(({ href, texto }) => (
+            {links.map(({ href, label: text }) => (
               <Link
                 key={href}
                 href={href}
-                className={styles["menu-directo-enlace"]}
+                className={styles["menu-direct-link"]}
                 aria-current={isActive(href) ? "page" : undefined}
               >
-                {texto}
+                {text}
               </Link>
             ))}
           </nav>
           <button
-            ref={boton}
+            ref={button}
             className={styles["menu-toggle"]}
             type="button"
-            aria-expanded={abierto}
+            aria-expanded={open}
             aria-controls="menu"
-            aria-label={abierto ? "Cerrar menú" : "Abrir menú"}
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
             onClick={toggleMenu}
           >
-            {[0, 1, 2].map((barra) => (
+            {[0, 1, 2].map((bar) => (
               <span
-                key={barra}
-                className={styles["menu-toggle-barra"]}
+                key={bar}
+                className={styles["menu-toggle-bar"]}
               />
             ))}
           </button>
@@ -110,34 +112,34 @@ const Header = () => {
           className={styles.menu}
           id="menu"
           aria-label="Navegación"
-          data-abierto={abierto ? "" : undefined}
-          inert={!abierto}
+          data-abierto={open ? "" : undefined}
+          inert={!open}
         >
-          <ul className={styles["menu-lista"]}>
-            {enlaces.map(({ href, texto }) => (
+          <ul className={styles["menu-list"]}>
+            {links.map(({ href, label: text }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className={styles["menu-enlace"]}
+                  className={styles["menu-link"]}
                   aria-current={isActive(href) ? "page" : undefined}
                   onClick={closeMenu}
                 >
-                  {texto}
+                  {text}
                 </Link>
               </li>
             ))}
           </ul>
-          <hr className={styles["menu-filete"]} />
-          <ul className={styles["menu-lista"]}>
-            {redes.map(({ tipo, texto }) => (
+          <hr className={styles["menu-border"]} />
+          <ul className={styles["menu-list"]}>
+            {redes.map(({ tipo, label: text }) => (
               <li key={tipo}>
                 <Link
                   href={`/laboratorios?tipo=${tipo}`}
-                  className={`${styles["menu-enlace"]} ${styles["menu-enlace-red"]}`}
-                  data-tipo={tipo}
+                  className={`${styles["menu-link"]} ${styles["menu-link-network"]}`}
+                  data-type={tipo}
                   onClick={closeMenu}
                 >
-                  {texto}
+                  {text}
                 </Link>
               </li>
             ))}

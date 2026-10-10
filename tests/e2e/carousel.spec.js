@@ -3,7 +3,7 @@ test("avanza automáticamente con progreso amarillo y respeta las pausas", async
   test.setTimeout(45000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
-  const carousel = page.locator("[data-carrusel][data-listo]");
+  const carousel = page.locator("[data-carousel][data-ready]");
   await carousel.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   const progress = () =>
@@ -11,7 +11,7 @@ test("avanza automáticamente con progreso amarillo y respeta las pausas", async
   await expect.poll(progress).toBeGreaterThan(0.1);
   expect(
     await carousel
-      .locator('[data-pagina][aria-pressed="true"]')
+      .locator('[data-page][aria-pressed="true"]')
       .evaluate((el) => getComputedStyle(el, "::after").backgroundColor),
   ).toBe("rgb(250, 195, 18)");
   for (const expected of [2, 3, 1]) {
@@ -40,7 +40,7 @@ test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic",
     reducedMotion: page.viewportSize().width === 1400 ? "reduce" : "no-preference",
   });
   await page.goto("/");
-  const carousel = page.locator("[data-carrusel][data-listo]");
+  const carousel = page.locator("[data-carousel][data-ready]");
   await carousel.scrollIntoViewIfNeeded();
   const track = carousel.locator("[data-slides]");
   const bounds = await track.boundingBox();
@@ -77,12 +77,12 @@ test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic",
       carousel.getByRole("button", { name: `Ir a noticia ${expected}` }),
     ).toHaveAttribute("aria-pressed", "true");
     await expect
-      .poll(() => carousel.locator("[data-slide][data-activo][data-copy]").count())
+      .poll(() => carousel.locator("[data-slide][data-active][data-copy]").count())
       .toBe(0);
     await expect
       .poll(() =>
         track.evaluate((el) => {
-          const active = el.querySelector("[data-activo]");
+          const active = el.querySelector("[data-active]");
           return Math.abs(
             el.scrollLeft - active.offsetLeft + (el.clientWidth - active.offsetWidth) / 2,
           );
@@ -97,12 +97,12 @@ test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic",
       carousel.getByRole("button", { name: `Ir a noticia ${expected}` }),
     ).toHaveAttribute("aria-pressed", "true");
     await expect
-      .poll(() => carousel.locator("[data-slide][data-activo][data-copy]").count())
+      .poll(() => carousel.locator("[data-slide][data-active][data-copy]").count())
       .toBe(0);
     await expect
       .poll(() =>
         track.evaluate((el) => {
-          const active = el.querySelector("[data-activo]");
+          const active = el.querySelector("[data-active]");
           return Math.abs(
             el.scrollLeft - active.offsetLeft + (el.clientWidth - active.offsetWidth) / 2,
           );
@@ -115,6 +115,6 @@ test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic",
     await session.send("Emulation.setTouchEmulationEnabled", { enabled: false });
     await session.detach();
   }
-  await carousel.locator("[data-activo] a").click();
+  await carousel.locator("[data-active] a").click();
   await expect(page).toHaveURL(/laboratorios\?tipo=unidades/);
 });

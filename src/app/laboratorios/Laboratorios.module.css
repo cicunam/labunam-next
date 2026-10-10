@@ -1,62 +1,62 @@
-.catalogo {
-  padding-bottom: var(--espacio-seccion);
+.catalog {
+  padding-bottom: var(--space-section);
 }
 
-.catalogo .tira {
+.catalog .strip {
   position: sticky;
   top: 64px;
   z-index: 20;
 
-  padding-block: var(--espacio-xs);
+  padding-block: var(--space-xs);
 
-  background: var(--superficie);
-  box-shadow: 0 1px 0 var(--filete-suave);
+  background: var(--surface);
+  box-shadow: 0 1px 0 var(--border-soft);
 }
 
-.reticula {
+.grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--espacio-lg) var(--espacio-base);
+  gap: var(--space-lg) var(--space-base);
 
   margin: 0;
-  padding: var(--espacio-base) 0 0;
+  padding: var(--space-base) 0 0;
 }
 
-.catalogo-vacio {
+.catalog-empty {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--espacio-md);
+  gap: var(--space-md);
 
-  padding: var(--espacio-seccion) 0;
+  padding: var(--space-section) 0;
 }
 
-.catalogo-vacio-titulo {
+.catalog-empty-title {
   margin: 0;
   font: var(--font-title-small);
   letter-spacing: var(--tracking-small);
 }
 
-.catalogo-vacio-texto {
+.catalog-empty-text {
   margin: 0;
   color: var(--color-neutral-dark);
   font: var(--font-large-regular);
 }
 
-.catalogo-vacio-accion {
+.catalog-empty-action {
   display: inline-flex;
   align-items: center;
   height: 48px;
-  padding: 0 var(--espacio-lg);
+  padding: 0 var(--space-lg);
 
-  border-radius: var(--radio-sm);
+  border-radius: var(--radius-sm);
   background: var(--color-brand);
-  color: var(--color-sobre-brand);
+  color: var(--color-on-brand);
   font: var(--font-medium-semibold);
   text-decoration: none;
 
   &:hover {
-    background: var(--color-brand-oscuro);
+    background: var(--color-brand-dark);
   }
 
   &:focus-visible {
@@ -66,44 +66,44 @@
 }
 
 @media (min-width: 744px) {
-  .catalogo .tira {
+  .catalog .strip {
     top: 80px;
   }
 
-  .reticula {
+  .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 992px) {
-  .reticula {
+  .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1128px) {
-  .reticula {
+  .grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-.estado {
+.status {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding-block: 16px;
 }
-.cuenta {
+.count {
   font: var(--font-medium-semibold);
 }
-.activos {
+.active {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
-.activos > a:last-child {
+.active > a:last-child {
   color: var(--color-black);
   font: var(--font-small-semibold);
   text-underline-offset: 3px;

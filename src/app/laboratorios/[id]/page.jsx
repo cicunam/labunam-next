@@ -27,34 +27,34 @@ const LaboratoryPage = async ({ params }) => {
   const lab = await findLaboratorio((await params).id);
   const {
     idLab,
-    nombre,
+    nombre: name,
     tipo,
     entidad,
     sedeNombre,
-    ubicacion,
-    mapa,
+    ubicacion: location,
+    mapa: mapUrl,
     servicios,
     equipos,
     distinciones,
-    sitio,
+    sitio: website,
   } = lab;
   return (
-    <div className={`contenido ${styles.detalle}`}>
+    <div className={`content ${styles.detail}`}>
       <AppLink href="/laboratorios">← Volver al catálogo</AppLink>
       <LaboratoryDialog
         key={idLab}
-        inicial={{
+        initialLaboratorio={{
           idLab,
-          nombre,
+          nombre: name,
           tipo,
           entidad,
           sedeNombre,
-          ubicacion,
-          mapa,
+          ubicacion: location,
+          mapa: mapUrl,
           servicios,
           equipos,
           distinciones,
-          sitio,
+          sitio: website,
           galeria: getPhotos(idLab, await readPhotos(), lab.grupos),
         }}
       />

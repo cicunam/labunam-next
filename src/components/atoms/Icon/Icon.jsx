@@ -1,8 +1,8 @@
 import styles from "./Icon.module.css";
 
-const trazos = {
+const paths = {
   general: "M4 21h16M6 21V4h12v17M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-6h4v6",
-  todas: "M4 12h16M4 6h16M4 18h16",
+  all: "M4 12h16M4 6h16M4 18h16",
   biologia: "M7 4c0 6 10 10 10 16M17 4c0 6-10 10-10 16M8 8h8M7.5 12h9M8 16h8",
   quimica: "M9 3v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V3M9 3h6M7 15h10",
   fisica:
@@ -15,23 +15,23 @@ const trazos = {
     "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2",
   sostenibilidad: "M12 21c0-6 3-11 8-13-1 8-4 11-8 13zM12 21c0-5-2-9-6-10 1 6 3 9 6 10zM12 21v-4",
   humanidades: "M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-7a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h7z",
-  buscar: "M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15M16 16l5 5",
-  cerrar: "M6 6l12 12M18 6L6 18",
+  search: "M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15M16 16l5 5",
+  close: "M6 6l12 12M18 6L6 18",
 };
-const Icon = ({ nombre, etiqueta, tamano = 24 }) => {
+const Icon = ({ name, label, size = 24 }) => {
   return (
     <svg
-      className={styles.icono}
+      className={styles.icon}
       viewBox="0 0 24 24"
-      width={tamano}
-      height={tamano}
-      role={etiqueta ? "img" : undefined}
-      aria-label={etiqueta}
-      aria-hidden={etiqueta ? undefined : true}
+      width={size}
+      height={size}
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
       focusable="false"
     >
       <path
-        d={trazos[nombre]}
+        d={paths[name]}
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"

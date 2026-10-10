@@ -6,7 +6,8 @@ const meta = {
   title: "Organismos/FilterDialog",
   component: FilterDialog,
   parameters: { layout: "fullscreen" },
-  args: { criterios: {}, filtros, total: 3, children: <DisciplineBar criterios={{}} /> },
+  args: { criteria: {}, filters: filtros, total: 3, children: <DisciplineBar criteria={{}} /> },
 };
 export default meta;
-export const Principal = {};
+const Default = {};
+export { Default };

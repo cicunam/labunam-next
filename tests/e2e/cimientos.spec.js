@@ -12,9 +12,9 @@ test("cabecera, pie y menú funcionan con teclado", async ({ page }) => {
   );
   const medidas = await page.evaluate(() => ({
     ancho: innerWidth,
-    contenido: document.documentElement.scrollWidth,
+    content: document.documentElement.scrollWidth,
   }));
-  expect(medidas.contenido).toBeLessThanOrEqual(medidas.ancho);
+  expect(medidas.content).toBeLessThanOrEqual(medidas.ancho);
   const boton = page.getByRole("button", { name: /Abrir menú|Cerrar menú/ });
   const menu = page.getByRole("navigation", { name: "Navegación", exact: true });
   await expect(menu).toBeHidden();

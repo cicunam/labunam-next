@@ -1,13 +1,13 @@
-.ficha {
+.details {
   width: min(720px, calc(100% - 32px));
   max-height: min(88vh, 860px);
   margin: auto;
   padding: 0;
 
   border: 0;
-  border-radius: var(--radio-md);
-  background: var(--superficie);
-  box-shadow: var(--sombra-alta);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-high);
   color: var(--color-black);
 
   &::backdrop {
@@ -20,10 +20,10 @@
   }
 }
 
-.ficha-cerrar {
+.details-close {
   position: absolute;
-  top: var(--espacio-base);
-  left: var(--espacio-base);
+  top: var(--space-base);
+  left: var(--space-base);
   z-index: 2;
 
   display: grid;
@@ -33,14 +33,14 @@
   padding: 0;
 
   border: 0;
-  border-radius: var(--radio-full);
-  background: var(--superficie);
-  box-shadow: var(--sombra);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  box-shadow: var(--shadow);
   color: var(--color-black);
   cursor: pointer;
 
   &:hover {
-    background: var(--superficie-fuerte);
+    background: var(--surface-strong);
   }
 
   &:focus-visible {
@@ -50,7 +50,7 @@
 }
 
 @media (max-width: 743px) {
-  .ficha {
+  .details {
     width: 100%;
     max-width: none;
     max-height: 100%;
@@ -58,14 +58,14 @@
     border-radius: 0;
   }
 }
-.estado {
-  padding: 64px var(--espacio-lg) var(--espacio-lg);
+.status {
+  padding: 64px var(--space-lg) var(--space-lg);
 }
 
-.pagina {
+.page {
   max-width: 960px;
   margin: 24px auto 64px;
-  border: 1px solid var(--filete-suave);
-  border-radius: var(--radio-md);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }

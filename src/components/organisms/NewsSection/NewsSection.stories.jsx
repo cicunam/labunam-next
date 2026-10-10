@@ -6,4 +6,5 @@ const meta = {
   parameters: { layout: "fullscreen" },
 };
 export default meta;
-export const Principal = { args: {} };
+const Default = { args: {} };
+export { Default };

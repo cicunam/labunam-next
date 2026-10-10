@@ -1,16 +1,16 @@
-.opcion {
+.option {
   position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  padding: var(--espacio-sm) var(--espacio-base);
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-full);
+  padding: var(--space-sm) var(--space-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
   color: var(--color-black);
   font: var(--font-medium-regular);
   cursor: pointer;
 }
-.opcion > input {
+.option > input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -19,27 +19,27 @@
   opacity: 0;
   cursor: inherit;
 }
-.opcion:hover {
+.option:hover {
   border-color: var(--color-black);
 }
-.opcion:has(input:checked) {
+.option:has(input:checked) {
   border-color: var(--color-black);
   background: var(--color-black);
   color: var(--color-white);
 }
-.cuenta {
-  margin-left: var(--espacio-xs);
+.count {
+  margin-left: var(--space-xs);
   color: var(--color-neutral-dark);
   font: var(--font-small-regular);
 }
-.opcion:has(input:checked) > .cuenta {
+.option:has(input:checked) > .count {
   color: inherit;
 }
-.opcion[data-vacia] {
+.option[data-empty] {
   opacity: 0.4;
   cursor: default;
 }
-.opcion:has(input:focus-visible) {
+.option:has(input:focus-visible) {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }

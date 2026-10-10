@@ -6,7 +6,7 @@ const AppLink = ({ href, className = "", ...props }) => {
     <Link
       {...props}
       href={href}
-      className={`${styles.enlace} ${className}`}
+      className={`${styles.link} ${className}`}
     />
   );
 };

@@ -6,8 +6,9 @@ const meta = {
   parameters: { layout: "fullscreen" },
 };
 export default meta;
-export const Principal = {};
-export const SolicitudServicio = {
+const Default = {};
+export { Default };
+const ServiceRequest = {
   args: {
     laboratorio: {
       idLab: 18,
@@ -18,3 +19,4 @@ export const SolicitudServicio = {
     },
   },
 };
+export { ServiceRequest };

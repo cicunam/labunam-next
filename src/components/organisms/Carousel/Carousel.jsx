@@ -8,14 +8,14 @@ const Carousel = ({ slides }) => {
     <>
       <div
         className={styles.carousel}
-        data-carrusel
+        data-carousel
         role="region"
         aria-roledescription="carrusel"
         aria-label="Noticias destacadas"
       >
-        <div className={styles["carousel-escenario"]}>
+        <div className={styles["carousel-stage"]}>
           <ul
-            className={styles["carousel-pista"]}
+            className={styles["carousel-track"]}
             data-slides
             tabIndex={0}
             aria-label="Noticias"
@@ -35,44 +35,44 @@ const Carousel = ({ slides }) => {
                 aria-hidden={
                   (slides.length > 1 && (i < slides.length || i >= slides.length * 2)) || undefined
                 }
-                data-activo={i === (slides.length > 1 ? slides.length : 0) || undefined}
-                style={{ "--carousel-imagen": `url(${slide.imagen})` }}
+                data-active={i === (slides.length > 1 ? slides.length : 0) || undefined}
+                style={{ "--carousel-image": `url(${slide.image})` }}
               >
                 <Link
                   draggable={false}
-                  className={styles["carousel-contenido"]}
+                  className={styles["carousel-content"]}
                   href={slide.href}
                 >
-                  <h3 className={styles["carousel-titulo"]}>{slide.titulo}</h3>
-                  <p className={styles["carousel-texto"]}>{slide.texto}</p>
-                  <span className={styles["carousel-cta"]}>{slide.enlace}</span>
+                  <h3 className={styles["carousel-title"]}>{slide.title}</h3>
+                  <p className={styles["carousel-text"]}>{slide.description}</p>
+                  <span className={styles["carousel-cta"]}>{slide.linkLabel}</span>
                 </Link>
               </li>
             ))}
           </ul>
           <button
             type="button"
-            className={`${styles["carousel-flecha"]} ${styles.anterior}`}
-            data-paso="-1"
+            className={`${styles["carousel-arrow"]} ${styles.previous}`}
+            data-step="-1"
             aria-label="Noticia anterior"
           >
             ‹
           </button>
           <button
             type="button"
-            className={`${styles["carousel-flecha"]} ${styles.siguiente}`}
-            data-paso="1"
+            className={`${styles["carousel-arrow"]} ${styles.next}`}
+            data-step="1"
             aria-label="Noticia siguiente"
           >
             ›
           </button>
         </div>
-        <div className={styles.controles}>
+        <div className={styles.controls}>
           {slides.map((slide, i) => (
             <button
-              key={slide.titulo}
+              key={slide.title}
               type="button"
-              data-pagina={i}
+              data-page={i}
               aria-label={`Ir a noticia ${i + 1}`}
               aria-pressed={i === 0}
             />
@@ -80,7 +80,7 @@ const Carousel = ({ slides }) => {
         </div>
       </div>
       <Script
-        src="/js/carrusel.js"
+        src="/js/carousel.js"
         strategy="afterInteractive"
       />
     </>

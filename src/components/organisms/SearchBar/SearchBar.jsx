@@ -7,13 +7,13 @@ import { normalizeText } from "@/lib/texto/texto";
 import Icon from "../../atoms/Icon/Icon";
 import styles from "./SearchBar.module.css";
 
-const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = [] }) => {
+const SearchBar = ({ title, criteria = {}, locations, suggestions, popularSearches = [] }) => {
   const {
     q,
-    activa,
+    activeIndex,
     input,
     form,
-    opciones,
+    options,
     visible,
     selectSuggestion,
     handleSearchChange,
@@ -21,15 +21,15 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
     handleSuggestionKeyDown,
     clearSearch,
     handleSubmit,
-  } = useSearchSuggestions({ criterios, sugerencias });
+  } = useSearchSuggestions({ criteria, suggestions });
 
   return (
     <div
-      className={styles.bloque}
-      data-buscador
+      className={styles.block}
+      data-search
     >
       <div className={styles.search}>
-        <h1 className={styles["search-titulo"]}>{titulo}</h1>
+        <h1 className={styles["search-title"]}>{title}</h1>
         <form
           ref={form}
           className={styles["search-form"]}
@@ -39,29 +39,29 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
           aria-label="Buscar laboratorios"
           onSubmit={handleSubmit}
         >
-          {Object.entries(criterios)
-            .filter(([eje, valor]) => !["q", "tipo", "sede"].includes(eje) && valor)
-            .map(([eje, valor]) => (
+          {Object.entries(criteria)
+            .filter(([eje, value]) => !["q", "tipo", "sede"].includes(eje) && value)
+            .map(([eje, value]) => (
               <input
                 key={eje}
                 type="hidden"
                 name={eje}
-                value={valor}
+                value={value}
               />
             ))}
-          <div className={styles.buscador}>
-            <div className={`${styles["buscador-segmento"]} ${styles["buscador-segmento-ancho"]}`}>
+          <div className={styles["search-bar"]}>
+            <div className={`${styles["search-segment"]} ${styles["search-segment-width"]}`}>
               <label
-                className={styles["buscador-etiqueta"]}
-                htmlFor="busqueda-q"
+                className={styles["search-label"]}
+                htmlFor="search-q"
               >
                 Qué buscas
               </label>
-              <div className={styles["buscador-control"]}>
+              <div className={styles["search-control"]}>
                 <input
                   ref={input}
                   className={styles["search-input"]}
-                  id="busqueda-q"
+                  id="search-q"
                   name="q"
                   type="search"
                   value={q}
@@ -73,66 +73,68 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
                   role="combobox"
                   aria-autocomplete="list"
                   aria-expanded={visible}
-                  aria-controls="busqueda-lista"
+                  aria-controls="search-list"
                   aria-activedescendant={
-                    visible && activa >= 0 ? `busqueda-opcion-${activa}` : undefined
+                    visible && activeIndex >= 0 ? `search-option-${activeIndex}` : undefined
                   }
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
                   onKeyDown={handleSuggestionKeyDown}
                 />
+
                 {q && (
                   <button
-                    className={styles["search-limpiar"]}
+                    className={styles["search-clear"]}
                     type="button"
                     aria-label="Borrar búsqueda"
                     onClick={clearSearch}
                   >
                     <Icon
-                      nombre="cerrar"
-                      tamano={16}
+                      name="close"
+                      size={16}
                     />
                   </button>
                 )}
               </div>
               <ul
-                id="busqueda-lista"
-                className={styles["search-lista"]}
+                id="search-list"
+                className={styles["search-list"]}
                 role="listbox"
                 aria-label="Sugerencias"
                 hidden={!visible}
               >
-                {opciones.map((opcion, i) => {
-                  const inicio = q.trim()
-                    ? normalizeText(opcion.texto).indexOf(normalizeText(q))
+                {options.map((option, i) => {
+                  const start = q.trim()
+                    ? normalizeText(option.texto).indexOf(normalizeText(q))
                     : -1;
                   return (
                     <li
-                      id={`busqueda-opcion-${i}`}
-                      key={opcion.texto}
-                      className={styles["search-opcion"]}
+                      id={`search-option-${i}`}
+                      key={option.texto}
+                      className={styles["search-option"]}
                       role="option"
-                      aria-selected={activa === i}
+                      aria-selected={activeIndex === i}
                       onPointerDown={(event) => event.preventDefault()}
-                      onClick={() => selectSuggestion(opcion.texto)}
+                      onClick={() => selectSuggestion(option.texto)}
                     >
                       <Icon
-                        nombre="buscar"
-                        tamano={16}
+                        name="search"
+                        size={16}
                       />
-                      <span className={styles["search-opcion-texto"]}>
-                        {inicio >= 0 ? (
+
+                      <span className={styles["search-option-text"]}>
+                        {start >= 0 ? (
                           <>
-                            {opcion.texto.slice(0, inicio)}
-                            <mark>{opcion.texto.slice(inicio, inicio + q.trim().length)}</mark>
-                            {opcion.texto.slice(inicio + q.trim().length)}
+                            {option.texto.slice(0, start)}
+                            <mark>{option.texto.slice(start, start + q.trim().length)}</mark>
+                            {option.texto.slice(start + q.trim().length)}
                           </>
                         ) : (
-                          opcion.texto
+                          option.texto
                         )}
                       </span>
-                      {opcion.reciente && (
-                        <span className={styles["search-opcion-nota"]}>reciente</span>
+                      {option.reciente && (
+                        <span className={styles["search-option-note"]}>reciente</span>
                       )}
                     </li>
                   );
@@ -140,24 +142,25 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
               </ul>
             </div>
             <span
-              className={styles["buscador-filete"]}
+              className={styles["search-border"]}
               aria-hidden="true"
             />
-            <div className={styles["buscador-segmento"]}>
+
+            <div className={styles["search-segment"]}>
               <label
-                className={styles["buscador-etiqueta"]}
-                htmlFor="busqueda-tipo"
+                className={styles["search-label"]}
+                htmlFor="search-type"
               >
                 Red
               </label>
               <select
-                className={styles["buscador-select"]}
-                id="busqueda-tipo"
+                className={styles["search-select"]}
+                id="search-type"
                 name="tipo"
-                defaultValue={criterios.tipo ?? ""}
+                defaultValue={criteria.tipo ?? ""}
               >
                 <option value="">Todas las redes</option>
-                {Object.entries(redes).map(([tipo, red]) => (
+                {Object.entries(redes).map(([tipo, network]) => (
                   <option
                     key={tipo}
                     value={tipo}
@@ -166,30 +169,31 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
                       ? "Nacionales"
                       : tipo === "universitarios"
                         ? "Universitarios"
-                        : red.nombre}
+                        : network.nombre}
                   </option>
                 ))}
               </select>
             </div>
             <span
-              className={styles["buscador-filete"]}
+              className={styles["search-border"]}
               aria-hidden="true"
             />
-            <div className={styles["buscador-segmento"]}>
+
+            <div className={styles["search-segment"]}>
               <label
-                className={styles["buscador-etiqueta"]}
-                htmlFor="busqueda-sede"
+                className={styles["search-label"]}
+                htmlFor="search-location"
               >
                 Sede
               </label>
               <select
-                className={styles["buscador-select"]}
-                id="busqueda-sede"
+                className={styles["search-select"]}
+                id="search-location"
                 name="sede"
-                defaultValue={criterios.sede ?? ""}
+                defaultValue={criteria.sede ?? ""}
               >
                 <option value="">Cualquier sede</option>
-                {sedes.map((sede) => (
+                {locations.map((sede) => (
                   <option
                     key={sede.clave}
                     value={sede.clave}
@@ -200,21 +204,22 @@ const SearchBar = ({ titulo, criterios = {}, sedes, sugerencias, frecuentes = []
               </select>
             </div>
             <button
-              className={styles["buscador-orbe"]}
+              className={styles["search-orb"]}
               type="submit"
               aria-label="Buscar"
             >
               <Icon
-                nombre="buscar"
-                tamano={18}
+                name="search"
+                size={18}
               />
-              <span className={styles["buscar-texto"]}>Buscar</span>
+
+              <span className={styles["search-text"]}>Buscar</span>
             </button>
           </div>
         </form>
-        {frecuentes.length > 0 && (
-          <p className={styles["search-frecuentes"]}>
-            {frecuentes.map((q) => (
+        {popularSearches.length > 0 && (
+          <p className={styles["search-popular"]}>
+            {popularSearches.map((q) => (
               <Link
                 key={q}
                 href={getCatalogUrl({ q })}

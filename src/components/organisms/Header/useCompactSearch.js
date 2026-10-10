@@ -3,34 +3,34 @@
 import { useEffect, useState } from "react";
 
 /** Muestra el acceso al buscador cuando éste queda fuera de la pantalla. */
-export function useCompactSearch(ruta) {
-  const [compacto, setCompact] = useState(false);
+export function useCompactSearch(pathname) {
+  const [compact, setCompact] = useState(false);
   useEffect(() => {
-    let actual;
-    const observer = new IntersectionObserver(([entrada]) => setCompact(!entrada.isIntersecting));
+    let current;
+    const observer = new IntersectionObserver(([entry]) => setCompact(!entry.isIntersecting));
     function observeSearchBar() {
-      const elemento = document.querySelector("[data-buscador]");
-      if (actual === elemento) {
+      const element = document.querySelector("[data-search]");
+      if (current === element) {
         return;
       }
       observer.disconnect();
-      actual = elemento;
-      if (elemento) {
-        observer.observe(elemento);
+      current = element;
+      if (element) {
+        observer.observe(element);
       } else {
         setCompact(false);
       }
     }
     // Next conserva la cabecera al navegar, pero reemplaza el buscador de la página.
     // Volvemos a observarlo cuando cambia el DOM, incluso si llega por streaming.
-    const cambios = new MutationObserver(observeSearchBar);
-    cambios.observe(document.body, { childList: true, subtree: true });
+    const changes = new MutationObserver(observeSearchBar);
+    changes.observe(document.body, { childList: true, subtree: true });
     observeSearchBar();
     return () => {
       observer.disconnect();
-      cambios.disconnect();
+      changes.disconnect();
     };
-  }, [ruta]);
+  }, [pathname]);
 
-  return compacto;
+  return compact;
 }

@@ -1,21 +1,21 @@
-.redes {
-  padding-block: var(--espacio-seccion);
+.networks {
+  padding-block: var(--space-section);
 }
 
-.redes-lista {
+.networks-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--espacio-lg);
+  gap: var(--space-lg);
 
-  margin: var(--espacio-lg) 0 0;
+  margin: var(--space-lg) 0 0;
   padding: 0;
   list-style: none;
 }
 
-.red {
+.network {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-md);
+  gap: var(--space-md);
 
   color: inherit;
   text-decoration: none;
@@ -23,36 +23,36 @@
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 4px;
-    border-radius: var(--radio-md);
+    border-radius: var(--radius-md);
   }
 }
 
-.red-foto {
+.network-photo {
   aspect-ratio: 3 / 2;
 
-  border-radius: var(--radio-md);
-  background-color: var(--superficie-fuerte);
-  background-image: var(--foto);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-strong);
+  background-image: var(--photo);
   background-size: cover;
   background-position: center;
 
-  transition: scale 0.3s var(--suave);
+  transition: scale 0.3s var(--soft);
 
-  .red:hover & {
+  .network:hover & {
     scale: 1.01;
   }
 }
 
-.red-cuerpo {
+.network-body {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-xs);
+  gap: var(--space-xs);
 }
 
-.red-titulo {
+.network-title {
   display: flex;
   align-items: center;
-  gap: var(--espacio-sm);
+  gap: var(--space-sm);
 
   color: var(--color-black);
   font: var(--font-title-small);
@@ -63,27 +63,27 @@
     flex: 0 0 auto;
     width: 8px;
     height: 8px;
-    border-radius: var(--radio-full);
-    background: var(--punto, var(--color-neutral));
+    border-radius: var(--radius-full);
+    background: var(--dot, var(--color-neutral));
   }
 }
 
-.red[data-tipo="nacionales"] {
-  --punto: var(--color-tipo-nacionales);
+.network[data-type="nacionales"] {
+  --dot: var(--color-type-nacionales);
 }
-.red[data-tipo="universitarios"] {
-  --punto: var(--color-tipo-universitarios);
+.network[data-type="universitarios"] {
+  --dot: var(--color-type-universitarios);
 }
-.red[data-tipo="unidades"] {
-  --punto: var(--color-tipo-unidades);
+.network[data-type="unidades"] {
+  --dot: var(--color-type-unidades);
 }
 
-.red-texto {
+.network-text {
   color: var(--color-neutral-dark);
   font: var(--font-medium-regular);
 }
 
-.red-cuenta {
+.network-count {
   color: var(--color-brand-ink);
   font: var(--font-small-semibold);
   letter-spacing: var(--tracking-small);
@@ -91,8 +91,8 @@
 }
 
 @media (min-width: 744px) {
-  .redes-lista {
+  .networks-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--espacio-base);
+    gap: var(--space-base);
   }
 }

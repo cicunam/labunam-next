@@ -7,10 +7,14 @@ const meta = {
   // El contraste naranja/blanco es una excepción de imagen documentada en el plan.
   parameters: { a11y: { test: "todo" } },
   args: { children: "Buscar laboratorios", onClick: fn() },
-  argTypes: { tamano: { control: "select", options: ["pequeno", "mediano", "grande"] } },
+  argTypes: { size: { control: "select", options: ["small", "medium", "large"] } },
 };
 export default meta;
-export const Pequeno = { args: { tamano: "pequeno" } };
-export const Mediano = { args: { tamano: "mediano" } };
-export const Grande = { args: { tamano: "grande" } };
-export const Deshabilitado = { args: { disabled: true } };
+const Small = { args: { size: "small" } };
+export { Small };
+const Medium = { args: { size: "medium" } };
+export { Medium };
+const Large = { args: { size: "large" } };
+export { Large };
+const Disabled = { args: { disabled: true } };
+export { Disabled };

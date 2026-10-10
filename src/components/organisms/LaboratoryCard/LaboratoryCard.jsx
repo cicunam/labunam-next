@@ -5,67 +5,65 @@ import styles from "./LaboratoryCard.module.css";
 
 const LaboratoryCard = ({
   laboratorio: lab,
-  foto,
-  prioritaria = false,
-  coincidencias = [],
-  busqueda = "",
+  photo,
+  priority = false,
+  matches = [],
+  query = "",
 }) => {
-  const capacidades = getCapabilities(lab.servicios, lab.equipos, coincidencias);
+  const capacidades = getCapabilities(lab.servicios, lab.equipos, matches);
   const area = lab.grupos?.length === 1 ? lab.grupos[0] : "general";
-  const coincidencia = capacidades.coincide ? capacidades.items[0] : undefined;
-  const detalle = coincidencia
-    ? getCapabilityExcerpt(coincidencia.texto, busqueda)
-    : lab.sedeNombre;
+  const match = capacidades.coincide ? capacidades.items[0] : undefined;
+  const detail = match ? getCapabilityExcerpt(match.texto, query) : lab.sedeNombre;
   return (
-    <article className={styles.tarjeta}>
+    <article className={styles.card}>
       <div
         className={styles.visual}
-        data-tipo-imagen={foto.tipo}
+        data-image-type={photo.tipo}
         data-area={area}
       >
-        {foto.tipo === "ilustracion" ? (
+        {photo.tipo === "illustration" ? (
           <div
-            className={styles.ilustracion}
+            className={styles.illustration}
             aria-hidden="true"
           >
-            <span className={styles.orbita} />
-            <span className={styles.simbolo}>
+            <span className={styles.orbit} />
+            <span className={styles.symbol}>
               <Icon
-                nombre={area}
-                tamano={76}
+                name={area}
+                size={76}
               />
             </span>
           </div>
         ) : (
           <img
-            src={foto.src}
-            srcSet={foto.srcSet}
+            src={photo.src}
+            srcSet={photo.srcSet}
             sizes="(min-width: 1128px) 25vw, (min-width: 744px) 33vw, 100vw"
             alt=""
-            loading={prioritaria ? "eager" : "lazy"}
-            fetchPriority={prioritaria ? "high" : "auto"}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
             decoding="async"
           />
         )}
         <span
-          className={styles.insignia}
-          data-tipo={lab.tipo}
+          className={styles.badge}
+          data-type={lab.tipo}
         >
           {redes[lab.tipo].singular}
         </span>
         <span
-          className={styles.flecha}
+          className={styles.arrow}
           aria-hidden="true"
         >
           ↗
         </span>
       </div>
-      <div className={styles.contenido}>
-        <h3 className={styles.titulo}>
+      <div className={styles.content}>
+        <h3 className={styles.title}>
           <button
-            className={styles.disparador}
+            className={styles.trigger}
             type="button"
-            data-ficha={lab.idLab}
+            data-details={lab.idLab}
             aria-haspopup="dialog"
             title={lab.nombre}
           >
@@ -73,18 +71,18 @@ const LaboratoryCard = ({
           </button>
         </h3>
         <p
-          className={styles.entidad}
+          className={styles.entity}
           title={lab.entidad}
         >
           {lab.entidad}
         </p>
-        {detalle && (
+        {detail && (
           <p
-            className={styles.detalle}
-            data-coincidencia={Boolean(coincidencia)}
-            title={coincidencia?.texto ?? detalle}
+            className={styles.detail}
+            data-match={Boolean(match)}
+            title={match?.texto ?? detail}
           >
-            {detalle}
+            {detail}
           </p>
         )}
       </div>

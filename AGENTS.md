@@ -28,7 +28,7 @@
 - Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
 - Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
   Una carpeta por módulo en `src/lib/`, con pruebas y fixtures junto al módulo.
-- Componentes y funciones en inglés. Conservar nombres de entidades y
+- Componentes, props, variables internas, variantes, clases CSS, tokens y atributos técnicos en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
 - Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
   `export default Component;` al final. Importarlos sin llaves y conservar el nombre.

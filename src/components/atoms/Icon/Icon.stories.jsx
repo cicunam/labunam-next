@@ -3,7 +3,7 @@ import Icon from "./Icon";
 const meta = {
   title: "Átomos/Icon",
   component: Icon,
-  args: { nombre: "biologia", etiqueta: "Biología" },
+  args: { name: "biologia", label: "Biología" },
 };
 export default meta;
 export const Biologia = {};
@@ -11,7 +11,7 @@ export const Areas = {
   render: () => (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 24, maxWidth: 600 }}>
       {[
-        "todas",
+        "all",
         "biologia",
         "salud",
         "quimica",
@@ -22,11 +22,11 @@ export const Areas = {
         "ingenieria",
         "sostenibilidad",
         "humanidades",
-      ].map((nombre) => (
+      ].map((name) => (
         <Icon
-          key={nombre}
-          nombre={nombre}
-          etiqueta={nombre}
+          key={name}
+          name={name}
+          label={name}
         />
       ))}
     </div>

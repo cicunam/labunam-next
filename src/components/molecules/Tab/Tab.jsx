@@ -1,6 +1,6 @@
 import styles from "./Tab.module.css";
 
-const Tab = ({ id, panelId, seleccionada, className = "", ...props }) => {
+const Tab = ({ id, panelId, selected, className = "", ...props }) => {
   return (
     <button
       {...props}
@@ -8,9 +8,9 @@ const Tab = ({ id, panelId, seleccionada, className = "", ...props }) => {
       type="button"
       role="tab"
       aria-controls={panelId}
-      aria-selected={seleccionada}
-      tabIndex={seleccionada ? 0 : -1}
-      className={`${styles.pestana} ${className}`}
+      aria-selected={selected}
+      tabIndex={selected ? 0 : -1}
+      className={`${styles.tab} ${className}`}
     />
   );
 };

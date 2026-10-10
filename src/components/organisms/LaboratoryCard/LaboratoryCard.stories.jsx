@@ -5,7 +5,7 @@ const meta = {
   title: "Organismos/LaboratoryCard",
   component: LaboratoryCard,
   parameters: { layout: "fullscreen" },
-  args: { laboratorio, foto: laboratorio.galeria[0] },
+  args: { laboratorio, photo: laboratorio.galeria[0] },
   decorators: [
     (Story) => (
       <div style={{ maxWidth: 320 }}>
@@ -15,17 +15,21 @@ const meta = {
   ],
 };
 export default meta;
-export const Principal = {};
-export const SinFotografia = {
+const Default = {};
+export { Default };
+const WithoutPhoto = {
   args: {
-    foto: {
+    photo: {
       src: "/assets/respaldos/general.svg",
       alt: "Sin fotografía disponible. Ilustración general de laboratorio.",
-      tipo: "ilustracion",
+      tipo: "illustration",
     },
   },
 };
-export const Coincidencia = { args: { coincidencias: ["Microscopio"] } };
-export const SinCapacidades = {
+export { WithoutPhoto };
+const Match = { args: { matches: ["Microscopio"] } };
+export { Match };
+const WithoutCapabilities = {
   args: { laboratorio: { ...laboratorio, servicios: [], equipos: [] } },
 };
+export { WithoutCapabilities };
