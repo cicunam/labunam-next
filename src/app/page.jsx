@@ -1,11 +1,12 @@
-// Datos del servidor
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { countFacet } from "@/lib/buscador/buscador";
-import { readPhotos } from "@/lib/fotos/fotos";
-import { grupos } from "@/lib/grupos/grupos";
-import { homeNetworks } from "@/lib/home/homeContent";
+// LabUNAM
+// Páginas
+// Portada (/)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
-// Secciones de la portada
+// Servicios
+import { getHomeData } from "@/server/home/homeService";
+
+// Componentes (secciones de la portada)
 import {
   SearchBar,
   LaboratoryNetworks,
@@ -17,41 +18,35 @@ import {
   LaboratoryDialog,
 } from "@/components";
 
+// Configuración de Next
 export const dynamic = "force-dynamic";
 
+// Definición de la página
+// No recibe props: todo sale de getHomeData.
 const HomePage = async () => {
-  // Los conteos y las fotos se preparan en servidor; el cliente recibe sólo lo que muestra.
-  const [catalogo, photos] = await Promise.all([loadCatalog(), readPhotos()]);
-  const tipos = homeNetworks.map(({ tipo }) => tipo);
-  const counts = countFacet(catalogo.laboratorios, {}, "tipo", tipos);
-  const areas = countFacet(
-    catalogo.laboratorios,
-    {},
-    "disciplina",
-    grupos.map((grupo) => grupo.clave),
-  );
-  const recentSearches = [...catalogo.laboratorios]
-    .sort((a, b) => b.fecha.localeCompare(a.fecha) || b.idLab - a.idLab)
-    .slice(0, 4);
+  // Datos
+  const { locations, suggestions, counts, areaCounts, recentLaboratorios, photos, total } =
+    await getHomeData();
 
+  // Interfaz
   return (
     <>
       <SearchBar
         title="Encuentra el laboratorio que necesitas"
-        locations={catalogo.sedes}
-        suggestions={catalogo.sugerencias}
+        locations={locations}
+        suggestions={suggestions}
         popularSearches={["Microscopía", "Rayos X", "Cromatografía"]}
       />
 
       <LaboratoryNetworks counts={counts} />
       <RecentLaboratories
-        recentLaboratorios={recentSearches}
+        recentLaboratorios={recentLaboratorios}
         photos={photos}
-        total={catalogo.laboratorios.length}
+        total={total}
       />
 
-      <DisciplineSection areaCounts={areas} />
-      <LaboratoryMap locations={catalogo.sedes} />
+      <DisciplineSection areaCounts={areaCounts} />
+      <LaboratoryMap locations={locations} />
       <NewsSection />
       <About />
       <LaboratoryDialog />

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getSearchOptions, saveRecentSearch, readRecentSearches } from "../sugerencias/sugerencias";
-import { prepareFilters } from "../filtros/filtros";
-import { normalizeCatalog } from "../normalizeCatalog/normalizeCatalog";
-import { createTestData } from "../catalogo/catalogo.fixtures";
+import { prepareFilters } from "../../server/filtros/filterOptions";
+import { assembleCatalog } from "../../server/catalogo/catalogoAssembler";
+import { createTestData } from "../../server/catalogo/catalogo.fixtures";
 import { filterLaboratorios, getFacetValues } from "../buscador/buscador";
 import { getPhotos } from "../fotos/fotos";
 import { formatCounts, getCatalogUrl } from "../presentacion/presentacion";
@@ -44,7 +44,7 @@ describe("búsquedas recientes", () => {
   });
 });
 it("calcula los cinco ejes respetando los otros filtros", () => {
-  const catalogo = normalizeCatalog(createTestData());
+  const catalogo = assembleCatalog(createTestData());
   const criterios = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
   const resultado = prepareFilters(catalogo, criterios);
   expect(resultado.total).toBe(filterLaboratorios(catalogo.laboratorios, criterios).length);

@@ -1,9 +1,17 @@
+// LabUNAM
+// Páginas
+// Catálogo de laboratorios (/laboratorios)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { filterLaboratorios, normalizeCriteria } from "@/lib/buscador/buscador";
-import { prepareFilters } from "@/lib/filtros/filtros";
-import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
+import { getPhotos } from "@/lib/fotos/fotos";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
+
+// Servicios
+import { searchCatalog } from "@/server/catalogo/catalogoSearchService";
+
+// Componentes
 import {
   SearchBar,
   FilterDialog,
@@ -12,19 +20,30 @@ import {
   LaboratoryDialog,
   ActiveChip,
 } from "@/components";
+
+// Estilos
 import styles from "./Laboratorios.module.css";
 
+// Configuración de Next
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Laboratorios" };
-const LaboratoriesPage = async ({ searchParams }) => {
-  const parameters = await searchParams;
-  const [catalogo, photos] = await Promise.all([loadCatalog(), readPhotos()]);
-  const criteria = normalizeCriteria(
-    catalogo.laboratorios,
-    Object.fromEntries(Object.entries(parameters).filter(([, v]) => typeof v === "string")),
-  );
-  const results = filterLaboratorios(catalogo.laboratorios, criteria);
-  const { filtros, total } = prepareFilters(catalogo, criteria);
+
+// Definición de la página
+const LaboratoriesPage = async ({
+  searchParams, // Promise - Resuelve al objeto con los parámetros de la URL (q, tipo, disciplina, sede…)
+}) => {
+  // Datos
+  const {
+    criteria,
+    results,
+    filters: filtros,
+    total,
+    locations,
+    suggestions,
+    photos,
+  } = await searchCatalog(await searchParams);
+
+  // Preparación de datos
   const title = criteria.tipo ? redes[criteria.tipo].nombre : "Laboratorios de la UNAM";
   const labels = Object.fromEntries(
     filtros.flatMap((filtro) =>
@@ -32,14 +51,16 @@ const LaboratoriesPage = async ({ searchParams }) => {
     ),
   );
   const activeFilters = Object.entries(criteria).filter(([, value]) => value);
+
+  // Interfaz
   return (
     <>
       <SearchBar
         key={getCatalogUrl(criteria)}
         title={title}
         criteria={criteria}
-        locations={catalogo.sedes}
-        suggestions={catalogo.sugerencias}
+        locations={locations}
+        suggestions={suggestions}
       />
 
       <section

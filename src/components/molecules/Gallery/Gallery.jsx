@@ -1,7 +1,20 @@
+// LabUNAM
+// Moléculas
+// Gallery (hasta tres imágenes de un laboratorio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Estilos
 import styles from "./Gallery.module.css";
 
-const Gallery = ({ images, label = "Galería" }) => {
+// Definición del componente
+const Gallery = ({
+  images, // Array - Imágenes de getPhotos con src, srcSet, alt y tipo; se muestran hasta tres
+  label = "Galería", // String Optional - Nombre accesible del grupo de imágenes
+}) => {
+  // Preparación de datos
   const photos = images.slice(0, 3);
+
+  // Interfaz
   if (!photos.length) {
     return <p className={styles.empty}>Sin imágenes disponibles.</p>;
   }

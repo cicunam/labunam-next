@@ -18,7 +18,8 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
 | `src/components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
 | `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
-| `src/lib/` | Datos y funciones sin React | `catalogo`, `buscador`, `fotos` |
+| `src/server/` | Backend por entidad | DAO, servicios, controladores y caché |
+| `src/lib/` | Funciones compartidas sin React | `texto`, `buscador`, `fotos` |
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
 | `tests/e2e/` | Pruebas en navegador | Catálogo, fichas, carrusel |
@@ -26,7 +27,7 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `docs/` | Guías y acuerdos | Este documento |
 
 `@/` en un import apunta a `src/`, por ejemplo
-`@/lib/catalogo/catalogo`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
+`@/server/catalogo/catalogoService`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
 la raíz. Las páginas y layouts usan `@/components`, que apunta al único barril
 `src/components/index.js`. Este archivo reúne los componentes mediante reexports
 nombrados. Entre componentes y en historias se usan rutas directas para evitar ciclos.
@@ -77,15 +78,20 @@ normal del servidor no se puede pasar como callback de clic a esa frontera.
 ```mermaid
 flowchart TD
   A[GET /laboratorios?q=microscopia] --> B[Página de servidor]
-  B --> C[loadCatalog]
+  B --> S[searchCatalog: servicio de búsqueda]
+  S --> C[loadCatalog]
   C --> D{Caché vigente}
   D -->|Sí| E[Catálogo normalizado]
-  D -->|No| F[Seis consultas SELECT a MySQL]
-  F --> E
+  D -->|No| F[Seis DAO consultan MySQL]
+  F --> M[Mapper y armado del catálogo]
+  M --> E
   E --> G[Búsqueda y facetas en lib]
   G --> H[HTML de tarjetas y datos públicos para controles]
   H --> I[Navegador: filtros y modal]
   I --> J[API de filtros o ficha cuando se necesita]
+  J --> K[Controller]
+  K --> L[Servicio compartido]
+  L --> C
 ```
 
 La caché dura 600 segundos por defecto y conserva la copia anterior si falla una
@@ -99,7 +105,7 @@ la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 ## Cómo decidir dónde editar
 
 Orden de portada: `src/app/page.jsx`. Textos de redes y noticias de ejemplo: `src/lib/home/homeContent.js`. Estilo de una tarjeta: su CSS Module.
-Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/lib/catalogo/`.
+Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/server/<entidad>/*Dao.js`.
 Interacción del carrusel: `public/js/carousel.js` y su organismo; es una mejora
 sobre HTML de servidor y no exige convertir toda la portada a cliente.
 

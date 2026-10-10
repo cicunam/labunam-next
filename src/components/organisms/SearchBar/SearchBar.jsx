@@ -1,13 +1,33 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// SearchBar (buscador principal con sugerencias, red y sede)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
-import { useSearchSuggestions } from "./useSearchSuggestions";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 import { normalizeText } from "@/lib/texto/texto";
+
+// Mecanismos
+import { useSearchSuggestions } from "./useSearchSuggestions";
+
+// Componentes
 import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
 import styles from "./SearchBar.module.css";
 
-const SearchBar = ({ title, criteria = {}, locations, suggestions, popularSearches = [] }) => {
+// Definición del componente
+const SearchBar = ({
+  title, // String - Encabezado principal de la sección
+  criteria = {}, // Object Optional - Criterios activos; rellenan el formulario y los demás filtros viajan como campos ocultos
+  locations, // Array - Sedes con clave y etiqueta para el selector
+  suggestions, // Array - Textos (String) que se sugieren mientras se escribe
+  popularSearches = [], // Array Optional - Búsquedas rápidas (String) que se muestran bajo el formulario
+}) => {
+  // Mecanismos
   const {
     q,
     activeIndex,
@@ -23,6 +43,7 @@ const SearchBar = ({ title, criteria = {}, locations, suggestions, popularSearch
     handleSubmit,
   } = useSearchSuggestions({ criteria, suggestions });
 
+  // Interfaz
   return (
     <div
       className={styles.block}

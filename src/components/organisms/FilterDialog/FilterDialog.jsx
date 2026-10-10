@@ -1,12 +1,29 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// FilterDialog (barra de áreas y diálogo de filtros con conteos en vivo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useEffect, useRef, useState } from "react";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
+
+// Componentes
 import FilterOption from "../../molecules/FilterOption/FilterOption";
 import Icon from "../../atoms/Icon/Icon";
-import { getCatalogUrl } from "@/lib/presentacion/presentacion";
+
+// Estilos
 import styles from "./FilterDialog.module.css";
 
-const FilterDialog = ({ criteria, filters, total, children }) => {
+// Definición del componente
+const FilterDialog = ({
+  criteria, // Object - Criterios aplicados en la URL; son el punto de partida del borrador
+  filters, // Array - Facetas de prepareFilters: eje, etiqueta, cualquiera y opciones con clave, etiqueta y total
+  total, // Number - Laboratorios que coinciden con los criterios aplicados
+  children, // ReactNode Optional - Contenido de la barra horizontal; en el catálogo es DisciplineBar
+}) => {
+  // Referencias y estado
   const dialog = useRef(null);
   const bar = useRef(null);
   const request = useRef(null);
@@ -15,6 +32,8 @@ const FilterDialog = ({ criteria, filters, total, children }) => {
   const [data, setData] = useState({ filtros: filters, total });
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+
+  // Arrastre con mouse y flechas de la barra horizontal
   useEffect(() => {
     const track = bar.current?.querySelector("[data-track]");
     const arrows = bar.current?.querySelectorAll("[data-move]");
@@ -121,6 +140,8 @@ const FilterDialog = ({ criteria, filters, total, children }) => {
       request.current?.abort();
     };
   }, []);
+
+  // Gestores de evento
   async function updateSelection(nextSelection) {
     setSelection(nextSelection);
     setPending(true);
@@ -150,6 +171,8 @@ const FilterDialog = ({ criteria, filters, total, children }) => {
       }
     }
   }
+
+  // Interfaz
   return (
     <div
       ref={bar}

@@ -1,9 +1,21 @@
+// LabUNAM
+// Organismos
+// Contact (contacto general o solicitud de servicio a un laboratorio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Componentes
 import Input from "../../atoms/Input/Input";
 import Button from "../../atoms/Button/Button";
 import AppLink from "../../atoms/AppLink/AppLink";
+
+// Estilos
 import styles from "./Contact.module.css";
 
-const Contact = ({ laboratorio: lab }) => {
+// Definición del componente
+const Contact = ({
+  laboratorio: lab, // Object Optional - Laboratorio de getContactDetails (idLab, nombre, entidad, servicios, sitio); sin él muestra el contacto general
+}) => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.contact}`}

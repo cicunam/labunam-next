@@ -1,7 +1,18 @@
+// LabUNAM
+// Organismos
+// Footer (pie del sitio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
+
+// Estilos
 import styles from "./Footer.module.css";
 
+// Definición del componente
+// No recibe props: enlaces y créditos son fijos.
 const Footer = () => {
+  // Interfaz
   return (
     <footer className={styles["footer"]}>
       <div className={styles["footer-content"]}>

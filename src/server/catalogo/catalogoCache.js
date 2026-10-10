@@ -1,12 +1,3 @@
-import { readCatalogRows } from "./catalogoQueries";
-import { normalizeCatalog } from "../normalizeCatalog/normalizeCatalog";
-
-/** Lee MySQL y transforma sus filas al catálogo público utilizado por la interfaz. */
-export async function buildCatalog() {
-  const rows = await readCatalogRows();
-  return normalizeCatalog(rows);
-}
-
 // Esta caché pertenece a un proceso Node; cada worker mantiene su propia copia.
 let cachedCatalog;
 let expiresAt = 0;
@@ -16,7 +7,7 @@ let pendingCatalog;
  * Devuelve el catálogo vigente y renueva una copia vencida cuando llega una petición.
  * Si falla MySQL, conserva el último catálogo válido; sin respaldo devuelve un error público.
  */
-export async function loadCatalog() {
+export async function getCachedCatalog(buildCatalog) {
   if (cachedCatalog && Date.now() < expiresAt) {
     return cachedCatalog;
   }
@@ -26,11 +17,11 @@ export async function loadCatalog() {
     return pendingCatalog;
   }
 
-  pendingCatalog = refreshCatalog();
+  pendingCatalog = refreshCatalog(buildCatalog);
   return pendingCatalog;
 }
 
-async function refreshCatalog() {
+async function refreshCatalog(buildCatalog) {
   try {
     const catalogo = await buildCatalog();
     const configuredSeconds = Number(process.env.LABUNAM_CATALOGO_SEGUNDOS ?? 600);

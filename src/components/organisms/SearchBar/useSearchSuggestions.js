@@ -1,5 +1,11 @@
 "use client";
 
+// LabUNAM
+// Mecanismos
+// useSearchSuggestions (sugerencias, historial y teclado del SearchBar)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useEffect, useRef, useState } from "react";
 import {
   saveRecentSearch,
@@ -7,8 +13,12 @@ import {
   getSearchOptions,
 } from "@/lib/sugerencias/sugerencias";
 
-/** Gestiona sugerencias, historial local y teclado; no consulta el catálogo. */
-export function useSearchSuggestions({ criteria, suggestions }) {
+// Definición del mecanismo
+// Gestiona sugerencias, historial local y teclado; no consulta el catálogo.
+export function useSearchSuggestions({
+  criteria, // Object - Criterios activos; criteria.q es el texto inicial del campo
+  suggestions, // Array - Textos (String) del catálogo que se ofrecen como sugerencia
+}) {
   const [q, setQ] = useState(criteria.q ?? "");
   const [recentSearches, setRecentSearches] = useState([]);
   const [open, setOpen] = useState(false);

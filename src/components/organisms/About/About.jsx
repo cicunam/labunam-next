@@ -1,6 +1,15 @@
+// LabUNAM
+// Organismos
+// About (sección ¿Qué es LabUNAM?, misión y visión)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Estilos
 import styles from "./About.module.css";
 
+// Definición del componente
+// No recibe props: el texto es fijo.
 const About = () => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.about}`}

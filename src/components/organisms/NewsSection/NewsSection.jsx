@@ -1,8 +1,21 @@
-import styles from "./NewsSection.module.css";
-import Carousel from "../Carousel/Carousel";
+// LabUNAM
+// Organismos
+// NewsSection (noticias de la portada en carrusel)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { homeNews } from "@/lib/home/homeContent";
 
+// Componentes
+import Carousel from "../Carousel/Carousel";
+
+// Estilos
+import styles from "./NewsSection.module.css";
+
+// Definición del componente
+// No recibe props: las noticias de ejemplo salen de homeNews.
 const NewsSection = () => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.news}`}

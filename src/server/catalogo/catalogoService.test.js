@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createTestData } from "./catalogo.fixtures";
 
 const { queryMock } = vi.hoisted(() => ({ queryMock: vi.fn() }));
-vi.mock("../db/db", () => ({ query: queryMock }));
+vi.mock("../config/dbconnection.js", () => ({ query: queryMock }));
 beforeEach(() => {
   vi.resetModules();
   queryMock.mockReset();
@@ -36,7 +36,7 @@ afterEach(() => {
 });
 describe("catálogo y caché", () => {
   it("consulta las seis fuentes públicas con el filtro de población", async () => {
-    const { buildCatalog } = await import("./catalogo");
+    const { buildCatalog } = await import("./catalogoService");
     const catalogo = await buildCatalog();
     expect(catalogo.laboratorios).toHaveLength(3);
     expect(queryMock).toHaveBeenCalledTimes(6);
@@ -46,7 +46,7 @@ describe("catálogo y caché", () => {
     expect(sql).not.toContain("SELECT *");
   });
   it("comparte una carga concurrente y reutiliza la copia durante 600 segundos", async () => {
-    const { loadCatalog } = await import("./catalogo");
+    const { loadCatalog } = await import("./catalogoService");
     const [primera, segunda] = await Promise.all([loadCatalog(), loadCatalog()]);
     expect(segunda).toBe(primera);
     vi.advanceTimersByTime(599_999);
@@ -58,14 +58,14 @@ describe("catálogo y caché", () => {
   });
   it("respeta la duración configurada", async () => {
     vi.stubEnv("LABUNAM_CATALOGO_SEGUNDOS", "5");
-    const { loadCatalog } = await import("./catalogo");
+    const { loadCatalog } = await import("./catalogoService");
     await loadCatalog();
     vi.advanceTimersByTime(5000);
     await loadCatalog();
     expect(queryMock).toHaveBeenCalledTimes(12);
   });
   it("sirve la copia vencida si falla la base y vuelve a intentarlo", async () => {
-    const { loadCatalog } = await import("./catalogo");
+    const { loadCatalog } = await import("./catalogoService");
     const copia = await loadCatalog();
     vi.advanceTimersByTime(600_000);
     queryMock.mockRejectedValueOnce(new Error("Fallo simulado"));
@@ -73,7 +73,7 @@ describe("catálogo y caché", () => {
     expect(await loadCatalog()).not.toBe(copia);
   });
   it("devuelve un error público sin detalles internos si no hay copia", async () => {
-    const { loadCatalog } = await import("./catalogo");
+    const { loadCatalog } = await import("./catalogoService");
     queryMock.mockRejectedValue(new Error("Detalle interno de prueba"));
     await expect(loadCatalog()).rejects.toThrow("El catálogo no está disponible en este momento.");
   });

@@ -21,21 +21,28 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 it("reutiliza un único pool incluso después de recargar el módulo", async () => {
-  const { query } = await import("./db");
+  const { query } = await import("./dbconnection");
   expect(await query("SELECT COUNT(*) AS total FROM tabla_prueba")).toEqual([{ total: 3 }]);
   vi.resetModules();
-  const recargado = await import("./db");
+  const recargado = await import("./dbconnection");
   await recargado.query("SELECT COUNT(*) AS total FROM tabla_prueba");
   expect(createPoolMock).toHaveBeenCalledTimes(1);
 });
 it("no devuelve detalles de conexión cuando el motor falla", async () => {
   queryMock.mockRejectedValue(new Error("Detalle interno de prueba que no debe salir"));
-  const { query } = await import("./db");
+  const { query } = await import("./dbconnection");
   await expect(query("SELECT 1")).rejects.toThrow("No fue posible consultar la base de LabUNAM.");
 });
 it("no intenta conectar si falta la configuración requerida", async () => {
   vi.stubEnv("LABUNAM_DB_HOST", "");
-  const { query } = await import("./db");
+  const { query } = await import("./dbconnection");
   await expect(query("SELECT 1")).rejects.toThrow("No fue posible consultar la base de LabUNAM.");
   expect(createPoolMock).not.toHaveBeenCalled();
+});
+
+it("pasa los valores dinámicos como parámetros separados del SQL", async () => {
+  const { query } = await import("./dbconnection");
+  const value = "1 OR 1=1";
+  await query("SELECT idLab FROM r_seccion1 WHERE idLab = ?", [value]);
+  expect(queryMock).toHaveBeenCalledWith("SELECT idLab FROM r_seccion1 WHERE idLab = ?", [value]);
 });

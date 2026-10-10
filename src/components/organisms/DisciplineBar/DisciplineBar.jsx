@@ -1,10 +1,24 @@
+// LabUNAM
+// Organismos
+// DisciplineBar (barra horizontal de áreas del catálogo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
 import { grupos } from "@/lib/grupos/grupos";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
+
+// Componentes
 import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
 import styles from "./DisciplineBar.module.css";
 
-const DisciplineBar = ({ criteria }) => {
+// Definición del componente
+const DisciplineBar = ({
+  criteria, // Object - Criterios activos de la búsqueda; se conservan al cambiar de área
+}) => {
+  // Interfaz
   return (
     <div
       className={styles["strip-frame"]}

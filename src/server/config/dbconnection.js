@@ -28,9 +28,9 @@ function getConnection() {
   });
   return proceso.poolLabunam;
 }
-export async function query(sql) {
+export async function query(sql, parameters = []) {
   try {
-    const [filas] = await getConnection().query(sql);
+    const [filas] = await getConnection().query(sql, parameters);
     return filas;
   } catch {
     // Los errores del motor pueden incluir datos de conexión; no se propagan a la interfaz.

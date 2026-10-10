@@ -6,10 +6,10 @@ import {
   normalizeCriteria,
   getFacetValues,
 } from "./buscador";
-import { normalizeCatalog } from "../normalizeCatalog/normalizeCatalog";
-import { createTestData } from "../catalogo/catalogo.fixtures";
+import { assembleCatalog } from "../../server/catalogo/catalogoAssembler";
+import { createTestData } from "../../server/catalogo/catalogo.fixtures";
 
-const { laboratorios } = normalizeCatalog(createTestData());
+const { laboratorios } = assembleCatalog(createTestData());
 describe("filtrar", () => {
   it("busca sin acentos y prioriza el nombre sobre las capacidades", () => {
     const resultados = filterLaboratorios(laboratorios, { q: "microscopia" });

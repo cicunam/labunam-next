@@ -20,6 +20,24 @@ export default defineConfig([
       "labunam/component-export": "error",
     },
   },
+  {
+    files: ["src/components/**/*.{js,jsx}", "src/lib/**/*.js"],
+    ignores: ["**/*.test.js"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/server/**", "**/server/**"],
+              message:
+                "El backend se consume desde páginas de servidor o endpoints. Componentes y lib reciben datos o llaman la API.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   globalIgnores([
     ".next/**",
     "out/**",

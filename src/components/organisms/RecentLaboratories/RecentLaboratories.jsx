@@ -1,9 +1,25 @@
+// LabUNAM
+// Organismos
+// RecentLaboratories (laboratorios actualizados recientemente en la portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
-import styles from "./RecentLaboratories.module.css";
-import LaboratoryCard from "../LaboratoryCard/LaboratoryCard";
 import { getPhotos } from "@/lib/fotos/fotos";
 
-const RecentLaboratories = ({ recentLaboratorios, photos, total }) => {
+// Componentes
+import LaboratoryCard from "../LaboratoryCard/LaboratoryCard";
+
+// Estilos
+import styles from "./RecentLaboratories.module.css";
+
+// Definición del componente
+const RecentLaboratories = ({
+  recentLaboratorios, // Array - Laboratorios más recientes, con la forma del catálogo
+  photos, // Object - Manifiesto de fotos por idLab que getPhotos usa para elegir cada imagen
+  total, // Number - Total de laboratorios del catálogo
+}) => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.featured}`}

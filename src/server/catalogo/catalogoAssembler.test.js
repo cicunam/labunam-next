@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { normalizeCatalog } from "./normalizeCatalog";
-import { createTestData, createLaboratorioRow } from "../catalogo/catalogo.fixtures";
-import { grupos } from "../grupos/grupos";
+import { assembleCatalog } from "./catalogoAssembler";
+import { createTestData, createLaboratorioRow } from "./catalogo.fixtures";
+import { grupos } from "../../lib/grupos/grupos";
 
-describe("normalizarCatalogo", () => {
+describe("armado del catálogo", () => {
   it("recupera la sede de la dependencia y corrige acentos", () => {
-    const catalogo = normalizeCatalog(createTestData());
+    const catalogo = assembleCatalog(createTestData());
     expect(catalogo.laboratorios.find((lab) => lab.idLab === 1)?.sedeNombre).toBe(
       "Ciudad de México",
     );
@@ -15,7 +15,7 @@ describe("normalizarCatalogo", () => {
     ]);
   });
   it("deduplica servicios y equipos sin acentos ni mayúsculas", () => {
-    const lab = normalizeCatalog(createTestData()).laboratorios.find((lab) => lab.idLab === 1);
+    const lab = assembleCatalog(createTestData()).laboratorios.find((lab) => lab.idLab === 1);
     expect(lab.equipos).toEqual(["Microscopio óptico"]);
     expect(lab.servicios).toEqual(["Microscopía óptica"]);
     expect(lab.indice).toContain("microscopia optica");
@@ -27,7 +27,7 @@ describe("normalizarCatalogo", () => {
     expect(lab.sitio).toBe("http://example.org/");
   });
   it("construye grupos, perfiles, distinciones y micrositio", () => {
-    const lab = normalizeCatalog(createTestData()).laboratorios.find((lab) => lab.idLab === 2);
+    const lab = assembleCatalog(createTestData()).laboratorios.find((lab) => lab.idLab === 2);
     expect(lab.grupos).toEqual(["fisica", "materiales"]);
     expect(lab.perfil).toEqual(["servicios", "basica"]);
     expect(lab.distinciones).toEqual(["Acreditación: Acreditación de prueba"]);
@@ -39,7 +39,7 @@ describe("normalizarCatalogo", () => {
     const datos = createTestData();
     datos.filas[0].dependenciaTitulo = "Centro de Pruebas Ópticas";
     datos.filas.push(createLaboratorioRow({ idLab: 99, idTpLab: 0 }));
-    const catalogo = normalizeCatalog(datos);
+    const catalogo = assembleCatalog(datos);
     expect(catalogo.laboratorios).toHaveLength(3);
     expect(catalogo.laboratorios.find((lab) => lab.idLab === 1)?.entidad).toBe(
       "Centro de Pruebas Ópticas",
@@ -61,7 +61,7 @@ describe("normalizarCatalogo", () => {
         fecha: null,
       }),
     ];
-    const lab = normalizeCatalog(datos).laboratorios[0];
+    const lab = assembleCatalog(datos).laboratorios[0];
     expect([lab.sede, lab.sedeNombre, lab.ubicacion, lab.mapa, lab.sitio, lab.fecha]).toEqual([
       "",
       "",
@@ -74,14 +74,14 @@ describe("normalizarCatalogo", () => {
   it("usa claves únicas y conserva especialidades con cero laboratorios", () => {
     const datos = createTestData();
     datos.disciplinas.push({ idDis: 36, disiplina: "QUÍMICA" });
-    const catalogo = normalizeCatalog(datos);
+    const catalogo = assembleCatalog(datos);
     for (const opciones of [catalogo.sedes, catalogo.disciplinas]) {
       expect(new Set(opciones.map((opcion) => opcion.clave)).size).toBe(opciones.length);
     }
     expect(catalogo.disciplinas.find((opcion) => opcion.clave === "quimica")?.total).toBe(0);
   });
   it("sugiere disciplinas y equipos presentes en al menos tres laboratorios", () => {
-    const catalogo = normalizeCatalog(createTestData());
+    const catalogo = assembleCatalog(createTestData());
     expect(catalogo.sugerencias).toEqual(["Física", "Materiales", "Microscopio Óptico"]);
     expect(catalogo.sugerencias).not.toContain("Difractómetro");
     expect(catalogo.sugerencias).not.toContain("Laboratorio de Microscopía");
@@ -98,7 +98,7 @@ describe("normalizarCatalogo", () => {
         tpPruebasServicio: null,
       })),
     );
-    const catalogo = normalizeCatalog(datos);
+    const catalogo = assembleCatalog(datos);
     expect(catalogo.sugerencias).toHaveLength(62);
     expect(catalogo.sugerencias).not.toContain("Equipo único");
   });

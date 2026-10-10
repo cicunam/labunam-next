@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { loadCatalog } from "@/lib/catalogo/catalogo";
+import { getContactDetails } from "@/server/laboratorios/laboratoriosService";
 import { Contact } from "@/components";
 
 export const metadata = {
@@ -12,24 +12,11 @@ const ContactPage = async ({ searchParams }) => {
   if (laboratorio === undefined) {
     return <Contact />;
   }
-  if (typeof laboratorio !== "string" || !/^[1-9]\d*$/.test(laboratorio)) {
-    notFound();
-  }
-  const lab = (await loadCatalog()).laboratorios.find((item) => item.idLab === Number(laboratorio));
+  const lab = await getContactDetails(laboratorio);
   if (!lab) {
     notFound();
   }
-  return (
-    <Contact
-      laboratorio={{
-        idLab: lab.idLab,
-        nombre: lab.nombre,
-        entidad: lab.entidad,
-        servicios: lab.servicios,
-        sitio: lab.sitio,
-      }}
-    />
-  );
+  return <Contact laboratorio={lab} />;
 };
 
 export default ContactPage;

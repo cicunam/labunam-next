@@ -69,15 +69,16 @@ el sitio en la UNAM.
 | `src/components/atoms/` | Piezas básicas de interfaz |
 | `src/components/molecules/` | Combinaciones genéricas de piezas |
 | `src/components/organisms/` | Secciones y comportamiento del portal |
-| `src/lib/` | MySQL, normalización, búsqueda, filtros y fotos |
+| `src/server/` | Conexión, DAO, servicios, controladores y caché |
+| `src/lib/` | Funciones y constantes compartidas |
 | `public/` | Recursos estáticos, fuente, iconos e ilustraciones |
 | `scripts/` | Generación de imágenes y revisión editorial |
 | `tests/e2e/` | Pruebas de navegador |
 | `.storybook/` | Configuración de historias y revisión visual |
 | `docs/` | Guías y acuerdos técnicos |
 
-Cada componente tiene su carpeta, CSS Module e historia. Cada módulo de `src/lib/`
-agrupa su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
+Cada componente tiene su carpeta, CSS Module e historia. Los módulos de `src/lib/` y `src/server/`
+agrupan su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
 Las páginas y layouts importan componentes desde un único barril `src/components/index.js`:
 `import { Header, Footer } from "@/components"`. Entre componentes y en historias
@@ -87,6 +88,12 @@ Componentes, props, variables internas, variantes, clases CSS y tokens se nombra
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
 en español. La fuente Inter se sirve desde `public/assets/fonts`, con su licencia
 OFL, sin depender de una descarga de Google.
+
+El backend sigue el recorrido **Controller → Service → DAO → MySQL**. Las páginas
+renderizadas en servidor llaman al servicio directamente. Los DAO contienen SQL;
+el mapper convierte filas y los servicios preparan datos públicos. La caché del
+catálogo está separada. La conexión vive en `src/server/config/dbconnection.js`.
+La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido completo.
 
 ## Páginas y funcionamiento
 
@@ -225,8 +232,8 @@ incluso en condiciones de una sola instrucción.
 La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
 textos se agrupan en `src/lib/home/homeContent.js`. Los hooks específicos viven
 junto al componente: `useSearchSuggestions` en SearchBar y `useHeaderMenu` /
-`useCompactSearch` en Header. Las consultas SQL están en `catalogoQueries.js`;
-`catalogo.js` conserva la coordinación y la caché.
+`useCompactSearch` en Header. Las consultas SQL están en los DAO de `src/server/`.
+`catalogoService.js` coordina la carga y `catalogoCache.js` administra la caché.
 
 Los comentarios explican decisiones y comportamientos que deben conservarse:
 historial del modal, peticiones concurrentes, conteos de filtros, datos heredados

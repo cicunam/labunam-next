@@ -1,11 +1,22 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// Header (cabecera con navegación, menú móvil y acceso al buscador)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+// Mecanismos
 import { useHeaderMenu } from "./useHeaderMenu";
 import { useCompactSearch } from "./useCompactSearch";
+
+// Estilos
 import styles from "./Header.module.css";
 
+// Constantes
 const links = [
   { href: "/", label: "Inicio" },
   { href: "/laboratorios", label: "Laboratorios" },
@@ -18,20 +29,27 @@ const redes = [
   { tipo: "unidades", label: "Unidades de apoyo" },
 ];
 
+// Definición del componente
+// No recibe props: la ruta activa sale de usePathname.
 const Header = () => {
+  // Mecanismos
   const pathname = usePathname();
   const compact = useCompactSearch(pathname);
   const { open, button, panel, toggleMenu, closeMenu } = useHeaderMenu();
 
+  // Gestores de evento
   function focusSearch() {
     document.querySelector("#search-q")?.focus({ preventScroll: true });
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
   }
 
+  // Utilidades
   function isActive(href) {
     return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
   }
+
+  // Interfaz
   return (
     <header className={styles.header}>
       <a

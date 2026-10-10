@@ -28,6 +28,69 @@ exportaciones nombradas. Los exports de Next (`metadata`, `generateMetadata`,
 `dynamic`, `GET`, etc.) conservan sus nombres y su formato requerido. Las historias
 de Storybook también conservan su metadata por defecto y sus historias nombradas.
 
+## Encabezado y secciones
+
+Cada archivo de `src/` abre con un encabezado de cuatro líneas: proyecto, capa, nombre
+con su propósito entre paréntesis y autor. El cuerpo se divide con comentarios de una
+línea que marcan cada bloque. Para componentes: `Dependencias`, `Componentes`,
+`Estilos`, `Definición del componente`, `Preparación de datos` o `Referencias y estado`,
+`Gestores de evento` e `Interfaz`. Para páginas: `Servicios`, `Componentes`, `Estilos`,
+`Configuración de Next`, `Definición de la página`, `Datos` e `Interfaz`. Para servicios:
+`Dependencias`, `Servicios` y `Definición del servicio`. Cuando hacen falta se añaden
+`Constantes` (valores fijos del módulo, como la lista de pestañas), `Mecanismos` (hooks
+propios, tanto el import como su llamada) y `Utilidades` (funciones auxiliares que no son
+eventos). Los hooks usan `Definición del mecanismo` y la capa `Mecanismos` en el
+encabezado. Un archivo con `"use client"`
+conserva esa directiva como primera línea y el encabezado va después.
+
+```jsx
+// LabUNAM
+// Organismos
+// LaboratoryCard (tarjeta de laboratorio en catálogo y portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
+import { redes } from "@/lib/presentacion/presentacion";
+
+// Componentes
+import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
+import styles from "./LaboratoryCard.module.css";
+
+// Definición del componente
+const LaboratoryCard = ({ laboratorio }) => {
+  // Preparación de datos
+  const area = laboratorio.grupos?.[0] ?? "general";
+
+  // Interfaz
+  return <article className={styles.card}>…</article>;
+};
+
+export default LaboratoryCard;
+```
+
+Cada prop lleva, en la misma línea del destructuring, un comentario con su tipo y su
+uso: `prop = valorPorDefecto, // Tipo - Descripción`. Los tipos son `String`, `Number`,
+`Boolean`, `Object`, `Array`, `Function`, `ReactNode` o `Promise`; se añade `Optional`
+cuando la prop tiene valor por defecto. Para un objeto del dominio, la descripción nombra
+los campos que el componente usa. Las funciones dicen qué reciben y qué devuelven. Los
+parámetros de páginas y servicios se documentan igual.
+
+```jsx
+const LaboratoryCard = ({
+  laboratorio: lab, // Object - Laboratorio del catálogo: idLab, nombre, entidad, sedeNombre y tipo
+  photo, // Object - Imagen elegida por getPhotos: src, srcSet y tipo
+  priority = false, // Boolean Optional - Carga la imagen de inmediato
+}) => {
+```
+
+Sólo se incluyen las etiquetas que el archivo necesita. Los comentarios que explican
+una decisión o un comportamiento que debe conservarse siguen yendo junto al código al
+que se refieren. Todos los componentes de `src/components/`, sus hooks, las dos páginas principales y
+`catalogoSearchService` siguen esta plantilla. El resto de páginas y de `src/server/` y
+`src/lib/` se adapta al tocarlo.
+
 ## Ejemplo completo: una nota informativa
 
 Este ejemplo no tiene estado ni eventos y no necesita `"use client"`. Crea:
@@ -147,7 +210,7 @@ No conviertas toda la página a cliente sólo para manejar un botón.
 
 1. Añadir historias de sus estados relevantes (ver [Storybook](06-storybook.md)).
 2. Probar texto largo, móvil, teclado, foco visible y estado vacío si aplica.
-3. Mantener la lógica de datos en `src/lib/`; no consultar MySQL desde un componente cliente.
+3. Mantener el backend en `src/server/` y las utilidades compartidas en `src/lib/`; no consultar MySQL desde un componente cliente.
 4. Usar 150 líneas como señal para revisar responsabilidades, no como límite rígido. Nunca comprimir JSX para reducir líneas.
 5. Ejecutar lint y build; añadir pruebas cuando exista comportamiento que proteger.
 

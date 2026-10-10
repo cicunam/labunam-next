@@ -1,6 +1,6 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
-import {query} from '../../src/lib/db/db.js';
+import {query} from '../../src/server/config/dbconnection.js';
 
 await mkdir('.revision-fotos',{recursive:true});
 try {

@@ -1,16 +1,35 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// LaboratoryDetails (contenido de la ficha: galería, pestañas y acciones)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
 import { useState } from "react";
 import { formatCounts, redes } from "@/lib/presentacion/presentacion";
+
+// Componentes
 import Gallery from "../../molecules/Gallery/Gallery";
 import Tab from "../../molecules/Tab/Tab";
 import Badge from "../../atoms/Badge/Badge";
+
+// Estilos
 import styles from "./LaboratoryDetails.module.css";
 
+// Constantes
 const tabs = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
-const LaboratoryDetails = ({ laboratorio: lab, isPage = false }) => {
+
+// Definición del componente
+const LaboratoryDetails = ({
+  laboratorio: lab, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, servicios, equipos, distinciones y galeria
+  isPage = false, // Boolean Optional - Usa h1 cuando la ficha es la página completa y h2 dentro del modal
+}) => {
+  // Estado
   const [activeIndex, setActive] = useState(0);
+
+  // Preparación de datos
   const Title = isPage ? "h1" : "h2";
   const content = [
     lab.servicios,
@@ -19,6 +38,7 @@ const LaboratoryDetails = ({ laboratorio: lab, isPage = false }) => {
     [lab.sedeNombre, lab.ubicacion].filter(Boolean),
   ];
 
+  // Interfaz
   return (
     <>
       <div className={styles["details-body"]}>

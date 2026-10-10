@@ -2,102 +2,121 @@
 
 [Volver al índice](README.md)
 
-## El recorrido actual
+## El recorrido de los datos
 
-`src/lib/db/db.js` mantiene un pool MySQL: un conjunto pequeño de conexiones
-reutilizables, no una conexión nueva por componente. Se crea cuando hace falta y
-sobrevive a recargas de módulos en desarrollo. Usa `mysql2/promise`.
+El backend vive en `src/server/`, organizado por entidades como en CICAPI.
+Las funciones y constantes compartidas con el navegador permanecen en `src/lib/`.
 
-`src/lib/catalogo/catalogoQueries.js` ejecuta seis consultas SELECT en `readCatalogRows()`:
-laboratorios y dependencias, estados, disciplinas, equipos, certificaciones y
-acreditaciones. `normalizeCatalog()` transforma filas SQL al modelo público.
-`buildCatalog()` coordina la lectura y normalización; `loadCatalog()` añade la caché y evita duplicar cargas concurrentes.
+```text
+Página de servidor ───────────────→ Service → DAO → MySQL
+Navegador → route.js → Controller → Service → DAO → MySQL
+```
 
-| Archivo | Para qué sirve |
-| --- | --- |
-| `src/lib/normalizeCatalog/normalizeCatalog.js` | Limpieza y transformación de filas |
-| `src/lib/catalogo/catalogoQueries.js` | Consultas SQL y lectura de filas |
-| `src/lib/catalogo/catalogo.js` | Construcción y caché del catálogo |
-| `src/lib/buscador/buscador.js` | Búsqueda y facetas sobre datos normalizados |
+Los dos caminos usan los mismos servicios. Una página no llama por HTTP a su propia
+API: espera el servicio y genera HTML con los datos, conservando el renderizado en
+servidor, títulos, descripciones y URLs públicas.
 
-No hay ORM ni migraciones en este proyecto. El esquema existente se consume en
-modo de sólo lectura. No hacer INSERT, UPDATE, DELETE ni ALTER para desarrollar
-una pantalla o preparar una prueba.
+| Pieza | Responsabilidad | Ejemplo real |
+| --- | --- | --- |
+| Conexión | Pool único de MySQL y consultas parametrizadas | `src/server/config/dbconnection.js` |
+| DAO | SQL de su entidad; devuelve filas | `src/server/laboratorios/LaboratorioDao.js` |
+| Mapper | Convierte filas heredadas en un laboratorio | `src/server/laboratorios/laboratorioMapper.js` |
+| Service | Coordina datos y selecciona campos públicos | `src/server/laboratorios/laboratoriosService.js` |
+| Controller | Valida entrada HTTP y devuelve JSON/estado | `src/server/laboratorios/laboratoriosController.js` |
+| Ruta de Next | Conecta la URL con el controlador | `src/app/api/laboratorios/[id]/route.js` |
 
-## Primero reutilizar el catálogo
+Los DAO son clases con métodos como `getAll()` y `getAllActive()`. Los servicios y
+controladores exportan funciones nombradas. No se necesita un controlador por cada
+tabla: sólo lo creamos cuando existe una operación HTTP.
 
-Para mostrar datos ya disponibles desde una página de servidor:
+## Ejemplo: leer una ficha
+
+En una página de servidor:
 
 ```jsx
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-// Ejemplo didáctico de page.jsx, no una ruta ya instalada.
-const LaboratoryCountPage = async () => {
-  const { laboratorios } = await loadCatalog();
-  return <p>Laboratorios disponibles: {laboratorios.length}</p>;
+import { notFound } from "next/navigation";
+import { getById } from "@/server/laboratorios/laboratoriosService";
+import { LaboratoryDialog } from "@/components";
+
+const LaboratoryPage = async ({ params }) => {
+  const { id } = await params;
+  const laboratorio = await getById(id);
+  if (!laboratorio) {
+    notFound();
+  }
+  return <LaboratoryDialog initialLaboratorio={laboratorio} />;
 };
 
-export default LaboratoryCountPage;
+export default LaboratoryPage;
 ```
 
-La función es `async` porque espera datos; `await` obtiene el resultado antes de
-usarlo. No llames a tu propia API HTTP desde una página de servidor cuando puedes
-reutilizar directamente la función. Si un componente cliente necesita datos al
-interactuar, usa una API pública como `/api/laboratorios/[id]`.
+`getById()` valida el ID, busca en el catálogo vigente y agrega fotografías.
+Devuelve `null` si el ID es inválido o no existe. Si falla la carga sin respaldo,
+propaga un error público. El objeto de salida contiene sólo los campos de la ficha,
+no el índice de búsqueda ni filas SQL completas.
 
-El catálogo ya contiene búsqueda y sugerencias; seleccionar un chip no construye
-una consulta SQL con el texto del usuario. Antes de añadir consultas por tarjeta,
-revisa si puedes resolverlo con los datos existentes y evitar cientos de peticiones.
+El modal, que corre en el navegador, usa `fetchLaboratorioDetails()` de
+`src/lib/ficha/ficha.js`. Esta función consulta `/api/laboratorios/[id]`.
+La ruta delega a `getDetails()` del controlador, que usa el mismo `getById()`:
+400 para ID inválido, 404 si no existe y 503 cuando falla la carga. Nunca responde
+con mensajes internos de MySQL. Contacto usa `getContactDetails()` para recibir
+sólo sus cinco campos necesarios, sin leer fotografías.
 
-## Una nueva consulta fija
+## Cómo se arma el catálogo
 
-Si realmente falta un dato, crea un módulo en `src/lib/`. Por ejemplo, el contenido
-de un hipotético `src/lib/estadisticas/estadisticas.js`:
+1. `catalogoService.js` llama en paralelo a los seis DAO: laboratorios (con sus
+   dependencias), estados, disciplinas, equipos, certificaciones y acreditaciones.
+2. `catalogoAssembler.js` coordina la transformación de las filas.
+3. `catalogoRelations.js` agrupa las relaciones una vez por ID para evitar recorrer
+   todas las filas por cada laboratorio.
+4. `laboratorioMapper.js` transforma cada laboratorio. `laboratorioFormatting.js`
+   contiene las reglas de direcciones, enlaces y distinciones.
+5. `catalogoOptions.js` prepara opciones y sugerencias. Las sugerencias incluyen
+   disciplinas y hasta 60 equipos presentes en al menos tres laboratorios.
 
-```js
-import { query } from "../db/db";
-export async function countActiveLaboratorios() {
-    const filas = await query("SELECT COUNT(*) AS total FROM r_seccion1 WHERE activo = 1 AND idTpLab IN (1, 2, 3, 4)");
-    return filas[0]?.total ?? 0;
-}
-```
+Las disciplinas heredadas están en 38 columnas de banderas. Hay comentarios para
+explicar esta particularidad, la sede de respaldo y los micrositios institucionales.
+No es necesario entender estas reglas para consumir un servicio desde una página.
 
-`query()` devuelve una lista de objetos. En este SELECT cada objeto contiene
-`total`; comprobar y normalizar los valores recibidos sigue siendo necesario.
-Este ejemplo ilustra el helper; para contar el catálogo de una página normalmente
-conviene `laboratorios.length`, evitando una consulta adicional.
+`searchCatalog()` prepara resultados y filtros usando la misma copia del catálogo;
+`getHomeData()` prepara conteos e incorporaciones de la portada. La búsqueda sigue
+operando sobre datos normalizados: seleccionar un chip no provoca una consulta SQL
+por cada laboratorio. Las fotos se leen en `src/server/fotos/fotosService.js` y su
+selección visual compartida permanece en `src/lib/fotos/fotos.js`.
 
-### Valores dinámicos y parámetros
-
-**El helper actual sólo acepta `query(sql)`.** No admite todavía un segundo
-argumento con parámetros. No escribir ejemplos como `query(sql, [id])` suponiendo
-que ya existe esa funcionalidad, ni concatenar entradas del usuario al SQL.
-
-Si una consulta nueva necesita parámetros, ampliar primero el helper para pasarlos
-al mecanismo de parámetros de mysql2, con validaciones y pruebas. Validar además el
-formato y límites de entrada. No intentar proteger una interpolación quitando
-comillas manualmente. Los nombres de columnas u órdenes dinámicos deben salir de
-una lista permitida, no del texto recibido.
-
-## Incorporar un campo al catálogo
+## Añadir una consulta o un campo
 
 1. Confirmar que el campo existe y puede mostrarse públicamente.
-2. Añadirlo explícitamente al SELECT (evitar `SELECT *`).
-3. Transformarlo en `normalizeCatalog`; resolver nulos y valores inesperados.
-4. Incluirlo en el objeto público sólo si la interfaz lo necesita.
-5. Actualizar fixtures ficticios y pruebas de normalización.
-6. Pasarlo a la interfaz o API seleccionando sólo los campos necesarios.
+2. Añadir el SELECT al DAO correspondiente, con columnas explícitas, sin `SELECT *`.
+3. Si necesita transformación, resolver nulos y valores heredados en el mapper.
+4. Exponerlo desde el servicio sólo si la pantalla lo necesita.
+5. Actualizar fixtures y pruebas; después consumir el servicio desde la página o controlador.
 
-`src/app/api/laboratorios/[id]/route.js` es el patrón real: valida el ID, busca en el
-catálogo y selecciona campos públicos. Devuelve 400 para ID inválido, 404 si no
-existe y 503 si falla la carga. Nunca devuelve mensajes internos de MySQL.
+La conexión ofrece `query(sql, parameters = [])`. Para valores dinámicos, usar
+marcadores `?` y parámetros separados:
 
-## Caché y diagnóstico
+```js
+const rows = await query(
+  "SELECT idLab, labNombre FROM r_seccion1 WHERE idLab = ? AND activo = 1 AND idTpLab IN (1, 2, 3, 4)",
+  [id],
+);
+```
 
-`LABUNAM_CATALOGO_SEGUNDOS` controla el tiempo de caché, 600 por defecto. Cada
-proceso Node tiene su propia copia. Una carga fallida conserva la anterior cuando
-existe; al arrancar sin copia y sin base, la petición falla con un mensaje genérico.
-No hay una tarea programada que actualice la caché: se revisa al solicitarla.
+Este ejemplo muestra la parametrización dentro de un DAO. La ficha actual reutiliza
+el catálogo: no añadas esta consulta por cada tarjeta. Valida formatos y límites de
+entrada; nombres de columnas y órdenes deben salir de una lista permitida.
 
-Para probar un cambio, usa las pruebas de `src/lib/catalogo/` y `src/lib/db/`, que sustituyen
-el acceso a MySQL por mocks. No necesitas ni debes modificar la base real. Los
-valores de `.env` se acuerdan con Raúl y nunca se incluyen en pruebas o capturas.
+No hay ORM ni migraciones. MySQL es de sólo lectura: no ejecutar INSERT, UPDATE,
+DELETE ni ALTER para desarrollar una pantalla o preparar pruebas.
+
+## Caché y pruebas
+
+`catalogoCache.js` conserva una copia por proceso durante 600 segundos por defecto
+(`LABUNAM_CATALOGO_SEGUNDOS`). Las cargas simultáneas comparten una promesa. Si
+MySQL falla, devuelve la última copia válida; sin copia, devuelve un error público.
+No hay una tarea programada: se revisa la vigencia al solicitar datos.
+
+`npm test` recoge pruebas de `src/lib/` y `src/server/`. Las de conexión y catálogo
+usan mocks, sin abrir MySQL ni cargar el `.env` real. Las del servicio de laboratorios
+verifican campos públicos y respuestas HTTP. Los fixtures están junto al catálogo.
+No guardar credenciales ni datos de personas en ejemplos o pruebas.

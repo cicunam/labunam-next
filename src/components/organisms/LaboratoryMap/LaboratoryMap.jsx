@@ -1,12 +1,24 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// LaboratoryMap (mapa de México con laboratorios por estado)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useId, useState } from "react";
 import Link from "next/link";
 import estados from "@/lib/mapa/estados.json";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
+
+// Estilos
 import styles from "./LaboratoryMap.module.css";
 
-const LaboratoryMap = ({ locations = [] }) => {
+// Definición del componente
+const LaboratoryMap = ({
+  locations = [], // Array Optional - Sedes del catálogo con clave, etiqueta y total
+}) => {
+  // Estado y preparación de datos
   const id = useId();
   const available = estados.map((estado) => ({
     ...estado,
@@ -17,6 +29,7 @@ const LaboratoryMap = ({ locations = [] }) => {
   const activeItem = available.find((estado) => estado.clave === selection) ?? initial;
   const withLaboratorios = available.filter((estado) => estado.total > 0).length;
 
+  // Gestores de evento
   function handleStateKey(event, key) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -24,6 +37,7 @@ const LaboratoryMap = ({ locations = [] }) => {
     }
   }
 
+  // Interfaz
   return (
     <section
       className={`content ${styles.section}`}

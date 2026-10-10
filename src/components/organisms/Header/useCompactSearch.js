@@ -1,9 +1,18 @@
 "use client";
 
+// LabUNAM
+// Mecanismos
+// useCompactSearch (acceso al buscador desde el Header)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useEffect, useState } from "react";
 
-/** Muestra el acceso al buscador cuando éste queda fuera de la pantalla. */
-export function useCompactSearch(pathname) {
+// Definición del mecanismo
+// Muestra el acceso al buscador cuando éste queda fuera de la pantalla.
+export function useCompactSearch(
+  pathname, // String - Ruta actual; al cambiar se vuelve a observar el buscador de la página
+) {
   const [compact, setCompact] = useState(false);
   useEffect(() => {
     let current;

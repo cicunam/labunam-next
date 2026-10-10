@@ -1,12 +1,31 @@
 "use client";
 
+// LabUNAM
+// Organismos
+// LaboratoryDialog (ficha de laboratorio en modal o como página)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { fetchLaboratorioDetails } from "@/lib/ficha/ficha";
+
+// Componentes
 import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
 import styles from "./LaboratoryDialog.module.css";
 
+// La ficha se carga sólo cuando se abre el modal; no forma parte del JavaScript inicial.
 const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails"));
-const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, initialLaboratorio = null }) => {
+
+// Definición del componente
+// Sin initialLaboratorio es un modal que se abre al pulsar cualquier elemento con data-details;
+// con él se dibuja como página completa.
+const LaboratoryDialog = ({
+  loadDetails = fetchLaboratorioDetails, // Function Optional - Recibe el id (Number) y devuelve una promesa con la ficha; por defecto consulta /api/laboratorios/[id]
+  initialLaboratorio = null, // Object Optional - Ficha ya cargada por la página /laboratorios/[id], con la forma que devuelve getById
+}) => {
+  // Referencias y estado
   const dialog = useRef(null);
   const trigger = useRef(null);
   const cache = useRef(new Map());
@@ -14,6 +33,10 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, initialLabora
   const hasHistoryEntry = useRef(false);
   const [lab, setLab] = useState(initialLaboratorio);
   const [error, setError] = useState("");
+
+  // Apertura, carga e historial del modal.
+  // Las tarjetas no llaman a este componente: cualquier clic en un elemento con
+  // data-details abre la ficha de ese id. Así el catálogo sigue siendo HTML de servidor.
   useEffect(() => {
     if (initialLaboratorio) {
       return;
@@ -80,6 +103,8 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, initialLabora
       window.removeEventListener("popstate", syncHistory);
     };
   }, [loadDetails, initialLaboratorio]);
+
+  // Gestores de evento
   function closeDialog() {
     dialog.current?.close();
   }
@@ -100,6 +125,7 @@ const LaboratoryDialog = ({ loadDetails = fetchLaboratorioDetails, initialLabora
     trigger.current?.focus({ preventScroll: true });
   }
 
+  // Interfaz
   const details = (
     <>
       {!lab ? (

@@ -1,9 +1,24 @@
+// LabUNAM
+// Organismos
+// Carousel (carrusel de noticias; su interacción vive en public/js/carousel.js)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
 import Script from "next/script";
+
+// Estilos
 import styles from "./Carousel.module.css";
 
-const Carousel = ({ slides }) => {
+// Definición del componente
+const Carousel = ({
+  slides, // Array - Diapositivas con image, title, description, href y linkLabel
+}) => {
+  // Preparación de datos
+  // Con más de una diapositiva se dibujan tres copias para cruzar ambos extremos sin saltos.
   const items = slides.length > 1 ? [...slides, ...slides, ...slides] : slides;
+
+  // Interfaz
   return (
     <>
       <div

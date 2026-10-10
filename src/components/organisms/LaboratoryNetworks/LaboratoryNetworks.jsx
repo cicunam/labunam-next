@@ -1,9 +1,21 @@
+// LabUNAM
+// Organismos
+// LaboratoryNetworks (tarjetas de las redes de laboratorios en la portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
-import styles from "./LaboratoryNetworks.module.css";
 import { homeNetworks } from "@/lib/home/homeContent";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 
-const LaboratoryNetworks = ({ counts }) => {
+// Estilos
+import styles from "./LaboratoryNetworks.module.css";
+
+// Definición del componente
+const LaboratoryNetworks = ({
+  counts, // Object - Número de laboratorios por tipo de red ({ nacionales: 40, … })
+}) => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.networks}`}

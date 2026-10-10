@@ -1,5 +1,13 @@
+// LabUNAM
+// Átomos
+// Icon (ícono SVG de trazo por nombre)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Estilos
 import styles from "./Icon.module.css";
 
+// Constantes
+// Trazos de cada ícono en una retícula de 24×24; las claves de área coinciden con grupos.js.
 const paths = {
   general: "M4 21h16M6 21V4h12v17M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-6h4v6",
   all: "M4 12h16M4 6h16M4 18h16",
@@ -18,7 +26,13 @@ const paths = {
   search: "M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15M16 16l5 5",
   close: "M6 6l12 12M18 6L6 18",
 };
-const Icon = ({ name, label, size = 24 }) => {
+// Definición del componente
+const Icon = ({
+  name, // String - Clave de paths: un área de disciplina, "general", "all", "search" o "close"
+  label, // String Optional - Texto accesible; sin él el ícono es decorativo y se oculta a lectores de pantalla
+  size = 24, // Number Optional - Ancho y alto en píxeles
+}) => {
+  // Interfaz
   return (
     <svg
       className={styles.icon}

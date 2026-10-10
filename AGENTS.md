@@ -27,7 +27,7 @@
 
 - Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
 - Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
-  Una carpeta por módulo en `src/lib/`, con pruebas y fixtures junto al módulo.
+  Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas y fixtures junto al módulo.
 - Componentes, props, variables internas, variantes, clases CSS, tokens y atributos técnicos en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
 - Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
@@ -37,8 +37,11 @@
   (`import { Button } from "@/components"`). Sin `"use client"` en el barril.
   Entre componentes, en historias y en cargas diferidas usar imports directos al archivo
   (default sin llaves) para evitar ciclos. Hooks y módulos de `src/lib/` mantienen imports directos.
-- Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
-  pertenecen a `src/lib/`, sin React.
+- Backend en `src/server/`, organizado por entidad: DAO con SQL, servicios con reglas y
+  controladores HTTP. Conexión en `config/dbconnection.js`. Páginas llaman servicios, no su propia API.
+- Componentes y utilidades compartidas no importan `src/server/`. `src/lib/` contiene funciones
+  y constantes compartidas, sin acceso a MySQL o al sistema de archivos. No crear capas genéricas
+  ni controladores para entidades que no tienen endpoint.
 - Priorizar componentes con una responsabilidad y props claras. Las 150 líneas son una
   referencia para revisar responsabilidades, no un límite: nunca comprimir JSX o quitar comentarios para cumplirlo.
 - Usar `npm run format` y conservar llaves en todos los `if`. Separar imports, preparación

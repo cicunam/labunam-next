@@ -1,8 +1,16 @@
 "use client";
 
+// LabUNAM
+// Mecanismos
+// useHeaderMenu (menú móvil del Header)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useEffect, useRef, useState } from "react";
 
-/** Mantiene juntos apertura, bloqueo del scroll y retorno del foco del menú. */
+// Definición del mecanismo
+// Mantiene juntos apertura, bloqueo del scroll y retorno del foco del menú.
+// No recibe parámetros.
 export function useHeaderMenu() {
   const [open, setOpen] = useState(false);
   const button = useRef(null);

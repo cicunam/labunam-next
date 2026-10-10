@@ -1,5 +1,10 @@
-import { countFacet, filterLaboratorios, perfiles, reconocimientos } from "../buscador/buscador";
-import { grupos } from "../grupos/grupos";
+import {
+  countFacet,
+  filterLaboratorios,
+  perfiles,
+  reconocimientos,
+} from "../../lib/buscador/buscador";
+import { grupos } from "../../lib/grupos/grupos";
 
 export function prepareFilters(catalogo, criterios) {
   const getOptions = (opciones) =>

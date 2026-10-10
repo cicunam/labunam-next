@@ -6,12 +6,13 @@
 
 | Necesidad | Herramienta | Ubicación |
 | --- | --- | --- |
-| Comprobar una regla o transformación | Vitest | `src/lib/<modulo>/<modulo>.test.js` |
+| Comprobar una regla o transformación | Vitest | `*.test.js` junto al módulo en `src/lib/` o `src/server/` |
 | Verificar filtros, navegación, teclado o modal | Playwright | `tests/e2e/*.spec.js` |
 | Inspeccionar estados y diseño de una pieza | Storybook | Junto al componente, `*.stories.jsx` |
 | Revisar convenciones y errores de código | ESLint | Comandos de proyecto |
 
-Vitest está configurado para **Node** y sólo recoge `src/lib/**/*.test.js`. No asumas
+Vitest está configurado para **Node** y recoge `src/lib/**/*.test.js` y
+`src/server/**/*.test.js`. No asumas
 que un test JSX junto al componente se ejecutará o que existe un entorno DOM.
 Storybook permite revisar componentes, pero una historia por sí sola no demuestra
 que una interacción se haya probado automáticamente.
@@ -45,8 +46,8 @@ repetir el mismo error. Usa un resultado que represente el requisito.
 ## Aislar MySQL y servicios
 
 Un **mock** reemplaza una dependencia por una respuesta controlada durante el test.
-`src/lib/db/db.test.js` simula `mysql2/promise`; comprueba reutilización del pool y errores
-sin abrir conexiones. `src/lib/catalogo/catalogo.test.js` cubre la caché y concurrencia.
+`src/server/config/dbconnection.test.js` simula `mysql2/promise`; comprueba reutilización del pool y errores
+sin abrir conexiones. `src/server/catalogo/catalogoService.test.js` cubre la caché y concurrencia.
 
 Copia esos patrones cuando haga falta: reiniciar mocks entre casos, restaurar
 variables simuladas y usar fixtures ficticios. No cargues `.env` real para unitarias.

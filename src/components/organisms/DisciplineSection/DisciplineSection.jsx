@@ -1,9 +1,21 @@
+// LabUNAM
+// Organismos
+// DisciplineSection (áreas de la portada con su número de laboratorios)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
-import styles from "./DisciplineSection.module.css";
 import { grupos } from "@/lib/grupos/grupos";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
-const DisciplineSection = ({ areaCounts }) => {
+// Estilos
+import styles from "./DisciplineSection.module.css";
+
+// Definición del componente
+const DisciplineSection = ({
+  areaCounts, // Object - Número de laboratorios por clave de área ({ biologia: 12, … })
+}) => {
+  // Interfaz
   return (
     <section
       className={`content ${styles.disciplines} ${styles["band-tint"]}`}
