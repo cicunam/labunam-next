@@ -18,9 +18,10 @@ Se conserva `laboratorio` como entidad y sus campos en español; por ejemplo,
 ## Declaración y exportación
 
 Usamos arrow functions con nombre para componentes y `export default Nombre;` al
-final del archivo. Al importarlos, no se usan llaves y se conserva el nombre del
-componente. Esta convención también aplica a páginas y layouts, incluidos los
-componentes de servidor `async`.
+final del archivo. Conservamos el nombre del componente al importarlo: con llaves
+desde el barril `@/components`, sin llaves al importar directamente su archivo.
+La declaración arrow y el export default también aplican a páginas y layouts,
+incluidos los componentes de servidor `async`.
 
 Los hooks y las funciones auxiliares pueden conservar declaraciones `function` y
 exportaciones nombradas. Los exports de Next (`metadata`, `generateMetadata`,
@@ -69,15 +70,31 @@ otras `.note`. Usa los tokens de `src/app/globals.css` y los patrones de compone
 vecinos antes de añadir colores o estilos nuevos. No pongas estilos específicos
 de esta nota en el CSS global.
 
-En una página u organismo:
+Añade su reexport al único barril, `src/components/index.js`:
+
+```js
+export { default as InfoNote } from "./atoms/InfoNote/InfoNote";
+```
+
+En una página o layout:
 
 ```jsx
-import InfoNote from "@/components/atoms/InfoNote/InfoNote";
+import { InfoNote } from "@/components";
 // Dentro del JSX del componente:
 <InfoNote text="Selecciona una opción para continuar." />;
 ```
 
-El import llega al archivo concreto. No crees `index.js` para reexportarlo.
+Dentro de otro componente o de una historia, importa el archivo directamente:
+
+```jsx
+import InfoNote from "@/components/atoms/InfoNote/InfoNote";
+```
+
+Así evitamos el ciclo componente → barril → componente. Las cargas diferidas
+(`lazy`/`import()`) también conservan la ruta directa. No crees barriles por nivel
+o por componente ni añadas `"use client"` al barril central: cada componente
+interactivo declara su propia frontera. El barril sólo reexporta componentes;
+hooks, fixtures, historias y utilidades quedan fuera.
 
 ## Si necesita interacción
 

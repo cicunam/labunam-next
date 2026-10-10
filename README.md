@@ -79,7 +79,9 @@ el sitio en la UNAM.
 Cada componente tiene su carpeta, CSS Module e historia. Cada módulo de `src/lib/`
 agrupa su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
-Los imports apuntan al archivo concreto, sin barriles `index.js`.
+Las páginas y layouts importan componentes desde un único barril `src/components/index.js`:
+`import { Header, Footer } from "@/components"`. Entre componentes y en historias
+se mantienen imports directos para evitar ciclos. Los módulos de `src/lib/` también se importan directamente.
 
 Componentes, props, variables internas, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del dominio,
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
@@ -212,8 +214,9 @@ con el equipo; un commit o push no equivale a un despliegue.
 ## Legibilidad del código
 
 Los componentes, páginas y layouts se declaran como arrow functions con nombre y
-se exportan al final con `export default Nombre;`. Se importan sin llaves, conservando
-el mismo nombre. Hooks y utilidades usan exportaciones nombradas.
+se exportan al final con `export default Nombre;`. El barril los reexporta con nombre
+para importarlos con llaves desde `@/components`. Los imports directos entre componentes
+usan el default sin llaves. Hooks y utilidades usan exportaciones nombradas.
 
 Ejecutar `npm run format` antes de entregar cambios y `npm run format:check` para
 comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llaves

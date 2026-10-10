@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { loadCatalog } from "@/lib/catalogo/catalogo";
-import Contact from "@/components/organisms/Contact/Contact";
+import { Contact } from "@/components";
 
 export const metadata = {
   title: "Contacto",

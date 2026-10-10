@@ -27,7 +27,10 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 
 `@/` en un import apunta a `src/`, por ejemplo
 `@/lib/catalogo/catalogo`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
-la raíz. No usamos barriles `index.js`.
+la raíz. Las páginas y layouts usan `@/components`, que apunta al único barril
+`src/components/index.js`. Este archivo reúne los componentes mediante reexports
+nombrados. Entre componentes y en historias se usan rutas directas para evitar ciclos.
+El barril no lleva `"use client"`; la frontera permanece en cada componente interactivo.
 
 ## Una carpeta define una URL
 

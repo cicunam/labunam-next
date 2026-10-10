@@ -1,5 +1,4 @@
-import Header from "@/components/organisms/Header/Header";
-import Footer from "@/components/organisms/Footer/Footer";
+import { Header, Footer } from "@/components";
 import "./globals.css";
 
 export const metadata = {

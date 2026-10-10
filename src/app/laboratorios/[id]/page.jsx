@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import { loadCatalog } from "@/lib/catalogo/catalogo";
 import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
-import LaboratoryDialog from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
-import AppLink from "@/components/atoms/AppLink/AppLink";
+import { LaboratoryDialog, AppLink } from "@/components";
 import styles from "./Laboratorio.module.css";
 
 export const dynamic = "force-dynamic";

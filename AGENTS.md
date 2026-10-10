@@ -31,9 +31,12 @@
 - Componentes, props, variables internas, variantes, clases CSS, tokens y atributos técnicos en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
 - Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
-  `export default Component;` al final. Importarlos sin llaves y conservar el nombre.
+  `export default Component;` al final. Conservar el nombre al importarlos.
   Hooks y utilidades mantienen exportaciones nombradas; respetar los exports propios de Next.
-- Imports al archivo concreto, sin barriles `index.js`.
+- Un único barril `src/components/index.js` con reexports nombrados explícitos para páginas y layouts
+  (`import { Button } from "@/components"`). Sin `"use client"` en el barril.
+  Entre componentes, en historias y en cargas diferidas usar imports directos al archivo
+  (default sin llaves) para evitar ciclos. Hooks y módulos de `src/lib/` mantienen imports directos.
 - Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
   pertenecen a `src/lib/`, sin React.
 - Priorizar componentes con una responsabilidad y props claras. Las 150 líneas son una

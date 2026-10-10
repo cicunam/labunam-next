@@ -4,12 +4,14 @@ import { filterLaboratorios, normalizeCriteria } from "@/lib/buscador/buscador";
 import { prepareFilters } from "@/lib/filtros/filtros";
 import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
-import SearchBar from "@/components/organisms/SearchBar/SearchBar";
-import FilterDialog from "@/components/organisms/FilterDialog/FilterDialog";
-import DisciplineBar from "@/components/organisms/DisciplineBar/DisciplineBar";
-import LaboratoryCard from "@/components/organisms/LaboratoryCard/LaboratoryCard";
-import LaboratoryDialog from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
-import ActiveChip from "@/components/molecules/ActiveChip/ActiveChip";
+import {
+  SearchBar,
+  FilterDialog,
+  DisciplineBar,
+  LaboratoryCard,
+  LaboratoryDialog,
+  ActiveChip,
+} from "@/components";
 import styles from "./Laboratorios.module.css";
 
 export const dynamic = "force-dynamic";

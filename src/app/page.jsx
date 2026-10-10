@@ -6,14 +6,16 @@ import { grupos } from "@/lib/grupos/grupos";
 import { homeNetworks } from "@/lib/home/homeContent";
 
 // Secciones de la portada
-import SearchBar from "@/components/organisms/SearchBar/SearchBar";
-import LaboratoryNetworks from "@/components/organisms/LaboratoryNetworks/LaboratoryNetworks";
-import RecentLaboratories from "@/components/organisms/RecentLaboratories/RecentLaboratories";
-import DisciplineSection from "@/components/organisms/DisciplineSection/DisciplineSection";
-import NewsSection from "@/components/organisms/NewsSection/NewsSection";
-import LaboratoryMap from "@/components/organisms/LaboratoryMap/LaboratoryMap";
-import About from "@/components/organisms/About/About";
-import LaboratoryDialog from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
+import {
+  SearchBar,
+  LaboratoryNetworks,
+  RecentLaboratories,
+  DisciplineSection,
+  NewsSection,
+  LaboratoryMap,
+  About,
+  LaboratoryDialog,
+} from "@/components";
 
 export const dynamic = "force-dynamic";
 
