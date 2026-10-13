@@ -1,0 +1,7 @@
+.formulario { display: grid; gap: var(--espacio-xxl); min-width: 0; }
+.aviso { display: grid; gap: var(--espacio-sm); padding: var(--espacio-base); border-radius: var(--radio-sm); background: var(--superficie-tinte); color: var(--color-black); }
+.marca { color: var(--color-tipo-nacionales); }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.acciones { display: grid; justify-items: start; gap: var(--espacio-base); }
+/* La región de estado permanece en el árbol de accesibilidad para que su anuncio sea fiable. */
+.estado { min-height: 1lh; color: var(--color-primary-dark); font: var(--font-medium-semibold); }

@@ -1,0 +1,15 @@
+.campo {
+  width: 100%;
+  min-width: 0;
+  padding: var(--espacio-md);
+  border: 1px solid var(--filete);
+  border-radius: var(--radio-sm);
+  background: var(--superficie);
+  color: var(--color-black);
+  font: var(--font-medium-regular);
+  resize: vertical;
+}
+.campo::placeholder { color: var(--color-neutral-dark); opacity: 1; }
+.campo:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.campo:disabled { opacity: .5; }
+.campo[aria-invalid="true"], .campo:user-invalid { border-color: var(--color-tipo-nacionales); }

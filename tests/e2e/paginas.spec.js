@@ -62,7 +62,7 @@ test("contacto explica el envío deshabilitado y no solicita datos", async ({ pa
     await expect(page.getByText("El envío de mensajes aún no está disponible.", { exact: false })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
-test("la navegación lleva a solicitud y la sección aún no recaba datos", async ({ page }) => {
+test("la navegación lleva a solicitud", async ({ page }) => {
     await page.goto("/");
     const menu = page.getByRole("navigation", { name: "Principal" });
     await expect(menu.getByRole("link", { name: "Contacto" })).toHaveCount(0);
@@ -75,7 +75,6 @@ test("la navegación lleva a solicitud y la sección aún no recaba datos", asyn
     await expect(page).toHaveURL(/\/solicitud$/);
     await expect(page).toHaveTitle("Solicitud | LabUNAM");
     await expect(page.getByRole("heading", { name: "Solicitud de servicio", level: 1 })).toBeVisible();
-    await expect(page.locator("main form, main input, main textarea, main select")).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 test("solicitud asociada a un laboratorio valida el identificador", async ({ page, request }) => {
@@ -102,6 +101,43 @@ test("el sobre flotante abre contacto desde cualquier página", async ({ page })
     await expect(page).toHaveURL(/\/contacto$/);
     await expect(page.getByRole("heading", { name: "Contacto", exact: true, level: 1 })).toBeVisible();
 });
+test("el formulario de solicitud muestra campos según las opciones y no envía datos", async ({ page }) => {
+    const envios = [];
+    page.on("request", (peticion) => { if (peticion.method() !== "GET") envios.push(peticion.url()); });
+    await page.goto("/solicitud");
+    const enviar = page.getByRole("button", { name: "Enviar solicitud" });
+    await enviar.click();
+    await expect(page.getByLabel("Nombre(s)")).toBeFocused();
+    await page.getByLabel("Nombre(s)").fill("Persona de Prueba");
+    await page.getByLabel("Primer apellido").fill("Ejemplo");
+    await page.getByLabel("Correo electrónico").fill("persona@ejemplo.com");
+    await page.getByLabel("Teléfono").fill("5512345678");
+    await expect(page.getByLabel("Estado")).toHaveCount(0);
+    await page.getByLabel("País").fill("mexico");
+    await expect(page.getByLabel("Estado")).toBeVisible();
+    await page.getByLabel("Tipo de solicitante").selectOption({ label: "Institución de educación superior" });
+    await expect(page.getByLabel("Dependencia")).toHaveCount(0);
+    await page.getByRole("combobox", { name: "Institución", exact: true }).fill("Universidad Nacional Autónoma de México");
+    await expect(page.getByLabel("Dependencia")).toBeVisible();
+    await page.getByLabel("Tipo de solicitante").selectOption({ label: "Empresa" });
+    await expect(page.getByRole("combobox", { name: "Institución", exact: true })).toHaveCount(0);
+    await page.getByLabel("Nombre de la empresa").fill("Empresa de Ejemplo");
+    await page.getByRole("radio", { name: "Análisis o prueba" }).check();
+    await page.getByLabel("¿En cuánto tiempo necesitas el resultado?").selectOption({ label: "Más de 3 días" });
+    await expect(page.getByLabel("Cantidad de días")).toBeVisible();
+    await page.getByLabel("Cantidad de días").fill("10");
+    await page.getByLabel("Descripción del análisis o prueba").fill("Análisis de una muestra ficticia.");
+    await page.getByLabel("País").fill("Pais inexistente");
+    await enviar.click();
+    await expect(page.getByLabel("País")).toBeFocused();
+    await expect(page.getByRole("status")).toHaveText("");
+    await page.getByLabel("País").fill("España");
+    await expect(page.getByLabel("Estado")).toHaveCount(0);
+    await enviar.click();
+    await expect(page.getByRole("status")).toContainText("no se envió información");
+    expect(envios).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
 test("una ficha inexistente responde 404", async ({ request }) => {
     expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
     expect((await request.get("/laboratorios/999999999")).status()).toBe(404);
@@ -115,7 +151,7 @@ test("solicitud de servicio conserva el laboratorio y explica que el formulario 
     await page.getByRole("link", { name: "Solicitar un servicio" }).click();
     await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
     await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
-    await expect(page.getByText("El formulario de solicitud estará disponible próximamente.", { exact: false })).toBeVisible();
+    await expect(page.getByText("El envío de solicitudes aún no está disponible", { exact: false })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.goBack();
     await expect(page.getByRole("dialog")).toBeVisible();

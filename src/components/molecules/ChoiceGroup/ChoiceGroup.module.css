@@ -1,0 +1,8 @@
+.grupo { min-width: 0; margin: 0; padding: 0; border: 0; }
+.ancho { grid-column: 1 / -1; }
+.leyenda { margin-bottom: var(--espacio-sm); padding: 0; font: var(--font-medium-semibold); color: var(--color-black); }
+.marca { color: var(--color-tipo-nacionales); }
+.opciones { display: flex; flex-wrap: wrap; gap: var(--espacio-sm) var(--espacio-lg); }
+.opcion { display: inline-flex; align-items: center; gap: var(--espacio-sm); min-height: 44px; font: var(--font-medium-regular); cursor: pointer; }
+.opcion input { width: 18px; height: 18px; margin: 0; accent-color: var(--color-primary); }
+.opcion input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
