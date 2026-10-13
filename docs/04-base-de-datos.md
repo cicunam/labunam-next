@@ -19,8 +19,8 @@ servidor, títulos, descripciones y URLs públicas.
 | Pieza | Responsabilidad | Ejemplo real |
 | --- | --- | --- |
 | Conexión | Pool único de MySQL y consultas parametrizadas | `src/server/config/dbconnection.js` |
-| DAO | SQL de su entidad; devuelve filas | `src/server/laboratorios/LaboratorioDao.js` |
-| Mapper | Convierte filas heredadas en un laboratorio | `src/server/laboratorios/laboratorioMapper.js` |
+| DAO | SQL de su entidad y, en laboratorios, conversión de filas heredadas | `src/server/laboratorios/LaboratorioDao.js` |
+| Catálogo | Todos los laboratorios en memoria con su caché | `src/server/laboratorios/laboratoriosCatalogo.js` |
 | Service | Coordina datos y selecciona campos públicos | `src/server/laboratorios/laboratoriosService.js` |
 | Controller | Valida entrada HTTP y devuelve JSON/estado | `src/server/laboratorios/laboratoriosController.js` |
 | Ruta de Next | Conecta la URL con el controlador | `src/app/api/laboratorios/[id]/route.js` |
@@ -64,25 +64,42 @@ sólo sus cinco campos necesarios, sin leer fotografías.
 
 ## Cómo se arma el catálogo
 
-1. `catalogoService.js` llama en paralelo a los seis DAO: laboratorios (con sus
-   dependencias), estados, disciplinas, equipos, certificaciones y acreditaciones.
-2. `catalogoAssembler.js` coordina la transformación de las filas.
-3. `catalogoRelations.js` agrupa las relaciones una vez por ID para evitar recorrer
-   todas las filas por cada laboratorio.
-4. `laboratorioMapper.js` transforma cada laboratorio. `laboratorioFormatting.js`
-   contiene las reglas de direcciones, enlaces y distinciones.
-5. `catalogoOptions.js` prepara opciones y sugerencias. Las sugerencias incluyen
-   disciplinas y hasta 60 equipos presentes en al menos tres laboratorios.
+El catálogo es la copia en memoria de todos los laboratorios públicos. No es una
+tabla ni una entidad aparte: es la forma en que la entidad laboratorios se carga y
+se comparte entre la portada, el catálogo, la ficha y las rutas de API.
+`src/server/laboratorios/` tiene cuatro archivos de código, cada uno con una pregunta:
 
-Las disciplinas heredadas están en 38 columnas de banderas. Hay comentarios para
-explicar esta particularidad, la sede de respaldo y los micrositios institucionales.
-No es necesario entender estas reglas para consumir un servicio desde una página.
+| Archivo | Responde |
+| --- | --- |
+| `LaboratorioDao.js` | Qué es un laboratorio y cómo se lee de MySQL |
+| `laboratoriosCatalogo.js` | Cómo se guardan todos en memoria |
+| `laboratoriosService.js` | Qué pueden preguntar páginas y API |
+| `laboratoriosController.js` | Qué responden las rutas de API |
 
-`searchCatalog()` prepara resultados y filtros usando la misma copia del catálogo;
-`getHomeData()` prepara conteos e incorporaciones de la portada. La búsqueda sigue
-operando sobre datos normalizados: seleccionar un chip no provoca una consulta SQL
-por cada laboratorio. Las fotos se leen en `src/server/fotos/fotosService.js` y su
-selección visual compartida permanece en `src/lib/fotos/fotos.js`.
+`LaboratorioDao.js` contiene el SELECT y `toLaboratorio()`, que convierte cada fila
+heredada en un laboratorio. La consulta trae en cada fila el estado, con `LEFT JOIN`, y
+los equipos, certificaciones y acreditaciones como arreglos, con `JSON_ARRAYAGG`. No se
+usa `GROUP_CONCAT` porque su límite de 1024 bytes truncaría los servicios de más de cien
+laboratorios. Las listas se usan en el orden en que llegan de MySQL, sin ordenarlas en
+JavaScript. MySQL no garantiza ese orden: si cambiara, la tarjeta mostraría otro servicio
+como el primero. Las distinciones aparecen en el orden en que se registraron. Al final están las utilidades de dirección, distinciones y
+sitio web. Las disciplinas heredadas están en 38 columnas de banderas; hay comentarios
+para esta particularidad, la sede de respaldo y los micrositios institucionales.
+
+`laboratoriosCatalogo.js` se lee de arriba abajo: `loadCatalog()` devuelve la copia
+vigente o la renueva; `buildCatalog()` hace dos consultas en paralelo: laboratorios
+con sus relaciones y el catálogo de disciplinas; `assembleCatalog()` convierte las filas.
+Al final están las utilidades: armar las opciones de sede y disciplina, preparar sugerencias (disciplinas y hasta 60 equipos
+presentes en al menos tres laboratorios) y renovar la caché.
+
+`laboratoriosService.js` ofrece `getById()` y `getContactDetails()` para la ficha y el
+contacto, `searchLaboratorios()` para el catálogo, `getFilterCounts()` para la API de
+filtros, y `getSearchOptions()`, `countLaboratorios()` y `getRecentLaboratorios()` para
+la portada. Todas leen la misma copia en caché, así que la portada puede llamarlas
+juntas sin multiplicar consultas. La búsqueda opera sobre datos normalizados:
+seleccionar un chip no provoca una consulta SQL. Las fotos se leen en
+`src/server/fotos/fotosService.js` y su selección visual compartida permanece en
+`src/lib/fotos/fotos.js`.
 
 ## Añadir una consulta o un campo
 
@@ -90,7 +107,7 @@ selección visual compartida permanece en `src/lib/fotos/fotos.js`.
 2. Añadir el SELECT al DAO correspondiente, con columnas explícitas, sin `SELECT *`.
 3. Si necesita transformación, resolver nulos y valores heredados en el mapper.
 4. Exponerlo desde el servicio sólo si la pantalla lo necesita.
-5. Actualizar fixtures y pruebas; después consumir el servicio desde la página o controlador.
+5. Actualizar `tests/datosPrueba/catalogo.js` y las pruebas; después consumir el servicio desde la página o controlador.
 
 La conexión ofrece `query(sql, parameters = [])`. Para valores dinámicos, usar
 marcadores `?` y parámetros separados:
@@ -111,12 +128,12 @@ DELETE ni ALTER para desarrollar una pantalla o preparar pruebas.
 
 ## Caché y pruebas
 
-`catalogoCache.js` conserva una copia por proceso durante 600 segundos por defecto
+`laboratoriosCatalogo.js` conserva una copia por proceso durante 600 segundos por defecto
 (`LABUNAM_CATALOGO_SEGUNDOS`). Las cargas simultáneas comparten una promesa. Si
 MySQL falla, devuelve la última copia válida; sin copia, devuelve un error público.
 No hay una tarea programada: se revisa la vigencia al solicitar datos.
 
 `npm test` recoge pruebas de `src/lib/` y `src/server/`. Las de conexión y catálogo
 usan mocks, sin abrir MySQL ni cargar el `.env` real. Las del servicio de laboratorios
-verifican campos públicos y respuestas HTTP. Los fixtures están junto al catálogo.
+verifican campos públicos y respuestas HTTP. Los datos de prueba del catálogo están en `tests/datosPrueba/catalogo.js`.
 No guardar credenciales ni datos de personas en ejemplos o pruebas.

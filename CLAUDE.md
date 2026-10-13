@@ -21,12 +21,12 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Trabajo | Archivos de entrada |
 | --- | --- |
 | Portada y noticias | `src/app/page.jsx`, `src/lib/home/homeContent.js`, organismos `LaboratoryNetworks`, `RecentLaboratories`, `DisciplineSection` y `NewsSection` |
-| Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/catalogo/catalogoSearchService.js`, `src/server/filtros/` |
-| Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/catalogo/catalogoService.js`, `src/server/catalogo/catalogoCache.js` |
-| Filas SQL y modelo público | `src/server/laboratorios/laboratorioMapper.js`, `src/server/catalogo/catalogo.fixtures.js` |
+| Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/laboratorios/laboratoriosService.js` |
+| Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/laboratorios/laboratoriosCatalogo.js` |
+| Filas SQL y modelo público | `src/server/laboratorios/LaboratorioDao.js`, `tests/datosPrueba/catalogo.js` |
 | Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
 | Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |
-| API de filtros | `src/app/api/filtros/route.js` |
+| API de filtros | `src/app/api/filtros/route.js`, `src/server/laboratorios/laboratoriosController.js` |
 | Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/ficha/ficha.js` |
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
@@ -71,10 +71,14 @@ son locales y no definen la configuración del servidor de la UNAM.
 
 - La búsqueda combina palabras normalizadas sobre el catálogo ya cargado; no es
   una consulta SQL nueva por cada chip. Las sugerencias proceden de disciplinas
-  y equipos del catálogo. Revisar implementación y fixtures antes de cambiar reglas.
-- El catálogo carga seis consultas de sólo lectura y comparte una promesa entre
+  y equipos del catálogo. Revisar implementación y datos de prueba antes de cambiar reglas.
+- El catálogo carga dos consultas de sólo lectura y comparte una promesa entre
   peticiones concurrentes. La caché vive por proceso (600 segundos por defecto,
   configurable con `LABUNAM_CATALOGO_SEGUNDOS`), no es persistencia compartida.
+- Equipos, certificaciones y acreditaciones llegan en la consulta de laboratorios con
+  `JSON_ARRAYAGG`. No cambiarlo a `GROUP_CONCAT`: su límite de 1024 bytes truncaría
+  listas reales. Las listas se usan en el orden en que llegan, sin ordenarlas en JavaScript;
+  las distinciones ya no salen de la más reciente a la más antigua.
 - `public/js/carousel.js` mejora HTML de servidor y administra montaje/limpieza
   durante navegación Next. Probar entrada/salida de la página y no sólo una carga.
 - `manifiesto.json` contiene originales y tiene prioridad por laboratorio sobre

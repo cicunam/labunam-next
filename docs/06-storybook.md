@@ -52,8 +52,8 @@ Si el componente recibe un callback, usa `fn()` de `storybook/test` como valor
 del callback en la historia. Así se registra la interacción sin ejecutar servicios
 reales. No uses solicitudes reales ni datos personales para simular un estado.
 
-Para organismos, reutiliza fixtures de `src/components/organisms/fixtures/` cuando
-corresponda. Un componente asíncrono que depende directamente de MySQL no debe
+Para organismos, reutiliza los datos de `tests/datosPrueba/componentes.js`
+(`import { laboratorio } from "@datosPrueba/componentes"`) cuando corresponda. Un componente asíncrono que depende directamente de MySQL no debe
 llevar esa dependencia a Storybook: muestra la pieza visual con datos ficticios.
 
 ## Revisión visual y accesibilidad

@@ -7,7 +7,12 @@ const config = {
   framework: "@storybook/nextjs-vite",
   async viteFinal(config) {
     return mergeConfig(config, {
-      resolve: { alias: { "@": fileURLToPath(new URL("../src", import.meta.url)) } },
+      resolve: {
+        alias: {
+          "@": fileURLToPath(new URL("../src", import.meta.url)),
+          "@datosPrueba": fileURLToPath(new URL("../tests/datosPrueba", import.meta.url)),
+        },
+      },
     });
   },
   staticDirs: ["../public"],

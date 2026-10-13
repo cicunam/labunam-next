@@ -1,1 +1,1 @@
-export { getAll as GET } from "@/server/filtros/filtrosController";
+export { getFilters as GET } from "@/server/laboratorios/laboratoriosController";

@@ -1,9 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getSearchOptions, saveRecentSearch, readRecentSearches } from "../sugerencias/sugerencias";
-import { prepareFilters } from "../../server/filtros/filterOptions";
-import { assembleCatalog } from "../../server/catalogo/catalogoAssembler";
-import { createTestData } from "../../server/catalogo/catalogo.fixtures";
-import { filterLaboratorios, getFacetValues } from "../buscador/buscador";
 import { getPhotos } from "../fotos/fotos";
 import { formatCounts, getCatalogUrl } from "../presentacion/presentacion";
 
@@ -42,22 +38,6 @@ describe("búsquedas recientes", () => {
     expect(readRecentSearches()).toEqual([]);
     expect(() => saveRecentSearch("Microscopía")).not.toThrow();
   });
-});
-it("calcula los cinco ejes respetando los otros filtros", () => {
-  const catalogo = assembleCatalog(createTestData());
-  const criterios = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
-  const resultado = prepareFilters(catalogo, criterios);
-  expect(resultado.total).toBe(filterLaboratorios(catalogo.laboratorios, criterios).length);
-  expect(resultado.filtros).toHaveLength(5);
-  for (const filtro of resultado.filtros) {
-    for (const opcion of filtro.opciones) {
-      expect(opcion.total).toBe(
-        filterLaboratorios(catalogo.laboratorios, { ...criterios, [filtro.eje]: "" }).filter(
-          (lab) => getFacetValues(lab, filtro.eje).includes(opcion.clave),
-        ).length,
-      );
-    }
-  }
 });
 it("conserva parámetros y elimina sólo el chip solicitado", () => {
   expect(getCatalogUrl({ q: "rayos x", tipo: "nacionales" }, { tipo: "" })).toBe(

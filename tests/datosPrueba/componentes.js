@@ -1,3 +1,10 @@
+// LabUNAM
+// Datos de prueba
+// componentes (datos ya procesados con la forma que reciben los organismos)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Las historias de Storybook muestran los componentes con estos datos sin levantar el servidor.
+
 export const laboratorio = {
   idLab: 1,
   nombre: "Laboratorio de demostración",

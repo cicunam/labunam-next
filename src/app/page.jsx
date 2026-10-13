@@ -4,7 +4,12 @@
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Servicios
-import { getHomeData } from "@/server/home/homeService";
+import {
+  getSearchOptions,
+  countLaboratorios,
+  getRecentLaboratorios,
+} from "@/server/laboratorios/laboratoriosService";
+import { readPhotos } from "@/server/fotos/fotosService";
 
 // Componentes (secciones de la portada)
 import {
@@ -22,11 +27,15 @@ import {
 export const dynamic = "force-dynamic";
 
 // Definición de la página
-// No recibe props: todo sale de getHomeData.
+// No recibe props: los datos salen de los servicios de laboratorios y fotos.
 const HomePage = async () => {
   // Datos
-  const { locations, suggestions, counts, areaCounts, recentLaboratorios, photos, total } =
-    await getHomeData();
+  const [{ locations, suggestions }, counts, recentLaboratorios, photos] = await Promise.all([
+    getSearchOptions(),
+    countLaboratorios(),
+    getRecentLaboratorios(4),
+    readPhotos(),
+  ]);
 
   // Interfaz
   return (
@@ -38,14 +47,14 @@ const HomePage = async () => {
         popularSearches={["Microscopía", "Rayos X", "Cromatografía"]}
       />
 
-      <LaboratoryNetworks counts={counts} />
+      <LaboratoryNetworks counts={counts.tipos} />
       <RecentLaboratories
         recentLaboratorios={recentLaboratorios}
         photos={photos}
-        total={total}
+        total={counts.total}
       />
 
-      <DisciplineSection areaCounts={areaCounts} />
+      <DisciplineSection areaCounts={counts.areas} />
       <LaboratoryMap locations={locations} />
       <NewsSection />
       <About />

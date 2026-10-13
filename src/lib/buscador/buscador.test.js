@@ -6,8 +6,8 @@ import {
   normalizeCriteria,
   getFacetValues,
 } from "./buscador";
-import { assembleCatalog } from "../../server/catalogo/catalogoAssembler";
-import { createTestData } from "../../server/catalogo/catalogo.fixtures";
+import { assembleCatalog } from "../../server/laboratorios/laboratoriosCatalogo";
+import { createTestData } from "@datosPrueba/catalogo";
 
 const { laboratorios } = assembleCatalog(createTestData());
 describe("filtrar", () => {

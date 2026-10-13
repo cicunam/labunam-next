@@ -69,16 +69,17 @@ el sitio en la UNAM.
 | `src/components/atoms/` | Piezas básicas de interfaz |
 | `src/components/molecules/` | Combinaciones genéricas de piezas |
 | `src/components/organisms/` | Secciones y comportamiento del portal |
-| `src/server/` | Conexión, DAO, servicios, controladores y caché |
+| `src/server/` | Una carpeta por entidad (DAO, servicio, controlador) y `config/` con la conexión |
 | `src/lib/` | Funciones y constantes compartidas |
 | `public/` | Recursos estáticos, fuente, iconos e ilustraciones |
 | `scripts/` | Generación de imágenes y revisión editorial |
 | `tests/e2e/` | Pruebas de navegador |
+| `tests/datosPrueba/` | Datos ficticios para pruebas unitarias e historias (`@datosPrueba/`) |
 | `.storybook/` | Configuración de historias y revisión visual |
 | `docs/` | Guías y acuerdos técnicos |
 
 Cada componente tiene su carpeta, CSS Module e historia. Los módulos de `src/lib/` y `src/server/`
-agrupan su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
+agrupan su lógica y pruebas. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
 Las páginas y layouts importan componentes desde un único barril `src/components/index.js`:
 `import { Header, Footer } from "@/components"`. Entre componentes y en historias
@@ -113,8 +114,8 @@ un estado abre el catálogo con `?sede=...`. Los trazados SVG se sirven localmen
 desde `public/assets/maps/`, con origen y licencia en su archivo `CREDITOS.md`.
 No se consulta un servicio externo de mapas ni se muestran ubicaciones exactas.
 
-El catálogo se renderiza en servidor. `loadCatalog()` combina seis consultas de
-sólo lectura y reutiliza una caché en memoria. Las peticiones concurrentes comparten
+El catálogo se renderiza en servidor. `loadCatalog()` combina dos consultas de
+sólo lectura (laboratorios con sus relaciones y disciplinas) y reutiliza una caché en memoria. Las peticiones concurrentes comparten
 la carga; si una actualización falla, se conserva la última copia válida.
 Cada proceso Node tiene su propia caché.
 
@@ -233,7 +234,8 @@ La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
 textos se agrupan en `src/lib/home/homeContent.js`. Los hooks específicos viven
 junto al componente: `useSearchSuggestions` en SearchBar y `useHeaderMenu` /
 `useCompactSearch` en Header. Las consultas SQL están en los DAO de `src/server/`.
-`catalogoService.js` coordina la carga y `catalogoCache.js` administra la caché.
+En `src/server/laboratorios/`, `laboratoriosCatalogo.js` carga y guarda en caché todos los
+laboratorios y `laboratoriosService.js` responde la ficha, la búsqueda, los filtros y la portada.
 
 Los comentarios explican decisiones y comportamientos que deben conservarse:
 historial del modal, peticiones concurrentes, conteos de filtros, datos heredados

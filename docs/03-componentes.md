@@ -88,7 +88,7 @@ const LaboratoryCard = ({
 Sólo se incluyen las etiquetas que el archivo necesita. Los comentarios que explican
 una decisión o un comportamiento que debe conservarse siguen yendo junto al código al
 que se refieren. Todos los componentes de `src/components/`, sus hooks, las dos páginas principales y
-`catalogoSearchService` siguen esta plantilla. El resto de páginas y de `src/server/` y
+los archivos de `src/server/laboratorios/` siguen esta plantilla. El resto de páginas y de `src/server/` y
 `src/lib/` se adapta al tocarlo.
 
 ## Ejemplo completo: una nota informativa
@@ -157,7 +157,7 @@ Así evitamos el ciclo componente → barril → componente. Las cargas diferida
 (`lazy`/`import()`) también conservan la ruta directa. No crees barriles por nivel
 o por componente ni añadas `"use client"` al barril central: cada componente
 interactivo declara su propia frontera. El barril sólo reexporta componentes;
-hooks, fixtures, historias y utilidades quedan fuera.
+hooks, datos de prueba, historias y utilidades quedan fuera.
 
 ## Si necesita interacción
 

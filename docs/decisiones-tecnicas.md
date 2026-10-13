@@ -16,9 +16,10 @@ equipo familiarizado con React que está incorporando Next.js.
   instalada; consultar `node_modules/next/dist/docs/` antes de asumir APIs antiguas.
 - Componentes de servidor por defecto; fronteras cliente pequeñas para interacción.
 - Atomic Design y una carpeta por componente con CSS Module e historia.
-- Backend por entidad en `src/server/`: `config/dbconnection.js`, DAO, servicios y controladores.
+- Backend sólo por entidad en `src/server/`, más `config/dbconnection.js`: DAO, servicios y controladores.
+  El catálogo en memoria, la búsqueda, los filtros y la portada pertenecen a `laboratorios/`.
   Transformación de filas en el mapper; caché independiente. Utilidades compartidas en `src/lib/`.
-  Pruebas y fixtures junto a cada módulo. Páginas llaman servicios; endpoints delegan a controladores.
+  Pruebas junto a cada módulo; datos de prueba en `tests/datosPrueba/`. Páginas llaman servicios; endpoints delegan a controladores.
 - Componentes y funciones en inglés; entidades del dominio y textos en español.
 - Un único barril `src/components/index.js` para importar componentes en páginas y layouts.
   Reexports nombrados explícitos, sin `"use client"`; cada componente conserva su frontera.

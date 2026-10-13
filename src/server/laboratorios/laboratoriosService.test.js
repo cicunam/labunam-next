@@ -1,12 +1,23 @@
 import { beforeEach, expect, it, vi } from "vitest";
-import { loadCatalog } from "../catalogo/catalogoService";
+import { loadCatalog, assembleCatalog } from "./laboratoriosCatalogo";
 import { readPhotos } from "../fotos/fotosService";
-import { assembleCatalog } from "../catalogo/catalogoAssembler";
-import { createTestData } from "../catalogo/catalogo.fixtures";
-import { getById, getContactDetails } from "./laboratoriosService";
-import { getDetails } from "./laboratoriosController";
+import { filterLaboratorios, getFacetValues } from "../../lib/buscador/buscador";
+import { createTestData } from "@datosPrueba/catalogo";
+import {
+  getById,
+  getContactDetails,
+  searchLaboratorios,
+  getSearchOptions,
+  countLaboratorios,
+  getRecentLaboratorios,
+  getFilterCounts,
+} from "./laboratoriosService";
+import { getDetails, getFilters } from "./laboratoriosController";
 
-vi.mock("../catalogo/catalogoService", () => ({ loadCatalog: vi.fn() }));
+vi.mock("./laboratoriosCatalogo", async (importOriginal) => ({
+  ...(await importOriginal()),
+  loadCatalog: vi.fn(),
+}));
 vi.mock("../fotos/fotosService", () => ({ readPhotos: vi.fn() }));
 
 beforeEach(() => {
@@ -71,4 +82,65 @@ it("contacto recibe sólo los campos que necesita, sin cargar las fotos", async 
     ["idLab", "nombre", "entidad", "servicios", "sitio"].sort(),
   );
   expect(readPhotos).not.toHaveBeenCalled();
+});
+
+it("el catálogo y la API muestran los mismos conteos y opciones", async () => {
+  const data = await searchLaboratorios({ q: "microscopia", tipo: "nacionales" });
+  const response = await getFilters(
+    new Request("http://localhost/api/filtros?q=microscopia&tipo=nacionales"),
+  );
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({ total: data.total, filtros: data.filters });
+  expect(data.results).toHaveLength(data.total);
+  expect(data.total).toBeGreaterThan(0);
+});
+
+it("ignora parámetros repetidos y no modifica el catálogo al filtrar", async () => {
+  const catalogo = await loadCatalog();
+  const before = structuredClone(catalogo);
+  const all = await searchLaboratorios({});
+  const repeated = await searchLaboratorios({ q: ["microscopia", "rayos"], tipo: ["nacionales"] });
+  expect(repeated.results).toEqual(all.results);
+  expect(catalogo).toEqual(before);
+});
+
+it("la portada obtiene opciones, conteos y recientes sin cambiar el orden del catálogo", async () => {
+  const catalogo = await loadCatalog();
+  const before = structuredClone(catalogo);
+  const [options, counts, recent] = await Promise.all([
+    getSearchOptions(),
+    countLaboratorios(),
+    getRecentLaboratorios(4),
+  ]);
+  expect(counts.total).toBe(3);
+  expect(counts.tipos.nacionales).toBe(1);
+  expect(Object.values(counts.areas).some((total) => total > 0)).toBe(true);
+  expect(options.locations).toEqual(catalogo.sedes);
+  expect(options.suggestions).toEqual(catalogo.sugerencias);
+  expect(recent).toHaveLength(3);
+  expect(catalogo).toEqual(before);
+});
+
+it("el controlador de filtros responde 503 sin filtrar el error interno", async () => {
+  vi.mocked(loadCatalog).mockRejectedValue(new Error("Detalle privado"));
+  const response = await getFilters(new Request("http://localhost/api/filtros"));
+  expect(response.status).toBe(503);
+  expect(await response.json()).toEqual({ error: "No se pudieron actualizar los conteos." });
+});
+
+it("los conteos de filtros calculan los cinco ejes respetando los otros filtros", async () => {
+  const catalogo = await loadCatalog();
+  const criterios = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
+  const resultado = await getFilterCounts(criterios);
+  expect(resultado.total).toBe(filterLaboratorios(catalogo.laboratorios, criterios).length);
+  expect(resultado.filtros).toHaveLength(5);
+  for (const filtro of resultado.filtros) {
+    for (const opcion of filtro.opciones) {
+      expect(opcion.total).toBe(
+        filterLaboratorios(catalogo.laboratorios, { ...criterios, [filtro.eje]: "" }).filter(
+          (lab) => getFacetValues(lab, filtro.eje).includes(opcion.clave),
+        ).length,
+      );
+    }
+  }
 });

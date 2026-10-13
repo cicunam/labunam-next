@@ -111,3 +111,17 @@ export function toTitleCase(texto, conservar = []) {
     })
     .join(" ");
 }
+
+// Convierte cualquier valor de la base en texto sin espacios en los extremos.
+export const getText = (valor) => String(valor ?? "").trim();
+// Quita vacíos y repetidos que sólo difieren en acentos, mayúsculas o espacios.
+export function uniqueValues(valores) {
+  const encontrados = new Map();
+  for (const valor of valores) {
+    const limpio = getText(valor).replace(/\s+/gu, " ");
+    if (limpio && !encontrados.has(normalizeText(limpio))) {
+      encontrados.set(normalizeText(limpio), limpio);
+    }
+  }
+  return [...encontrados.values()];
+}

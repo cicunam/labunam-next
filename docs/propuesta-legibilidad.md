@@ -183,7 +183,7 @@ dos rutas de `src/app/api/` respondan con el sobre que el equipo ya conoce:
 Es un cambio pequeño en `laboratoriosController`, `filtrosController` y los dos
 consumidores.
 
-### 3.6 Consolidar `src/server/catalogo` (opcional)
+### 3.6 Consolidar `src/server/catalogo` (aplicado y superado: todo pasó a `src/server/laboratorios/`, que tiene cuatro archivos de código)
 
 `catalogoOptions.js` (37 líneas) y `catalogoRelations.js` (30) sólo los usa
 `catalogoAssembler.js`. Unirlos en el ensamblador deja tres archivos con nombres que

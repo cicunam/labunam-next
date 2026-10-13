@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@datosPrueba/*": ["./tests/datosPrueba/*"]
     }
   },
   "exclude": ["node_modules", ".next", "storybook-static"]

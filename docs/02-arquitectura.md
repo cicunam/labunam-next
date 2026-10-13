@@ -18,16 +18,17 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
 | `src/components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
 | `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
-| `src/server/` | Backend por entidad | DAO, servicios, controladores y caché |
+| `src/server/` | Backend, una carpeta por entidad | `laboratorios/`, `disciplinas/`, `fotos/`; `config/` con la conexión |
 | `src/lib/` | Funciones compartidas sin React | `texto`, `buscador`, `fotos` |
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
 | `tests/e2e/` | Pruebas en navegador | Catálogo, fichas, carrusel |
+| `tests/datosPrueba/` | Datos ficticios para pruebas e historias | `catalogo.js`, `componentes.js` |
 | `.storybook/` | Configuración del explorador de componentes | Historias, estilos y viewports |
 | `docs/` | Guías y acuerdos | Este documento |
 
 `@/` en un import apunta a `src/`, por ejemplo
-`@/server/catalogo/catalogoService`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
+`@/server/laboratorios/laboratoriosService`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
 la raíz. Las páginas y layouts usan `@/components`, que apunta al único barril
 `src/components/index.js`. Este archivo reúne los componentes mediante reexports
 nombrados. Entre componentes y en historias se usan rutas directas para evitar ciclos.
@@ -78,12 +79,12 @@ normal del servidor no se puede pasar como callback de clic a esa frontera.
 ```mermaid
 flowchart TD
   A[GET /laboratorios?q=microscopia] --> B[Página de servidor]
-  B --> S[searchCatalog: servicio de búsqueda]
+  B --> S[searchLaboratorios en laboratoriosService]
   S --> C[loadCatalog]
   C --> D{Caché vigente}
   D -->|Sí| E[Catálogo normalizado]
-  D -->|No| F[Seis DAO consultan MySQL]
-  F --> M[Mapper y armado del catálogo]
+  D -->|No| F[Dos consultas: laboratorios con sus relaciones y disciplinas]
+  F --> M[LaboratorioDao convierte filas y laboratoriosCatalogo arma el catálogo]
   M --> E
   E --> G[Búsqueda y facetas en lib]
   G --> H[HTML de tarjetas y datos públicos para controles]

@@ -1,6 +1,6 @@
 import DisciplineBar from "./DisciplineBar";
 import FilterDialog from "../FilterDialog/FilterDialog";
-import { filtros } from "../fixtures/organismos.fixtures";
+import { filtros } from "@datosPrueba/componentes";
 
 const meta = {
   title: "Organismos/DisciplineBar",

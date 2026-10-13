@@ -1,5 +1,5 @@
 import FilterDialog from "./FilterDialog";
-import { filtros } from "../fixtures/organismos.fixtures";
+import { filtros } from "@datosPrueba/componentes";
 import DisciplineBar from "../DisciplineBar/DisciplineBar";
 
 const meta = {

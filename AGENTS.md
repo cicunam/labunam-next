@@ -27,7 +27,8 @@
 
 - Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
 - Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
-  Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas y fixtures junto al módulo.
+  Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas junto al módulo.
+  Los datos de prueba viven en `tests/datosPrueba/` y se importan con `@datosPrueba/`.
 - Componentes, props, variables internas, variantes, clases CSS, tokens y atributos técnicos en inglés. Conservar nombres de entidades y
   campos del dominio en español; textos visibles y URLs también en español.
 - Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
@@ -37,8 +38,10 @@
   (`import { Button } from "@/components"`). Sin `"use client"` en el barril.
   Entre componentes, en historias y en cargas diferidas usar imports directos al archivo
   (default sin llaves) para evitar ciclos. Hooks y módulos de `src/lib/` mantienen imports directos.
-- Backend en `src/server/`, organizado por entidad: DAO con SQL, servicios con reglas y
-  controladores HTTP. Conexión en `config/dbconnection.js`. Páginas llaman servicios, no su propia API.
+- Backend en `src/server/`, sólo con carpetas de entidades más `config/` para la conexión:
+  DAO con SQL y conversión de filas, servicios con reglas y controladores HTTP.
+  Lo que trabaja sobre laboratorios (catálogo en memoria, búsqueda, filtros, portada) vive en
+  `laboratorios/`. Páginas llaman servicios y componen sus datos, no su propia API.
 - Componentes y utilidades compartidas no importan `src/server/`. `src/lib/` contiene funciones
   y constantes compartidas, sin acceso a MySQL o al sistema de archivos. No crear capas genéricas
   ni controladores para entidades que no tienen endpoint.

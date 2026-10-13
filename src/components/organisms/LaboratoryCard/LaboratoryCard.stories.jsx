@@ -1,5 +1,5 @@
 import LaboratoryCard from "./LaboratoryCard";
-import { laboratorio } from "../fixtures/organismos.fixtures";
+import { laboratorio } from "@datosPrueba/componentes";
 
 const meta = {
   title: "Organismos/LaboratoryCard",

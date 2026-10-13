@@ -9,7 +9,7 @@ import { getPhotos } from "@/lib/fotos/fotos";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Servicios
-import { searchCatalog } from "@/server/catalogo/catalogoSearchService";
+import { searchLaboratorios } from "@/server/laboratorios/laboratoriosService";
 
 // Componentes
 import {
@@ -41,7 +41,7 @@ const LaboratoriesPage = async ({
     locations,
     suggestions,
     photos,
-  } = await searchCatalog(await searchParams);
+  } = await searchLaboratorios(await searchParams);
 
   // Preparación de datos
   const title = criteria.tipo ? redes[criteria.tipo].nombre : "Laboratorios de la UNAM";
