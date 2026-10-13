@@ -10,7 +10,7 @@ export function SuggestionField({ etiqueta, controlId, opciones = [], valor = ""
     return <FormField etiqueta={etiqueta} controlId={controlId} obligatorio={obligatorio} ayuda={ayuda} ancho={ancho}>
     <Input ref={campo} id={controlId} list={`${controlId}-opciones`} value={valor} onChange={(event) => onChange?.(event.target.value)} required={obligatorio} placeholder={placeholder} autoComplete="off" aria-describedby={ayuda ? `${controlId}-ayuda` : undefined}/>
     <datalist id={`${controlId}-opciones`}>
-      {opciones.map(({ clave, nombre }) => <option key={clave} value={nombre}/>)}
+      {opciones.map(({ clave, nombre, detalle }) => <option key={clave} value={nombre} label={detalle || undefined}/>)}
     </datalist>
   </FormField>;
 }

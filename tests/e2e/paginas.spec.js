@@ -138,6 +138,12 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
     expect(envios).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({ request }) => {
+    const unam = await (await request.get("/api/solicitudes/instituciones?q=unam")).json();
+    expect(unam.instituciones[0]).toMatchObject({ nombre: "Universidad Nacional Autonoma de Mexico", siglas: "UNAM" });
+    expect(unam.instituciones.length).toBeLessThanOrEqual(15);
+    expect((await (await request.get("/api/solicitudes/instituciones?q=u")).json()).instituciones).toEqual([]);
+});
 test("una ficha inexistente responde 404", async ({ request }) => {
     expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
     expect((await request.get("/laboratorios/999999999")).status()).toBe(404);

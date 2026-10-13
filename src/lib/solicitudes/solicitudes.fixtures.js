@@ -1,4 +1,4 @@
-// Catálogos de ejemplo para desarrollar el formulario antes de conectar las tablas reales.
+// Catálogos ficticios con la forma pública de loadRequestCatalogs, para historias y pruebas.
 export const catalogosEjemplo = {
     paises: [
         { clave: "ARG", nombre: "Argentina" }, { clave: "CAN", nombre: "Canadá" }, { clave: "ESP", nombre: "España" },
@@ -8,11 +8,6 @@ export const catalogosEjemplo = {
         MEX: [{ clave: "1", nombre: "Ciudad de México" }, { clave: "2", nombre: "Jalisco" }, { clave: "3", nombre: "Yucatán" }],
         USA: [{ clave: "51", nombre: "California" }, { clave: "52", nombre: "Texas" }],
     },
-    instituciones: [
-        { clave: "1", nombre: "Universidad Nacional Autónoma de México" },
-        { clave: "2", nombre: "Universidad de demostración" },
-        { clave: "3", nombre: "Instituto tecnológico de ejemplo" },
-    ],
     dependencias: [
         { clave: "10", nombre: "Instituto de demostración" }, { clave: "11", nombre: "Facultad de ejemplo" },
     ],

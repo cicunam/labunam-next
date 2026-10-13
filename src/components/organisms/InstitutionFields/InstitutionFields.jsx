@@ -1,18 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SuggestionField } from "../../molecules/SuggestionField/SuggestionField";
 import { FormField } from "../../molecules/FormField/FormField";
 import { Select } from "../../atoms/Select/Select";
 import { findOption, isUnam } from "@/lib/solicitudes/solicitudes";
-export function InstitutionFields({ catalogos }) {
+import { MINIMO_BUSQUEDA, fetchInstitutions } from "@/lib/instituciones/instituciones";
+// Las instituciones son miles: se piden al servidor tras una pausa breve en la escritura.
+export function InstitutionFields({ catalogos, buscarInstituciones = fetchInstitutions }) {
     const [textoInstitucion, setInstitucion] = useState("");
     const [textoDependencia, setDependencia] = useState("");
-    const institucion = findOption(catalogos.instituciones, textoInstitucion);
+    const [sugerencias, setSugerencias] = useState({ texto: "", opciones: [] });
+    useEffect(() => {
+        const texto = textoInstitucion.trim();
+        if (texto.length < MINIMO_BUSQUEDA)
+            return;
+        const control = new AbortController();
+        const espera = setTimeout(() => {
+            buscarInstituciones(texto, control.signal)
+                .then((opciones) => setSugerencias({ texto, opciones }))
+                .catch(() => { if (!control.signal.aborted) setSugerencias({ texto, opciones: [] }); });
+        }, 250);
+        return () => { clearTimeout(espera); control.abort(); };
+    }, [textoInstitucion, buscarInstituciones]);
+    const opciones = textoInstitucion.trim().length < MINIMO_BUSQUEDA ? [] : sugerencias.opciones.map((opcion) => ({ ...opcion, detalle: opcion.siglas }));
+    const institucion = findOption(opciones, textoInstitucion);
     const dependencia = findOption(catalogos.dependencias, textoDependencia);
     const unam = isUnam(institucion?.nombre);
     return <>
     {/* Una institución que no está en el catálogo se conserva como texto libre, igual que en la versión anterior. */}
-    <SuggestionField etiqueta="Institución" controlId="solicitud-institucion" opciones={catalogos.instituciones} valor={textoInstitucion} onChange={(texto) => { setInstitucion(texto); setDependencia(""); }} obligatorio ancho ayuda="Si no aparece en la lista, escribe su nombre completo."/>
+    <SuggestionField etiqueta="Institución" controlId="solicitud-institucion" opciones={opciones} valor={textoInstitucion} onChange={(texto) => { setInstitucion(texto); setDependencia(""); }} obligatorio ancho placeholder="Escribe al menos dos letras" ayuda="Elige una sugerencia; si no aparece, escribe su nombre completo."/>
     <input type="hidden" name="id_institucion" value={institucion?.clave ?? ""}/>
     <input type="hidden" name="institucion_otra" value={institucion ? "" : textoInstitucion.trim()}/>
     {unam && <>
