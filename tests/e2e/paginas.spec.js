@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { CAMPOS_FORMULARIO } from "../../src/lib/validacionSolicitud/validacionSolicitud.js";
 test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({ page }) => {
     await page.goto("/");
     const redes = page.getByRole("region", { name: "Tres redes, una universidad" });
@@ -135,6 +136,9 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
     await expect(page.getByLabel("Estado")).toHaveCount(0);
     await enviar.click();
     await expect(page.getByRole("status")).toContainText("no se envió información");
+    // Los nombres del formulario deben coincidir con los que acepta la validación del servidor.
+    const nombres = await page.locator("form").evaluate((form) => [...new FormData(form).keys()]);
+    expect(nombres.filter((nombre) => !CAMPOS_FORMULARIO.includes(nombre))).toEqual([]);
     expect(envios).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
