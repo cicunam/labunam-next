@@ -26,7 +26,7 @@ const Contact = ({
         <p>
           {laboratorio
             ? "Cuéntanos qué necesitas para tu proyecto."
-            : "Encuentra el canal adecuado para tu query."}
+            : "Encuentra el canal adecuado para tu consulta."}
         </p>
       </header>
       <div className={styles.columns}>
