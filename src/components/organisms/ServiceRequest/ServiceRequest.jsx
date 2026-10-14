@@ -15,6 +15,9 @@ export function ServiceRequest({ laboratorio: lab, catalogos }) {
           <h2>¿Ya sabes qué laboratorio te interesa?</h2>
           <p>Abre su ficha en el catálogo y elige «Solicitar un servicio» para que tu solicitud quede asociada a ese laboratorio.</p>
           <AppLink href="/laboratorios">Explorar laboratorios →</AppLink>
+          <h2>¿Sólo quieres enviarnos un mensaje?</h2>
+          <p>Si no necesitas registrar una solicitud de servicio y prefieres escribirnos directamente, usa la sección de contacto.</p>
+          <AppLink href="/contacto">Ir a contacto →</AppLink>
         </>}
       </aside>
       <div className={styles.formulario}>

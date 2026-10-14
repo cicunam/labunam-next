@@ -5,6 +5,7 @@
 .columnas { display: grid; gap: 40px; }
 .informacion, .formulario { min-width: 0; }
 .informacion h2 { font: var(--font-title-medium); margin-bottom: 16px; }
+.informacion h2:not(:first-child) { margin-top: 40px; }
 .informacion p { margin-bottom: 16px; color: var(--color-neutral-dark); }
 .informacion a { color: var(--color-primary-dark); text-underline-offset: 4px; }
 .formulario { border: 1px solid var(--filete-suave); border-radius: var(--radio-md); padding: 24px; }

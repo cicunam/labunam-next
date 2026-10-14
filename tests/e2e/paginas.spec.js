@@ -77,6 +77,8 @@ test("la navegación lleva a solicitud", async ({ page }) => {
     await expect(page).toHaveTitle("Solicitud | LabUNAM");
     await expect(page.getByRole("heading", { name: "Solicitud de servicio", level: 1 })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.getByRole("link", { name: "Ir a contacto" }).click();
+    await expect(page).toHaveURL(/\/contacto$/);
 });
 test("solicitud asociada a un laboratorio valida el identificador", async ({ page, request }) => {
     await page.goto("/laboratorios?tipo=internacionales");
