@@ -12,7 +12,7 @@
 ## Entorno y datos
 
 - Node 24 LTS; usar la versión de `.nvmrc`, npm y `package-lock.json`.
-- Raúl administra `.env`. No leer, imprimir, copiar ni incorporar credenciales a
+- El usuario administra `.env`. No leer, imprimir, copiar ni incorporar credenciales a
   código, logs, capturas o commits. Usar `.env.example` como referencia de variables;
   la carga normal del entorno por Next y los scripts está permitida.
 - MySQL es de sólo lectura. No crear migraciones ni modificar el esquema o los

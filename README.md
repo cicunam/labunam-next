@@ -233,8 +233,11 @@ incluso en condiciones de una sola instrucción.
 La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
 textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
 las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
-junto al componente: `useSearchSuggestions` en SearchBar y `useHeaderMenu` /
-`useCompactSearch` en Header. Las consultas SQL están en los DAO de `src/server/`.
+junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar,
+`useHeaderMenu` / `useCompactSearch` en Header, `useLaboratoryDialog` en LaboratoryDialog
+(apertura, carga e historial del modal y el contrato `data-details`), `useFilterDraft` en
+FilterDialog (borrador de filtros con conteos en vivo) y `useDragScroll` en DisciplineBar
+(arrastre y flechas de la franja). Las consultas SQL están en los DAO de `src/server/`.
 En `src/server/laboratorios/`, `laboratoriosCatalogo.js` carga y guarda en caché todos los
 laboratorios y `laboratoriosService.js` responde la ficha, la búsqueda, los filtros y la portada.
 

@@ -144,7 +144,7 @@ Puntos calientes donde el cambio se nota de inmediato, aunque no se renombre nad
 Si el equipo prefiere mantener el inglés que fijaron los últimos commits, la versión
 mínima es: prohibir alias en destructuring y no mezclar dentro de una misma función.
 
-### 3.4 Extraer "mecanismos" (hooks) de los organismos grandes
+### 3.4 Extraer "mecanismos" (hooks) de los organismos grandes (aplicado el 14 de octubre de 2026 para los dos diálogos: `useLaboratoryDialog`, `useFilterDraft` y `useDragScroll`, este último en DisciplineBar, que pasó a ser Client Component; el carrusel sigue pendiente)
 
 csgca pone la lógica en hooks pequeños con nombre (`useCollection`, `useDetail`,
 `usePagination`) y deja los componentes como vista. Tres candidatos:

@@ -100,7 +100,8 @@ recarga. Vive en memoria de cada proceso, no en una base aparte. El navegador no
 recibe todo el catálogo de servicios y equipos para hacer las búsquedas.
 
 El modal usa History API para cambiar la URL sin desmontar el catálogo. Atrás,
-Adelante y cerrar conservan contexto. Si compartes o recargas esa URL, Next sirve
+Adelante y cerrar conservan contexto; esa lógica vive en `useLaboratoryDialog`, junto
+al componente. Si compartes o recargas esa URL, Next sirve
 la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 ## Cómo decidir dónde editar

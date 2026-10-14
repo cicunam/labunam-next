@@ -1,3 +1,5 @@
+"use client";
+
 // LabUNAM
 // Organismos
 // DisciplineBar (barra horizontal de áreas del catálogo)
@@ -8,6 +10,9 @@ import Link from "next/link";
 import { grupos } from "@/lib/grupos/grupos";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
+// Mecanismos
+import { useDragScroll } from "./useDragScroll";
+
 // Componentes
 import Icon from "../../atoms/Icon/Icon";
 
@@ -15,12 +20,18 @@ import Icon from "../../atoms/Icon/Icon";
 import styles from "./DisciplineBar.module.css";
 
 // Definición del componente
+// Es un Client Component sólo por el arrastre y las flechas; los enlaces siguen siendo
+// HTML normal que funciona sin JavaScript.
 const DisciplineBar = ({
   criteria, // Object - Criterios activos de la búsqueda; se conservan al cambiar de área
 }) => {
+  // Mecanismos
+  const frame = useDragScroll();
+
   // Interfaz
   return (
     <div
+      ref={frame}
       className={styles["strip-frame"]}
       data-strip
     >

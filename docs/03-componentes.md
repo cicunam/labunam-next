@@ -241,8 +241,11 @@ Escape, retorno de foco y navegación es parte del comportamiento.
 - Separar imports, estado/datos, funciones de eventos e interfaz con líneas en blanco.
 - Usar llaves en todos los `if`, aunque tengan una sola instrucción.
 - Extraer eventos con varios pasos a funciones con nombre, por ejemplo `clearSearch`.
-- Guardar un hook específico junto al componente. `useSearchSuggestions` es el ejemplo
-  del buscador; no crear un hook para una operación que ya es fácil de entender.
+- Guardar un hook específico junto al componente y dejar el componente como vista:
+  `useSearchSuggestions` en SearchBar, `useLaboratoryDialog` en LaboratoryDialog,
+  `useFilterDraft` en FilterDialog y `useDragScroll` en DisciplineBar. El hook reúne
+  referencias, estado, efectos y gestores de evento, y devuelve sólo lo que el JSX usa.
+  No crear un hook para una operación que ya es fácil de entender.
 - Comentar en español decisiones, supuestos y casos difíciles. Un comentario debe
   explicar por qué se conserva una caché o una entrada de historial, no repetir un `setState`.
 - En funciones de datos complejas, describir qué reciben y qué devuelven. Actualizar

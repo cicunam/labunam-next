@@ -28,8 +28,8 @@ const LaboratoryCard = ({
   const detail = match ? getCapabilityExcerpt(match.texto, query) : lab.sedeNombre;
 
   // Interfaz
-  // El título es un botón con data-details: LaboratoryDialog escucha ese atributo
-  // para abrir la ficha sin que la tarjeta conozca el diálogo.
+  // El título es un botón con data-details: useLaboratoryDialog (en LaboratoryDialog) escucha
+  // ese atributo para abrir la ficha sin que la tarjeta conozca el diálogo.
   return (
     <article className={styles.card}>
       <div
