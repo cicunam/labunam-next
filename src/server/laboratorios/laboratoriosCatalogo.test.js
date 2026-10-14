@@ -20,13 +20,13 @@ vi.mock("../config/dbconnection.js", () => ({ query: queryMock }));
 beforeEach(() => {
   vi.resetModules();
   queryMock.mockReset();
-  const datos = createTestData();
+  const data = createTestData();
   queryMock.mockImplementation(async (sql) => {
     if (sql.includes("FROM r_seccion1")) {
-      return datos.filas;
+      return data.rows;
     }
     if (sql.includes("FROM catDisiplina")) {
-      return datos.disciplinas;
+      return data.disciplinas;
     }
     throw new Error("Consulta inesperada");
   });
@@ -56,13 +56,13 @@ describe("catálogo y caché", () => {
   });
   it("comparte una carga concurrente y reutiliza la copia durante 600 segundos", async () => {
     const { loadCatalog } = await import("./laboratoriosCatalogo");
-    const [primera, segunda] = await Promise.all([loadCatalog(), loadCatalog()]);
-    expect(segunda).toBe(primera);
+    const [first, second] = await Promise.all([loadCatalog(), loadCatalog()]);
+    expect(second).toBe(first);
     vi.advanceTimersByTime(599_999);
-    expect(await loadCatalog()).toBe(primera);
+    expect(await loadCatalog()).toBe(first);
     expect(queryMock).toHaveBeenCalledTimes(2);
     vi.advanceTimersByTime(1);
-    expect(await loadCatalog()).not.toBe(primera);
+    expect(await loadCatalog()).not.toBe(first);
     expect(queryMock).toHaveBeenCalledTimes(4);
   });
   it("respeta la duración configurada", async () => {
@@ -75,11 +75,11 @@ describe("catálogo y caché", () => {
   });
   it("sirve la copia vencida si falla la base y vuelve a intentarlo", async () => {
     const { loadCatalog } = await import("./laboratoriosCatalogo");
-    const copia = await loadCatalog();
+    const copy = await loadCatalog();
     vi.advanceTimersByTime(600_000);
     queryMock.mockRejectedValueOnce(new Error("Fallo simulado"));
-    expect(await loadCatalog()).toBe(copia);
-    expect(await loadCatalog()).not.toBe(copia);
+    expect(await loadCatalog()).toBe(copy);
+    expect(await loadCatalog()).not.toBe(copy);
   });
   it("devuelve un error público sin detalles internos si no hay copia", async () => {
     const { loadCatalog } = await import("./laboratoriosCatalogo");
@@ -120,18 +120,18 @@ describe("armado del catálogo", () => {
     expect(lab.sitio).toBe("https://labunam.unam.mx/micrositio/index.php?il=2");
   });
   it("respeta entidades corregidas y excluye tipos de prueba", () => {
-    const datos = createTestData();
-    datos.filas[0].dependenciaTitulo = "Centro de Pruebas Ópticas";
-    datos.filas.push(createLaboratorioRow({ idLab: 99, idTpLab: 0 }));
-    const catalogo = assembleCatalog(datos);
+    const data = createTestData();
+    data.rows[0].dependenciaTitulo = "Centro de Pruebas Ópticas";
+    data.rows.push(createLaboratorioRow({ idLab: 99, idTpLab: 0 }));
+    const catalogo = assembleCatalog(data);
     expect(catalogo.laboratorios).toHaveLength(3);
     expect(catalogo.laboratorios.find((lab) => lab.idLab === 1)?.entidad).toBe(
       "Centro de Pruebas Ópticas",
     );
   });
   it("tolera campos vacíos y enlaces no navegables", () => {
-    const datos = createTestData();
-    datos.filas = [
+    const data = createTestData();
+    data.rows = [
       createLaboratorioRow({
         estado: null,
         calleNum: null,
@@ -144,7 +144,7 @@ describe("armado del catálogo", () => {
         fecha: null,
       }),
     ];
-    const lab = assembleCatalog(datos).laboratorios[0];
+    const lab = assembleCatalog(data).laboratorios[0];
     expect([lab.sede, lab.sedeNombre, lab.ubicacion, lab.mapa, lab.sitio, lab.fecha]).toEqual([
       "",
       "",
@@ -155,9 +155,9 @@ describe("armado del catálogo", () => {
     ]);
   });
   it("usa claves únicas y conserva especialidades con cero laboratorios", () => {
-    const datos = createTestData();
-    datos.disciplinas.push({ idDis: 36, disiplina: "QUÍMICA" });
-    const catalogo = assembleCatalog(datos);
+    const data = createTestData();
+    data.disciplinas.push({ idDis: 36, disiplina: "QUÍMICA" });
+    const catalogo = assembleCatalog(data);
     for (const opciones of [catalogo.sedes, catalogo.disciplinas]) {
       expect(new Set(opciones.map((opcion) => opcion.clave)).size).toBe(opciones.length);
     }
@@ -170,34 +170,34 @@ describe("armado del catálogo", () => {
     expect(catalogo.sugerencias).not.toContain("Laboratorio de Microscopía");
   });
   it("limita los equipos sugeridos a 60 y no cuenta duplicados del mismo laboratorio", () => {
-    const datos = createTestData();
-    for (const fila of datos.filas) {
-      fila.equipos = Array.from({ length: 65 }, (_, i) => ({
+    const data = createTestData();
+    for (const row of data.rows) {
+      row.equipos = Array.from({ length: 65 }, (_, i) => ({
         nombre: `Equipo ${i}`,
         tpPruebasServicio: null,
       }));
     }
-    datos.filas[0].equipos.push(
+    data.rows[0].equipos.push(
       ...Array.from({ length: 4 }, () => ({
         nombre: "Equipo único",
         tpPruebasServicio: null,
       })),
     );
-    const catalogo = assembleCatalog(datos);
+    const catalogo = assembleCatalog(data);
     expect(catalogo.sugerencias).toHaveLength(62);
     expect(catalogo.sugerencias).not.toContain("Equipo único");
   });
   it("usa equipos y distinciones en el orden en que llegan de MySQL", () => {
-    const datos = createTestData();
-    datos.filas[0].equipos = [
+    const data = createTestData();
+    data.rows[0].equipos = [
       { nombre: "Espectrómetro", tpPruebasServicio: "Espectroscopía" },
       { nombre: "Microscopio óptico", tpPruebasServicio: "Microscopía óptica" },
     ];
-    datos.filas[0].certificaciones = [
+    data.rows[0].certificaciones = [
       { nombre: "Antigua", organismo: null, fFin: "2015-01-01" },
       { nombre: "Reciente", organismo: null, fFin: "2024-01-01" },
     ];
-    const lab = assembleCatalog(datos).laboratorios.find((lab) => lab.idLab === 1);
+    const lab = assembleCatalog(data).laboratorios.find((lab) => lab.idLab === 1);
     expect(lab.equipos).toEqual(["Espectrómetro", "Microscopio óptico"]);
     expect(lab.servicios).toEqual(["Espectroscopía", "Microscopía óptica"]);
     expect(lab.distinciones).toEqual([
@@ -206,9 +206,9 @@ describe("armado del catálogo", () => {
     ]);
   });
   it("tolera laboratorios sin equipos ni distinciones", () => {
-    const datos = createTestData();
-    datos.filas = [createLaboratorioRow({ equipos: null, certificaciones: null })];
-    const lab = assembleCatalog(datos).laboratorios[0];
+    const data = createTestData();
+    data.rows = [createLaboratorioRow({ equipos: null, certificaciones: null })];
+    const lab = assembleCatalog(data).laboratorios[0];
     expect([lab.equipos, lab.servicios, lab.distinciones]).toEqual([[], [], []]);
     expect([lab.certificado, lab.acreditado]).toEqual([false, false]);
   });

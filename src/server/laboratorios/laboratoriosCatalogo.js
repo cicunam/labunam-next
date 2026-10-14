@@ -40,25 +40,25 @@ export async function loadCatalog() {
 
 export async function buildCatalog() {
   // Dos lecturas por lote: laboratorios con todas sus relaciones y el catálogo de disciplinas.
-  const [filas, disciplinas] = await Promise.all([
+  const [rows, disciplinas] = await Promise.all([
     laboratorioDao.getAllActive(),
     disciplinaDao.getAll(),
   ]);
 
-  return assembleCatalog({ filas, disciplinas });
+  return assembleCatalog({ rows, disciplinas });
 }
 
 // Convierte las filas en laboratorios y prepara las opciones de filtros y sugerencias.
 export function assembleCatalog(
-  rows, // Object - { filas, disciplinas }: filas de LaboratorioDao y de DisciplinaDao
+  data, // Object - { rows, disciplinas }: filas de LaboratorioDao y de DisciplinaDao
 ) {
   const disciplinas = new Map(
-    rows.disciplinas.map((fila) => [Number(fila.idDis), toTitleCase(fila.disiplina)]),
+    data.disciplinas.map((row) => [Number(row.idDis), toTitleCase(row.disiplina)]),
   );
-  const laboratorios = rows.filas.map((fila) => toLaboratorio(fila, disciplinas)).filter(Boolean);
-  const nombresDisciplinas = [...disciplinas.values()];
+  const laboratorios = data.rows.map((row) => toLaboratorio(row, disciplinas)).filter(Boolean);
+  const disciplineNames = [...disciplinas.values()];
 
-  const sugerencias = buildSuggestions(laboratorios, nombresDisciplinas);
+  const sugerencias = buildSuggestions(laboratorios, disciplineNames);
   laboratorios.sort((first, second) => first.nombre.localeCompare(second.nombre, "es"));
 
   return {
@@ -68,7 +68,7 @@ export function assembleCatalog(
       laboratorios,
       "sede",
     ),
-    disciplinas: buildOptions(nombresDisciplinas, laboratorios, "disciplinas"),
+    disciplinas: buildOptions(disciplineNames, laboratorios, "disciplinas"),
     sugerencias,
   };
 }
@@ -77,20 +77,20 @@ export function assembleCatalog(
 
 // Opciones de un filtro con clave, etiqueta y total, ordenadas de mayor a menor total.
 function buildOptions(
-  valores, // Array - Etiquetas (String) de sedes o disciplinas
+  values, // Array - Etiquetas (String) de sedes o disciplinas
   laboratorios, // Array - Laboratorios ya armados, para contar cuántos tiene cada opción
   eje, // String - "sede" o "disciplinas"
 ) {
-  const etiquetas = new Map(valores.filter(Boolean).map((valor) => [slugify(valor), valor]));
-  const totales = new Map();
+  const labels = new Map(values.filter(Boolean).map((value) => [slugify(value), value]));
+  const totals = new Map();
   for (const lab of laboratorios) {
-    const claves = eje === "sede" ? [lab.sede] : lab.disciplinas.map(slugify);
-    for (const valor of new Set(claves)) {
-      totales.set(valor, (totales.get(valor) ?? 0) + 1);
+    const keys = eje === "sede" ? [lab.sede] : lab.disciplinas.map(slugify);
+    for (const value of new Set(keys)) {
+      totals.set(value, (totals.get(value) ?? 0) + 1);
     }
   }
-  return [...etiquetas]
-    .map(([clave, etiqueta]) => ({ clave, etiqueta, total: totales.get(clave) ?? 0 }))
+  return [...labels]
+    .map(([clave, etiqueta]) => ({ clave, etiqueta, total: totals.get(clave) ?? 0 }))
     .sort((a, b) => b.total - a.total || a.etiqueta.localeCompare(b.etiqueta, "es"));
 }
 
@@ -98,25 +98,25 @@ function buildSuggestions(
   laboratorios, // Array - Laboratorios ya armados
   disciplinas, // Array - Nombres (String) de todas las disciplinas
 ) {
-  const frecuencias = new Map();
+  const frequencies = new Map();
   for (const laboratorio of laboratorios) {
     const equipos = laboratorio.equipos;
     for (const equipo of equipos) {
-      const frecuencia = frecuencias.get(normalizeText(equipo)) ?? {
+      const frequency = frequencies.get(normalizeText(equipo)) ?? {
         etiqueta: toTitleCase(equipo.toUpperCase()),
         total: 0,
       };
-      frecuencia.total++;
-      frecuencias.set(normalizeText(equipo), frecuencia);
+      frequency.total++;
+      frequencies.set(normalizeText(equipo), frequency);
     }
   }
   // Las sugerencias combinan disciplinas con equipos presentes en al menos tres laboratorios.
   // Limitamos a 60 equipos antes de enviar esta lista pequeña al buscador del navegador.
-  const frecuentes = [...frecuencias.values()]
+  const frequent = [...frequencies.values()]
     .filter((equipo) => equipo.total >= 3)
     .sort((a, b) => b.total - a.total || a.etiqueta.localeCompare(b.etiqueta, "es"))
     .slice(0, 60);
-  return uniqueValues([...disciplinas, ...frecuentes.map((equipo) => equipo.etiqueta)]);
+  return uniqueValues([...disciplinas, ...frequent.map((equipo) => equipo.etiqueta)]);
 }
 
 // Renueva la copia y fija su vencimiento; la usa loadCatalog.

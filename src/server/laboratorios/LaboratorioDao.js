@@ -72,77 +72,77 @@ class LaboratorioDao {
 // Conversión de filas
 // Recibe una fila y devuelve un laboratorio, o null si su tipo no es público.
 export function toLaboratorio(
-  fila, // Object - Fila de getAllActive: estado, equipos, certificaciones, acreditaciones y las 38 columnas de disciplinas
+  row, // Object - Fila de getAllActive: estado, equipos, certificaciones, acreditaciones y las 38 columnas de disciplinas
   disciplinas, // Map - Nombre de cada disciplina por su id (Number), leído por DisciplinaDao
 ) {
-  const tipo = tipos[Number(fila.idTpLab)];
+  const tipo = tipos[Number(row.idTpLab)];
   if (!tipo) {
     return null;
   }
-  const idLab = Number(fila.idLab);
+  const idLab = Number(row.idLab);
   // Las disciplinas vienen en 38 columnas de banderas, no en una tabla de relaciones.
-  const ids = [...disciplinas.keys()].filter((id) => Number(fila[`dis${id}`]) === 1);
-  const estado = getText(fila.estado);
+  const ids = [...disciplinas.keys()].filter((id) => Number(row[`dis${id}`]) === 1);
+  const estado = getText(row.estado);
   const sedeNombre =
     estado === "NO ESPECIFICADO" ? "" : (estadosConAcentos[estado] ?? toTitleCase(estado));
-  const filasEquipo = fila.equipos ?? [];
-  const equipos = uniqueValues(filasEquipo.map((equipo) => equipo.nombre));
-  const servicios = uniqueValues(filasEquipo.map((equipo) => equipo.tpPruebasServicio));
-  const certificados = fila.certificaciones ?? [];
-  const acreditados = fila.acreditaciones ?? [];
-  const siglas = getText(fila.siglas);
+  const equipoRows = row.equipos ?? [];
+  const equipos = uniqueValues(equipoRows.map((equipo) => equipo.nombre));
+  const servicios = uniqueValues(equipoRows.map((equipo) => equipo.tpPruebasServicio));
+  const certificados = row.certificaciones ?? [];
+  const acreditados = row.acreditaciones ?? [];
+  const siglas = getText(row.siglas);
   const perfil = [];
-  if (Number(fila.objServicios) === 1) {
+  if (Number(row.objServicios) === 1) {
     perfil.push("servicios");
   }
-  if (Number(fila.objDocencia) === 1) {
+  if (Number(row.objDocencia) === 1) {
     perfil.push("docencia");
   }
-  if (Number(fila.objInvesBasica) === 1) {
+  if (Number(row.objInvesBasica) === 1) {
     perfil.push("basica");
   }
-  if (Number(fila.objInvesApli) === 1) {
+  if (Number(row.objInvesApli) === 1) {
     perfil.push("aplicada");
   }
-  const lat = Number(fila.latitud),
-    lng = Number(fila.longitud);
+  const lat = Number(row.latitud),
+    lng = Number(row.longitud);
   // El valor 2 de marcaAutorizaInfoWeb indica que la ficha usa el micrositio institucional.
   const lab = {
     idLab,
-    nombre: toTitleCase(fila.labNombre, [siglas]),
+    nombre: toTitleCase(row.labNombre, [siglas]),
     siglas,
     tipo,
     entidad:
-      getText(fila.dependenciaTitulo) ||
-      toTitleCase(getText(fila.dependencia), [getText(fila.iniciales)]),
-    entidadSiglas: getText(fila.iniciales),
+      getText(row.dependenciaTitulo) ||
+      toTitleCase(getText(row.dependencia), [getText(row.iniciales)]),
+    entidadSiglas: getText(row.iniciales),
     sede: slugify(sedeNombre),
     sedeNombre,
     grupos: grupos
       .filter((grupo) => grupo.disciplinas.some((id) => ids.includes(id)))
       .map((grupo) => grupo.clave),
     disciplinas: ids.map((id) => disciplinas.get(id)),
-    palabrasClave: getText(fila.palabrasClave),
+    palabrasClave: getText(row.palabrasClave),
     servicios,
     equipos,
     distinciones: [
-      ...certificados.map((fila) => formatDistinction("Certificación", fila)),
-      ...acreditados.map((fila) => formatDistinction("Acreditación", fila)),
+      ...certificados.map((row) => formatDistinction("Certificación", row)),
+      ...acreditados.map((row) => formatDistinction("Acreditación", row)),
     ],
     certificado: certificados.length > 0,
     acreditado: acreditados.length > 0,
-    micrositio: Number(fila.marcaAutorizaInfoWeb) === 2,
+    micrositio: Number(row.marcaAutorizaInfoWeb) === 2,
     perfil,
-    ubicacion: formatAddress(fila),
+    ubicacion: formatAddress(row),
     mapa:
       lat && lng && Math.abs(lat) <= 90 && Math.abs(lng) <= 180
         ? `https://www.google.com/maps?q=${lat},${lng}`
         : "",
     sitio:
-      Number(fila.marcaAutorizaInfoWeb) === 2
+      Number(row.marcaAutorizaInfoWeb) === 2
         ? `https://labunam.unam.mx/micrositio/index.php?il=${idLab}`
-        : normalizeWebsite(fila.webLab),
-    fecha: getText(fila.fecha),
+        : normalizeWebsite(row.webLab),
+    fecha: getText(row.fecha),
     indice: "",
   };
   lab.indice = normalizeText(
@@ -152,7 +152,7 @@ export function toLaboratorio(
       lab.entidad,
       lab.entidadSiglas,
       lab.palabrasClave,
-      getText(fila.subDis),
+      getText(row.subDis),
       ...lab.disciplinas,
       ...equipos,
       ...servicios,
@@ -166,43 +166,43 @@ export function toLaboratorio(
 // Texto de una certificación o acreditación con su organismo y año de vigencia.
 function formatDistinction(
   tipo, // String - "Certificación" o "Acreditación"
-  fila, // Object - Fila con nombre, organismo y fFin
+  row, // Object - Fila con nombre, organismo y fFin
 ) {
-  const organismo = getText(fila.organismo);
-  const fecha = getText(fila.fFin);
-  return `${tipo}: ${getText(fila.nombre)}${organismo ? ` · ${organismo}` : ""}${fecha && fecha !== "0000-00-00" ? ` (vigencia ${fecha.slice(0, 4)})` : ""}`;
+  const organismo = getText(row.organismo);
+  const fecha = getText(row.fFin);
+  return `${tipo}: ${getText(row.nombre)}${organismo ? ` · ${organismo}` : ""}${fecha && fecha !== "0000-00-00" ? ` (vigencia ${fecha.slice(0, 4)})` : ""}`;
 }
 // Dirección legible sin partes vacías ni ceros heredados.
 function formatAddress(
-  fila, // Object - Fila con calleNum, colonia, muniDeleg y cp
+  row, // Object - Fila con calleNum, colonia, muniDeleg y cp
 ) {
-  const partes = [
+  const parts = [
     ...new Set(
-      [fila.calleNum, fila.colonia, fila.muniDeleg]
+      [row.calleNum, row.colonia, row.muniDeleg]
         .map(getText)
         .filter((parte) => parte && parte !== "0"),
     ),
   ].map((parte) => toTitleCase(parte));
-  const cp = getText(fila.cp);
+  const cp = getText(row.cp);
   if (cp && cp !== "0") {
-    partes.push(`C.P. ${cp}`);
+    parts.push(`C.P. ${cp}`);
   }
-  return partes.join(", ");
+  return parts.join(", ");
 }
 // URL navegable del sitio del laboratorio, o cadena vacía si no es http ni https.
 function normalizeWebsite(
-  web, // String - Sitio tal como está registrado en la base
+  website, // String - Sitio tal como está registrado en la base
 ) {
-  const valor = getText(web);
-  if (!valor) {
+  const value = getText(website);
+  if (!value) {
     return "";
   }
   // Los enlaces de la base son externos; sólo se admiten protocolos navegables.
-  if (/^[a-z][a-z\d+.-]*:/i.test(valor) && !/^https?:\/\//i.test(valor)) {
+  if (/^[a-z][a-z\d+.-]*:/i.test(value) && !/^https?:\/\//i.test(value)) {
     return "";
   }
   try {
-    const url = new URL(/^https?:\/\//i.test(valor) ? valor : `http://${valor}`);
+    const url = new URL(/^https?:\/\//i.test(value) ? value : `http://${value}`);
     return url.protocol === "http:" || url.protocol === "https:" ? url.href : "";
   } catch {
     return "";

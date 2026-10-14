@@ -29,8 +29,13 @@
 - Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
   Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas junto al módulo.
   Los datos de prueba viven en `tests/datosPrueba/` y se importan con `@datosPrueba/`.
-- Componentes, props, variables internas, variantes, clases CSS, tokens y atributos técnicos en inglés. Conservar nombres de entidades y
-  campos del dominio en español; textos visibles y URLs también en español.
+- Componentes, hooks, funciones, props, variables, variantes, clases CSS, tokens y atributos
+  técnicos en inglés. Conservan el español las entidades y campos del catálogo (`laboratorio`,
+  `catalogo`, `sede`, `disciplina`, `grupo`, `red`, `equipos`, `servicios`, `filtro`, `opcion`,
+  `eje`, `clave`, `etiqueta`, `fotos`…) y las variables que contienen exactamente uno de ellos;
+  una variable genérica se nombra en inglés aunque guarde datos del dominio (`rows`, `criteria`,
+  `valid`, `words`, `response`). Textos visibles, URLs y comentarios en español. Nunca dos
+  nombres para la misma cosa en un archivo: sin alias en destructuring ni al devolver datos.
 - Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
   `export default Component;` al final. Conservar el nombre al importarlos.
   Hooks y utilidades mantienen exportaciones nombradas; respetar los exports propios de Next.

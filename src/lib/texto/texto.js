@@ -5,7 +5,7 @@
 
 // Constantes
 // Vocales acentuadas y eñe con su equivalente sin acento.
-const acentos = {
+const accents = {
   á: "a",
   é: "e",
   í: "i",
@@ -20,7 +20,7 @@ const acentos = {
   ù: "u",
 };
 // Palabras que quedan en minúsculas dentro de un título, salvo al inicio.
-const menores = new Set([
+const minorWords = new Set([
   "de",
   "del",
   "la",
@@ -41,7 +41,7 @@ const menores = new Set([
   "sin",
 ]);
 // Siglas y números romanos que conservan sus mayúsculas.
-const siglas = [
+const acronyms = [
   "UNAM",
   "ISO",
   "ADN",
@@ -78,75 +78,75 @@ const siglas = [
 // Definición del módulo
 // Texto en minúsculas, sin acentos ni espacios en los extremos, para comparar y buscar.
 export function normalizeText(
-  texto, // String - Texto original
+  text, // String - Texto original
 ) {
-  return texto
+  return text
     .trim()
     .toLowerCase()
-    .replace(/[áéíóúüñàèìòù]/g, (letra) => acentos[letra]);
+    .replace(/[áéíóúüñàèìòù]/g, (letter) => accents[letter]);
 }
 // Clave para URL con letras, números y guiones.
 export function slugify(
-  texto, // String - Texto original
+  text, // String - Texto original
 ) {
-  return normalizeText(texto)
+  return normalizeText(text)
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 // Convierte a tipo título los textos escritos casi por completo en mayúsculas; respeta la escritura manual.
 export function toTitleCase(
-  texto, // String - Texto original, normalmente un nombre heredado en mayúsculas
-  conservar = [], // Array Optional - Siglas (String) adicionales que conservan sus mayúsculas
+  text, // String - Texto original, normalmente un nombre heredado en mayúsculas
+  keep = [], // Array Optional - Siglas (String) adicionales que conservan sus mayúsculas
 ) {
-  const limpio = texto.replace(/\s+/gu, " ").trim();
-  const letras = limpio.match(/\p{L}/gu)?.length ?? 0;
-  const mayusculas = limpio.match(/\p{Lu}/gu)?.length ?? 0;
-  if (!letras || mayusculas / letras < 0.85) {
-    return limpio;
+  const clean = text.replace(/\s+/gu, " ").trim();
+  const letters = clean.match(/\p{L}/gu)?.length ?? 0;
+  const uppercase = clean.match(/\p{Lu}/gu)?.length ?? 0;
+  if (!letters || uppercase / letters < 0.85) {
+    return clean;
   }
-  const intactas = new Set(
-    [...siglas, ...conservar].flatMap((sigla) => sigla.toUpperCase().split(/[^\p{L}\p{N}]+/u)),
+  const intact = new Set(
+    [...acronyms, ...keep].flatMap((acronym) => acronym.toUpperCase().split(/[^\p{L}\p{N}]+/u)),
   );
-  return limpio
+  return clean
     .split(" ")
-    .map((palabra, posicion) => {
-      const partes = palabra.match(/^([^\p{L}\p{N}]*)(.*?)([^\p{L}\p{N}]*)$/u);
-      if (!partes) {
-        return palabra;
+    .map((word, position) => {
+      const parts = word.match(/^([^\p{L}\p{N}]*)(.*?)([^\p{L}\p{N}]*)$/u);
+      if (!parts) {
+        return word;
       }
-      const [, antes, nucleo, despues] = partes;
+      const [, before, core, after] = parts;
       if (
-        !nucleo ||
-        intactas.has(nucleo.toUpperCase()) ||
-        /\p{N}/u.test(nucleo) ||
-        antes.startsWith("(")
+        !core ||
+        intact.has(core.toUpperCase()) ||
+        /\p{N}/u.test(core) ||
+        before.startsWith("(")
       ) {
-        return palabra;
+        return word;
       }
-      const minusculas = nucleo.toLowerCase();
-      const nuevo =
-        posicion > 0 && menores.has(minusculas)
-          ? minusculas
-          : minusculas.charAt(0).toUpperCase() + minusculas.slice(1);
-      return antes + nuevo + despues;
+      const lower = core.toLowerCase();
+      const recased =
+        position > 0 && minorWords.has(lower)
+          ? lower
+          : lower.charAt(0).toUpperCase() + lower.slice(1);
+      return before + recased + after;
     })
     .join(" ");
 }
 
 // Convierte cualquier valor de la base en texto sin espacios en los extremos.
 export const getText = (
-  valor, // String | Number - Valor de la base; null o undefined se convierten en cadena vacía
-) => String(valor ?? "").trim();
+  value, // String | Number - Valor de la base; null o undefined se convierten en cadena vacía
+) => String(value ?? "").trim();
 // Quita vacíos y repetidos que sólo difieren en acentos, mayúsculas o espacios.
 export function uniqueValues(
-  valores, // Array - Valores de la base (String | Number), en el orden en que llegan
+  values, // Array - Valores de la base (String | Number), en el orden en que llegan
 ) {
-  const encontrados = new Map();
-  for (const valor of valores) {
-    const limpio = getText(valor).replace(/\s+/gu, " ");
-    if (limpio && !encontrados.has(normalizeText(limpio))) {
-      encontrados.set(normalizeText(limpio), limpio);
+  const found = new Map();
+  for (const value of values) {
+    const clean = getText(value).replace(/\s+/gu, " ");
+    if (clean && !found.has(normalizeText(clean))) {
+      found.set(normalizeText(clean), clean);
     }
   }
-  return [...encontrados.values()];
+  return [...found.values()];
 }

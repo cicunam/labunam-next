@@ -21,11 +21,11 @@ describe("búsquedas recientes", () => {
     expect(getSearchOptions("", [], ["Uno", "Dos"])).toHaveLength(2);
   });
   it("guarda como máximo cinco, mueve la última al frente y tolera almacenamiento inválido", () => {
-    let valor = "malformado";
+    let value = "malformado";
     vi.stubGlobal("localStorage", {
-      getItem: () => valor,
-      setItem: (_, dato) => {
-        valor = dato;
+      getItem: () => value,
+      setItem: (_, item) => {
+        value = item;
       },
     });
     expect(readRecentSearches()).toEqual([]);

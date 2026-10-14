@@ -14,9 +14,9 @@ const { createPoolMock, queryMock } = vi.hoisted(() => ({
 }));
 vi.mock("mysql2/promise", () => ({ createPool: createPoolMock }));
 // El pool vive en globalThis; cada prueba parte sin él y con variables ficticias.
-const proceso = globalThis;
+const globalScope = globalThis;
 beforeEach(() => {
-  delete proceso.poolLabunam;
+  delete globalScope.poolLabunam;
   vi.resetModules();
   createPoolMock.mockReset().mockReturnValue({ query: queryMock });
   queryMock.mockReset().mockResolvedValue([[{ total: 3 }]]);
@@ -26,7 +26,7 @@ beforeEach(() => {
   vi.stubEnv("LABUNAM_DB_PASS", "clave_ficticia");
 });
 afterEach(() => {
-  delete proceso.poolLabunam;
+  delete globalScope.poolLabunam;
   vi.unstubAllEnvs();
 });
 
@@ -35,8 +35,8 @@ it("reutiliza un único pool incluso después de recargar el módulo", async () 
   const { query } = await import("./dbconnection");
   expect(await query("SELECT COUNT(*) AS total FROM tabla_prueba")).toEqual([{ total: 3 }]);
   vi.resetModules();
-  const recargado = await import("./dbconnection");
-  await recargado.query("SELECT COUNT(*) AS total FROM tabla_prueba");
+  const reloaded = await import("./dbconnection");
+  await reloaded.query("SELECT COUNT(*) AS total FROM tabla_prueba");
   expect(createPoolMock).toHaveBeenCalledTimes(1);
 });
 it("no devuelve detalles de conexión cuando el motor falla", async () => {

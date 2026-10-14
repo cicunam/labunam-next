@@ -6,16 +6,16 @@
 // Definición del módulo
 // URL del catálogo con los criterios no vacíos; los cambios reemplazan o quitan criterios.
 export function getCatalogUrl(
-  criterios, // Object - Criterios activos: q y un valor por eje
-  cambios = {}, // Object Optional - Criterios que se sobrescriben; un valor vacío quita ese filtro
+  criteria, // Object - Criterios activos: q y un valor por eje
+  changes = {}, // Object Optional - Criterios que se sobrescriben; un valor vacío quita ese filtro
 ) {
-  const parametros = new URLSearchParams();
-  for (const [clave, valor] of Object.entries({ ...criterios, ...cambios })) {
-    if (valor) {
-      parametros.set(clave, valor);
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries({ ...criteria, ...changes })) {
+    if (value) {
+      params.set(key, value);
     }
   }
-  return `/laboratorios${parametros.size ? `?${parametros}` : ""}`;
+  return `/laboratorios${params.size ? `?${params}` : ""}`;
 }
 // Texto breve con cuántos servicios y equipos tiene un laboratorio, omitiendo los ceros.
 export function formatCounts(

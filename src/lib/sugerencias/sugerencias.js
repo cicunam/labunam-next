@@ -12,31 +12,31 @@ import { normalizeText } from "../texto/texto";
 export function getSearchOptions(
   q, // String - Texto escrito en el buscador
   sugerencias, // Array - Textos (String) del catálogo que se ofrecen como sugerencia
-  recientes, // Array - Búsquedas recientes (String) guardadas en el navegador, la más nueva primero
+  recent, // Array - Búsquedas recientes (String) guardadas en el navegador, la más nueva primero
 ) {
-  const clave = normalizeText(q);
-  if (!clave) {
-    return recientes.slice(0, 5).map((texto) => ({ texto, reciente: true }));
+  const key = normalizeText(q);
+  if (!key) {
+    return recent.slice(0, 5).map((texto) => ({ texto, reciente: true }));
   }
-  const anteriores = recientes
-    .filter((texto) => normalizeText(texto).includes(clave) && normalizeText(texto) !== clave)
+  const previous = recent
+    .filter((texto) => normalizeText(texto).includes(key) && normalizeText(texto) !== key)
     .slice(0, 3);
-  const nuevas = sugerencias.filter(
+  const added = sugerencias.filter(
     (texto) =>
-      normalizeText(texto).includes(clave) &&
-      !anteriores.some((anterior) => normalizeText(anterior) === normalizeText(texto)),
+      normalizeText(texto).includes(key) &&
+      !previous.some((item) => normalizeText(item) === normalizeText(texto)),
   );
   return [
-    ...anteriores.map((texto) => ({ texto, reciente: true })),
-    ...nuevas.map((texto) => ({ texto, reciente: false })),
+    ...previous.map((texto) => ({ texto, reciente: true })),
+    ...added.map((texto) => ({ texto, reciente: false })),
   ].slice(0, 8);
 }
 // Lee hasta cinco búsquedas recientes; devuelve una lista vacía si el almacenamiento falla o está dañado.
 // No recibe parámetros.
 export function readRecentSearches() {
   try {
-    const datos = JSON.parse(localStorage.getItem("labunam.busquedas") ?? "[]");
-    return Array.isArray(datos) ? datos.filter((dato) => typeof dato === "string").slice(0, 5) : [];
+    const data = JSON.parse(localStorage.getItem("labunam.busquedas") ?? "[]");
+    return Array.isArray(data) ? data.filter((item) => typeof item === "string").slice(0, 5) : [];
   } catch {
     return [];
   }

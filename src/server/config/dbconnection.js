@@ -8,13 +8,13 @@ import { createPool } from "mysql2/promise";
 
 // Constantes
 // Next recarga módulos en desarrollo; el pool debe sobrevivir a esas recargas.
-const proceso = globalThis;
+const globalScope = globalThis;
 
 // Utilidades
 // Devuelve el pool guardado en el proceso o lo crea con las variables de entorno.
 function getConnection() {
-  if (proceso.poolLabunam) {
-    return proceso.poolLabunam;
+  if (globalScope.poolLabunam) {
+    return globalScope.poolLabunam;
   }
   const {
     LABUNAM_DB_HOST: host,
@@ -25,7 +25,7 @@ function getConnection() {
   if (!host || !database || !user) {
     throw new Error("Falta configurar la conexión de LabUNAM.");
   }
-  proceso.poolLabunam = createPool({
+  globalScope.poolLabunam = createPool({
     host,
     database,
     user,
@@ -36,7 +36,7 @@ function getConnection() {
     connectionLimit: 6,
     connectTimeout: 5000,
   });
-  return proceso.poolLabunam;
+  return globalScope.poolLabunam;
 }
 
 // Definición del módulo
@@ -46,8 +46,8 @@ export async function query(
   parameters = [], // Array Optional - Valores que mysql2 sustituye en los marcadores de la consulta
 ) {
   try {
-    const [filas] = await getConnection().query(sql, parameters);
-    return filas;
+    const [rows] = await getConnection().query(sql, parameters);
+    return rows;
   } catch {
     // Los errores del motor pueden incluir datos de conexión; no se propagan a la interfaz.
     throw new Error("No fue posible consultar la base de LabUNAM.");

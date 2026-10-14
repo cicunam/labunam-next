@@ -108,8 +108,8 @@ la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 Orden de portada: `src/app/page.jsx`. Textos de redes: `LaboratoryNetworks`. Noticias de ejemplo: `NewsSection`. Estilo de una tarjeta: su CSS Module.
 Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/server/<entidad>/*Dao.js`.
-Interacción del carrusel: `public/js/carousel.js` y su organismo; es una mejora
-sobre HTML de servidor y no exige convertir toda la portada a cliente.
+Interacción del carrusel: `useCarousel` junto a su organismo; el componente es la única
+frontera cliente de esa sección y no exige convertir toda la portada a cliente.
 
 Antes de añadir una dependencia o cambiar la estrategia de renderizado, consulta
 las decisiones del README. La documentación de la versión instalada está en

@@ -13,14 +13,14 @@ describe("plano", () => {
     ["Microscopía Óptica", "microscopia optica"],
     ["  ÁÉÍÓÚ ÜÑ ÀÈÌÒÙ  ", "aeiou un aeiou"],
     ["", ""],
-  ])("normaliza %s", (entrada, salida) => expect(normalizeText(entrada)).toBe(salida));
+  ])("normaliza %s", (input, output) => expect(normalizeText(input)).toBe(output));
 });
 describe("clave", () => {
   it.each([
     ["Ciencias de la Tierra e Ingenierías", "ciencias-de-la-tierra-e-ingenierias"],
     [" ¡QUÍMICA / RMN 3D! ", "quimica-rmn-3d"],
     ["---", ""],
-  ])("genera la clave de %s", (entrada, salida) => expect(slugify(entrada)).toBe(salida));
+  ])("genera la clave de %s", (input, output) => expect(slugify(input)).toBe(output));
 });
 describe("titulo", () => {
   it("conserva las siglas indicadas", () => {
@@ -42,7 +42,7 @@ describe("titulo", () => {
     ["LABORATORIO DE POZOS, AGUA Y SUELO.", "Laboratorio de Pozos, Agua y Suelo."],
     ["123 --", "123 --"],
     ["   ", ""],
-  ])("convierte %s", (entrada, salida) => expect(toTitleCase(entrada)).toBe(salida));
+  ])("convierte %s", (input, output) => expect(toTitleCase(input)).toBe(output));
   it("sólo convierte desde el 85 % de mayúsculas", () => {
     expect(toTitleCase("ABCDEFGHIJKLMNOqrstUV")).toBe("ABCDEFGHIJKLMNOqrstUV");
     expect(toTitleCase("ABCDEFGHIJKLMNOPQrst")).toBe("Abcdefghijklmnopqrst");

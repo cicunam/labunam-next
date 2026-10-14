@@ -25,9 +25,9 @@ test("no inventa capacidades ni marca coincidencias ausentes en el inventario", 
   expect(getCapabilities([], [], ["No existe"])).toEqual({ coincide: false, items: [] });
 });
 test("el fragmento hace visible una coincidencia al final de una descripción larga", () => {
-  const texto =
+  const text =
     "Caracterización de muestras y análisis de estructuras superficiales mediante protocolos especializados para estudios de microscopía avanzada";
-  const fragmento = getCapabilityExcerpt(texto, "microscopia");
-  expect(fragmento).toContain("microscopía");
-  expect(fragmento.startsWith("…")).toBe(true);
+  const excerpt = getCapabilityExcerpt(text, "microscopia");
+  expect(excerpt).toContain("microscopía");
+  expect(excerpt.startsWith("…")).toBe(true);
 });

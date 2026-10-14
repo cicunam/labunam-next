@@ -10,10 +10,10 @@ import { grupos } from "../grupos/grupos";
 // Hasta tres imágenes aprobadas, fotografías antes que logos; sin imágenes, la ilustración del área.
 export function getPhotos(
   id, // Number - Identificador del laboratorio
-  manifiesto, // Object - Fotos aprobadas por idLab, leídas de los manifiestos; cada una con src, srcset y tipo
+  manifest, // Object - Fotos aprobadas por idLab, leídas de los manifiestos; cada una con src, srcset y tipo
   areas = [], // Array Optional - Claves de área del laboratorio, para elegir la ilustración
 ) {
-  const fotos = manifiesto[String(id)];
+  const fotos = manifest[String(id)];
   if (Array.isArray(fotos) && fotos.length) {
     // Fotografías primero; orden editorial conservado dentro de cada tipo.
     return [...fotos]
@@ -26,8 +26,9 @@ export function getPhotos(
         ...(foto.tipo ? { tipo: foto.tipo } : {}),
       }));
   }
-  const unicas = [...new Set(areas)];
-  const area = unicas.length === 1 ? grupos.find((g) => g.clave === unicas[0]) : undefined;
+  const uniqueAreas = [...new Set(areas)];
+  const area =
+    uniqueAreas.length === 1 ? grupos.find((grupo) => grupo.clave === uniqueAreas[0]) : undefined;
   return [
     {
       src: `/assets/respaldos/${area?.clave ?? "general"}.svg`,

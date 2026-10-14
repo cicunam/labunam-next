@@ -8,21 +8,21 @@
 export async function fetchLaboratorioDetails(
   id, // Number | String - Identificador del laboratorio
 ) {
-  const respuesta = await fetch(`/api/laboratorios/${id}`);
-  if (!respuesta.ok) {
+  const response = await fetch(`/api/laboratorios/${id}`);
+  if (!response.ok) {
     throw new Error("No se pudo cargar la ficha. Intenta de nuevo.");
   }
-  return respuesta.json();
+  return response.json();
 }
 // Pide los conteos de filtros que resultarían de unos criterios, sin cambiar la URL del catálogo.
 export async function fetchFilterCounts(
-  criterios, // Object - Criterios del borrador: q y un valor por eje; los vacíos no viajan
+  criteria, // Object - Criterios del borrador: q y un valor por eje; los vacíos no viajan
   signal, // AbortSignal - Cancela la petición cuando el borrador cambia o el diálogo se desmonta
 ) {
-  const parametros = new URLSearchParams(Object.entries(criterios).filter(([, valor]) => valor));
-  const respuesta = await fetch(`/api/filtros?${parametros}`, { signal });
-  if (!respuesta.ok) {
+  const params = new URLSearchParams(Object.entries(criteria).filter(([, value]) => value));
+  const response = await fetch(`/api/filtros?${params}`, { signal });
+  if (!response.ok) {
     throw new Error("No se pudieron actualizar los conteos.");
   }
-  return respuesta.json();
+  return response.json();
 }

@@ -159,22 +159,22 @@ function prepareFilters(
       .filter((filtro) => filtro.enDialogo)
       .map((filtro) => {
         const opciones = filtro.opciones(catalogo);
-        const cuentas = countFacet(
+        const counts = countFacet(
           catalogo.laboratorios,
           criteria,
           filtro.eje,
           opciones.map((opcion) => opcion.clave),
         );
-        const conTotales = opciones.map((opcion) => ({ ...opcion, total: cuentas[opcion.clave] }));
+        const withTotals = opciones.map((opcion) => ({ ...opcion, total: counts[opcion.clave] }));
         if (filtro.reordenar) {
-          conTotales.sort(
+          withTotals.sort(
             (a, b) => b.total - a.total || a.etiqueta.localeCompare(b.etiqueta, "es"),
           );
         }
         return {
           eje: filtro.eje,
           etiqueta: filtro.etiqueta,
-          opciones: conTotales,
+          opciones: withTotals,
           cualquiera: filterLaboratorios(catalogo.laboratorios, { ...criteria, [filtro.eje]: "" })
             .length,
         };

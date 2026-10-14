@@ -24,8 +24,8 @@ const reconocimientos = {
 };
 // Convierte un objeto clave → etiqueta en la lista de opciones que usa el diálogo.
 const toOptions = (
-  etiquetas, // Object - Etiqueta visible (String) por cada clave
-) => Object.entries(etiquetas).map(([clave, etiqueta]) => ({ clave, etiqueta }));
+  labels, // Object - Etiqueta visible (String) por cada clave
+) => Object.entries(labels).map(([clave, etiqueta]) => ({ clave, etiqueta }));
 
 // Los seis filtros del catálogo, en el orden en que los muestra el diálogo. Cada uno define:
 // - eje: el parámetro de la URL. Los nombres son heredados: "disciplina" filtra por área
@@ -92,7 +92,7 @@ export const filtros = [
 ];
 // Ejes de filtro que aceptan la URL y el diálogo de filtros.
 export const ejes = filtros.map((filtro) => filtro.eje);
-const filtrosPorEje = Object.fromEntries(filtros.map((filtro) => [filtro.eje, filtro]));
+const filtersByAxis = Object.fromEntries(filtros.map((filtro) => [filtro.eje, filtro]));
 
 // Definición del módulo
 // Valores que un laboratorio aporta a un eje, con las claves que usa la URL.
@@ -100,27 +100,27 @@ export function getFacetValues(
   lab, // Object - Laboratorio del catálogo; se leen los campos que pide cada filtro
   eje, // String - Uno de los ejes de filtro (ver ejes)
 ) {
-  return filtrosPorEje[eje].valores(lab);
+  return filtersByAxis[eje].valores(lab);
 }
 // Conserva el texto buscado y sólo los filtros con algún laboratorio que los cumpla.
 export function normalizeCriteria(
   laboratorios, // Array - Laboratorios del catálogo en memoria
-  criterios, // Object - Criterios recibidos: q con el texto buscado y un valor por eje
+  criteria, // Object - Criterios recibidos: q con el texto buscado y un valor por eje
 ) {
-  const validos = { q: criterios.q?.trim() ?? "" };
+  const valid = { q: criteria.q?.trim() ?? "" };
   for (const eje of ejes) {
-    const valor = criterios[eje];
-    if (valor && laboratorios.some((lab) => getFacetValues(lab, eje).includes(valor))) {
-      validos[eje] = valor;
+    const value = criteria[eje];
+    if (value && laboratorios.some((lab) => getFacetValues(lab, eje).includes(value))) {
+      valid[eje] = value;
     }
   }
-  return validos;
+  return valid;
 }
 // Indica si el texto contiene todas las palabras, en cualquier orden.
 const contains = (
-  texto, // String - Texto ya normalizado donde se busca
-  palabras, // Array - Palabras (String) normalizadas que deben aparecer todas
-) => palabras.every((palabra) => texto.includes(palabra));
+  text, // String - Texto ya normalizado donde se busca
+  words, // Array - Palabras (String) normalizadas que deben aparecer todas
+) => words.every((word) => text.includes(word));
 // Separa el texto buscado en palabras normalizadas, sin vacíos.
 const getWords = (
   q = "", // String Optional - Texto escrito en el buscador
@@ -128,58 +128,58 @@ const getWords = (
 // Indica si un laboratorio cumple todos los filtros y contiene todas las palabras.
 function matchesCriteria(
   lab, // Object - Laboratorio del catálogo; se leen sus ejes y lab.indice, el texto normalizado de búsqueda
-  criterios, // Object - Criterios ya validados con normalizeCriteria
-  palabras, // Array - Palabras (String) normalizadas del texto buscado
+  criteria, // Object - Criterios ya validados con normalizeCriteria
+  words, // Array - Palabras (String) normalizadas del texto buscado
 ) {
   return (
-    ejes.every((eje) => !criterios[eje] || getFacetValues(lab, eje).includes(criterios[eje])) &&
-    contains(lab.indice, palabras)
+    ejes.every((eje) => !criteria[eje] || getFacetValues(lab, eje).includes(criteria[eje])) &&
+    contains(lab.indice, words)
   );
 }
 // Busca todas las palabras y prioriza coincidencias en nombre, luego en equipos/servicios.
 export function filterLaboratorios(
   laboratorios, // Array - Laboratorios del catálogo en memoria
-  criterios, // Object - Criterios de la URL: q con el texto buscado y un valor por eje; se validan aquí
+  criteria, // Object - Criterios de la URL: q con el texto buscado y un valor por eje; se validan aquí
 ) {
-  const validos = normalizeCriteria(laboratorios, criterios);
-  const palabras = getWords(validos.q);
-  const encontrados = laboratorios.filter((lab) => matchesCriteria(lab, validos, palabras));
-  const resultados = encontrados.map((lab) => {
+  const valid = normalizeCriteria(laboratorios, criteria);
+  const words = getWords(valid.q);
+  const found = laboratorios.filter((lab) => matchesCriteria(lab, valid, words));
+  const results = found.map((lab) => {
     const capacidades = [...lab.equipos, ...lab.servicios];
-    const coincidencias = palabras.length
-      ? capacidades.filter((texto) => contains(normalizeText(texto), palabras))
+    const coincidencias = words.length
+      ? capacidades.filter((text) => contains(normalizeText(text), words))
       : [];
     const enNombre =
-      palabras.length > 0 && contains(normalizeText(`${lab.nombre} ${lab.siglas}`), palabras);
+      words.length > 0 && contains(normalizeText(`${lab.nombre} ${lab.siglas}`), words);
     return { ...lab, coincidencias, enNombre };
   });
-  return resultados.sort(compareSearchResults);
+  return results.sort(compareSearchResults);
 }
 // Cuántos laboratorios tiene cada valor de un eje con los demás filtros aplicados.
 export function countFacet(
   laboratorios, // Array - Laboratorios del catálogo en memoria
-  criterios, // Object - Criterios activos: q y un valor por eje; se validan aquí
+  criteria, // Object - Criterios activos: q y un valor por eje; se validan aquí
   eje, // String - Eje que se cuenta; su propia selección se ignora
-  valores, // Array - Valores (String) del eje que se cuentan; los que no aparecen quedan en cero
+  values, // Array - Valores (String) del eje que se cuentan; los que no aparecen quedan en cero
 ) {
-  const validos = normalizeCriteria(laboratorios, criterios);
+  const valid = normalizeCriteria(laboratorios, criteria);
   // Excluimos el filtro de la categoría que contamos. Así las alternativas siguen
   // mostrando cuántos resultados darían si el usuario cambiara su selección.
   // Los filtros de las demás categorías sí siguen activos.
-  delete validos[eje];
-  const palabras = getWords(validos.q);
-  const totales = Object.fromEntries(valores.map((valor) => [valor, 0]));
+  delete valid[eje];
+  const words = getWords(valid.q);
+  const totals = Object.fromEntries(values.map((value) => [value, 0]));
   for (const lab of laboratorios) {
-    if (!matchesCriteria(lab, validos, palabras)) {
+    if (!matchesCriteria(lab, valid, words)) {
       continue;
     }
-    for (const valor of new Set(getFacetValues(lab, eje))) {
-      if (Object.hasOwn(totales, valor)) {
-        totales[valor]++;
+    for (const value of new Set(getFacetValues(lab, eje))) {
+      if (Object.hasOwn(totals, value)) {
+        totals[value]++;
       }
     }
   }
-  return totales;
+  return totals;
 }
 
 // Utilidades

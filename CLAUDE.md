@@ -31,7 +31,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
 | Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
-| Carrusel | `src/components/organisms/Carousel/`, `public/js/carousel.js` |
+| Carrusel | `src/components/organisms/Carousel/` (`useCarousel.js` tiene la interacción) |
 | Selección y presentación de imágenes | `src/server/fotos/fotosService.js`, `src/lib/fotos/fotos.js` |
 | Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
@@ -82,8 +82,8 @@ son locales y no definen la configuración del servidor de la UNAM.
   `JSON_ARRAYAGG`. No cambiarlo a `GROUP_CONCAT`: su límite de 1024 bytes truncaría
   listas reales. Las listas se usan en el orden en que llegan, sin ordenarlas en JavaScript;
   las distinciones ya no salen de la más reciente a la más antigua.
-- `public/js/carousel.js` mejora HTML de servidor y administra montaje/limpieza
-  durante navegación Next. Probar entrada/salida de la página y no sólo una carga.
+- `useCarousel` trabaja sobre el HTML que renderiza `Carousel` y libera listeners y
+  observadores al desmontar. Probar entrada/salida de la página y no sólo una carga.
 - `manifiesto.json` contiene originales y tiene prioridad por laboratorio sobre
   `manifiesto-web.json`. Dentro de una selección, las fotos preceden a los logos.
 - Guardar una revisión de imágenes no equivale a aplicarla. La importación corre

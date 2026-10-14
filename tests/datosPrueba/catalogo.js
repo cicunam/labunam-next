@@ -8,7 +8,7 @@
 // Como en MySQL, equipos, certificaciones y acreditaciones llegan como arreglos de
 // JSON_ARRAYAGG, o null cuando el laboratorio no tiene ninguno.
 
-export function createLaboratorioRow(cambios = {}) {
+export function createLaboratorioRow(changes = {}) {
   return {
     idLab: 1,
     labNombre: "LABORATORIO DE MICROSCOPÍA",
@@ -42,12 +42,12 @@ export function createLaboratorioRow(cambios = {}) {
       { nombre: "ISO 9001:2015", organismo: "Organismo de prueba", fFin: "2020-01-01" },
     ],
     acreditaciones: null,
-    ...cambios,
+    ...changes,
   };
 }
 export function createTestData() {
   return {
-    filas: [
+    rows: [
       createLaboratorioRow(),
       createLaboratorioRow({
         idLab: 2,

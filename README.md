@@ -85,7 +85,7 @@ Las páginas y layouts importan componentes desde un único barril `src/componen
 `import { Header, Footer } from "@/components"`. Entre componentes y en historias
 se mantienen imports directos para evitar ciclos. Los módulos de `src/lib/` también se importan directamente.
 
-Componentes, props, variables internas, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del dominio,
+Componentes, funciones, props, variables, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del catálogo,
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
 en español. La fuente Inter se sirve desde `public/assets/fonts`, con su licencia
 OFL, sin depender de una descarga de Google.
@@ -235,8 +235,9 @@ las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
 junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar,
 `useHeaderMenu` / `useCompactSearch` en Header, `useLaboratoryDialog` en LaboratoryDialog
 (apertura, carga e historial del modal y el contrato `data-details`), `useFilterDraft` en
-FilterDialog (borrador de filtros con conteos en vivo) y `useDragScroll` en DisciplineBar
-(arrastre y flechas de la franja). Las consultas SQL están en los DAO de `src/server/`.
+FilterDialog (borrador de filtros con conteos en vivo), `useDragScroll` en DisciplineBar
+(arrastre y flechas de la franja) y `useCarousel` en Carousel (arrastre, avance automático
+y pausas de las noticias). Las consultas SQL están en los DAO de `src/server/`.
 En `src/server/laboratorios/`, `laboratoriosCatalogo.js` carga y guarda en caché todos los
 laboratorios y `laboratoriosService.js` responde la ficha, la búsqueda, los filtros y la portada.
 

@@ -143,15 +143,15 @@ it("el controlador de filtros responde 503 sin filtrar el error interno", async 
 
 it("los conteos de filtros calculan los cinco ejes respetando los otros filtros", async () => {
   const catalogo = await loadCatalog();
-  const criterios = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
-  const resultado = await getFilterCounts(criterios);
-  expect(resultado.total).toBe(filterLaboratorios(catalogo.laboratorios, criterios).length);
-  expect(resultado.filters).toHaveLength(5);
-  for (const filtro of resultado.filters) {
+  const criteria = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
+  const result = await getFilterCounts(criteria);
+  expect(result.total).toBe(filterLaboratorios(catalogo.laboratorios, criteria).length);
+  expect(result.filters).toHaveLength(5);
+  for (const filtro of result.filters) {
     for (const opcion of filtro.opciones) {
       expect(opcion.total).toBe(
-        filterLaboratorios(catalogo.laboratorios, { ...criterios, [filtro.eje]: "" }).filter(
-          (lab) => getFacetValues(lab, filtro.eje).includes(opcion.clave),
+        filterLaboratorios(catalogo.laboratorios, { ...criteria, [filtro.eje]: "" }).filter((lab) =>
+          getFacetValues(lab, filtro.eje).includes(opcion.clave),
         ).length,
       );
     }

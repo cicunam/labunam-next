@@ -273,3 +273,9 @@ La convención de inglés incluye valores de variantes (`tone="neutral"`,
 `size="small"`), clases CSS (`.badge`, `.button`), variables, tokens y atributos
 técnicos. Los textos visibles y comentarios permanecen en español. Los nombres
 y campos de entidades también conservan su contrato, por ejemplo `laboratorio.nombre`.
+Una variable conserva el español sólo cuando contiene exactamente una entidad o campo
+del catálogo: `laboratorio`, `catalogo`, `sede`, `filtro`, `opcion`, `eje`, `clave`,
+`etiqueta`. Las genéricas van en inglés aunque guarden datos del dominio: `rows` para
+las filas de MySQL, `criteria` para los criterios de la URL, `words` para las palabras
+buscadas. Y nunca dos nombres para la misma cosa en un archivo: ni `laboratorio: lab`
+en las props ni `filters: filtros` al leer un servicio.

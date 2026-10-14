@@ -20,8 +20,8 @@ export async function readPhotos() {
         () => "{}",
       ),
     );
-    const manifiesto = { ...web, ...base };
-    return manifiesto;
+    const manifest = { ...web, ...base };
+    return manifest;
   } catch {
     return {};
   }
