@@ -231,7 +231,8 @@ comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llave
 incluso en condiciones de una sola instrucción.
 
 La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
-textos se agrupan en `src/lib/home/homeContent.js`. Los hooks específicos viven
+textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
+las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
 junto al componente: `useSearchSuggestions` en SearchBar y `useHeaderMenu` /
 `useCompactSearch` en Header. Las consultas SQL están en los DAO de `src/server/`.
 En `src/server/laboratorios/`, `laboratoriosCatalogo.js` carga y guarda en caché todos los

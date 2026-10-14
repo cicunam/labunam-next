@@ -5,11 +5,34 @@
 
 // Dependencias
 import Link from "next/link";
-import { homeNetworks } from "@/lib/home/homeContent";
 import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Estilos
 import styles from "./LaboratoryNetworks.module.css";
+
+// Constantes
+// Cada tarjeta conserva juntos sus datos; añadir una red no depende de alinear índices.
+// El nombre de cada red sale de redes en presentacion.js.
+const networks = [
+  {
+    tipo: "nacionales",
+    image: "laboratorio-abc.jpeg",
+    description:
+      "Investigación especializada con tecnología de vanguardia, compartida entre instituciones para formar especialistas y atender necesidades de la sociedad.",
+  },
+  {
+    tipo: "universitarios",
+    image: "mision.png",
+    description:
+      "Investigación y servicios con tecnología de vanguardia que promueven la colaboración y el uso compartido de recursos entre entidades académicas.",
+  },
+  {
+    tipo: "unidades",
+    image: "vision.png",
+    description:
+      "Servicios con equipo especializado dentro y fuera de la UNAM, que fortalecen la vinculación con el sector productivo.",
+  },
+];
 
 // Definición del componente
 const LaboratoryNetworks = ({
@@ -29,7 +52,7 @@ const LaboratoryNetworks = ({
       </h2>
       <p className="band-entry">Explora la infraestructura de investigación de la UNAM.</p>
       <ul className={styles["networks-list"]}>
-        {homeNetworks.map(({ tipo, image, description }) => (
+        {networks.map(({ tipo, image, description }) => (
           <li key={tipo}>
             <Link
               className={styles.network}

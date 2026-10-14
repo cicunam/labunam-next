@@ -20,7 +20,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 | Trabajo | Archivos de entrada |
 | --- | --- |
-| Portada y noticias | `src/app/page.jsx`, `src/lib/home/homeContent.js`, organismos `LaboratoryNetworks`, `RecentLaboratories`, `DisciplineSection` y `NewsSection` |
+| Portada y noticias | `src/app/page.jsx`, organismos `LaboratoryNetworks` (textos de redes), `RecentLaboratories`, `DisciplineSection` y `NewsSection` (noticias de ejemplo) |
 | Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/laboratorios/laboratoriosService.js` |
 | Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/laboratorios/laboratoriosCatalogo.js` |
 | Filas SQL y modelo público | `src/server/laboratorios/LaboratorioDao.js`, `tests/datosPrueba/catalogo.js` |
