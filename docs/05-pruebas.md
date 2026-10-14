@@ -6,15 +6,14 @@
 
 | Necesidad | Herramienta | Ubicación |
 | --- | --- | --- |
-| Comprobar una regla o transformación | Vitest | `src/lib/<modulo>/<modulo>.test.js` |
+| Comprobar una regla o transformación | Vitest | `*.test.js` junto al módulo en `src/lib/` o `src/server/` |
 | Verificar filtros, navegación, teclado o modal | Playwright | `tests/e2e/*.spec.js` |
-| Inspeccionar estados y diseño de una pieza | Storybook | Junto al componente, `*.stories.jsx` |
 | Revisar convenciones y errores de código | ESLint | Comandos de proyecto |
 
-Vitest está configurado para **Node** y sólo recoge `src/lib/**/*.test.js`. No asumas
+Vitest está configurado para **Node** y recoge `src/lib/**/*.test.js` y
+`src/server/**/*.test.js`. No asumas
 que un test JSX junto al componente se ejecutará o que existe un entorno DOM.
-Storybook permite revisar componentes, pero una historia por sí sola no demuestra
-que una interacción se haya probado automáticamente.
+Los estados visuales de un componente se revisan en la página que lo usa, a los tres anchos.
 
 ## Prueba unitaria
 
@@ -45,12 +44,26 @@ repetir el mismo error. Usa un resultado que represente el requisito.
 ## Aislar MySQL y servicios
 
 Un **mock** reemplaza una dependencia por una respuesta controlada durante el test.
-`src/lib/db/db.test.js` simula `mysql2/promise`; comprueba reutilización del pool y errores
-sin abrir conexiones. `src/lib/catalogo/catalogo.test.js` cubre la caché y concurrencia.
+`src/server/config/dbconnection.test.js` simula `mysql2/promise`; comprueba reutilización del pool y errores
+sin abrir conexiones. `src/server/laboratorios/laboratoriosCatalogo.test.js` cubre el armado, la caché y la concurrencia.
 
 Copia esos patrones cuando haga falta: reiniciar mocks entre casos, restaurar
-variables simuladas y usar fixtures ficticios. No cargues `.env` real para unitarias.
+variables simuladas y usar datos ficticios. No cargues `.env` real para unitarias.
 No elimines validaciones sólo para que una prueba pase.
+
+## Datos de prueba
+
+Los datos ficticios compartidos viven en `tests/datosPrueba/`, igual que los SQL de
+`test/seed/` en cicapi, pero en JavaScript y sin base de datos de por medio:
+
+| Archivo | Forma de los datos | Lo usan |
+| --- | --- | --- |
+| `catalogo.js` | Filas como las devuelven los DAO de MySQL | Pruebas unitarias de `src/lib/` y `src/server/` |
+
+Se importan con el alias `@datosPrueba/`, por ejemplo
+`import { createTestData } from "@datosPrueba/catalogo"`. El alias está configurado en
+`jsconfig.json` y `vitest.config.js`. Nunca uses nombres, correos
+ni datos reales de personas o laboratorios.
 
 ## Prueba en navegador
 
@@ -108,7 +121,7 @@ npx playwright show-trace ruta/al/trace.zip
 Para código, `npm run lint` y `npm run build`, más las pruebas del comportamiento
 modificado. No hay comando de comprobación de tipos; las pruebas protegen las reglas
 y el build comprueba que la aplicación puede compilarse.
-Para cambios visuales, revisar Storybook y la página integrada a los tres anchos.
+Para cambios visuales, revisar la página integrada a los tres anchos.
 Para documentación, comprobar rutas, ejemplos y formato; no hace falta arrancar
 MySQL ni repetir toda la suite.
 

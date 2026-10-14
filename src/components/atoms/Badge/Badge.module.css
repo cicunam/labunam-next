@@ -1,16 +1,36 @@
-.insignia {
+/* LabUNAM
+   Estilos
+   Badge.module.css (etiqueta corta con punto de color)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px var(--espacio-md);
-  border: 1px solid var(--filete-suave);
-  border-radius: var(--radio-full);
-  background: var(--superficie);
+  padding: 5px var(--space-md);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-full);
+  background: var(--surface);
   color: var(--color-black);
   font: var(--font-tiny-semibold);
 }
-.insignia::before { content: ""; width: 6px; height: 6px; flex: 0 0 auto; border-radius: var(--radio-full); background: var(--punto); }
-.rojo { --punto: var(--color-tipo-nacionales); }
-.azul { --punto: var(--color-tipo-universitarios); }
-.verde { --punto: var(--color-tipo-unidades); }
-.neutro { --punto: var(--color-neutral); }
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-full);
+  background: var(--dot);
+}
+.network {
+  --dot: var(--color-type-nacionales);
+}
+.blue {
+  --dot: var(--color-type-universitarios);
+}
+.green {
+  --dot: var(--color-type-unidades);
+}
+.neutral {
+  --dot: var(--color-neutral);
+}

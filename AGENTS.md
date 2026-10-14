@@ -4,21 +4,21 @@
 
 - Este es el portal público Next.js de LabUNAM para la CIC/UNAM.
 - Confirmar que se trabaja en `labunam-next` antes de editar o ejecutar Git.
-- Leer `README.md` para operación y pendientes; `docs/decisiones-tecnicas.md`
-  para la arquitectura y `docs/preguntas-servidor.md` para acuerdos de infraestructura.
+- Leer `README.md` para operación y pendientes, y `docs/02-arquitectura.md` para
+  la arquitectura. Las decisiones técnicas están más abajo en este archivo.
 - Las instrucciones explícitas de Raúl tienen prioridad sobre las convenciones
   del proyecto. No convertir una preferencia técnica en una aprobación adicional.
 
 ## Entorno y datos
 
 - Node 24 LTS; usar la versión de `.nvmrc`, npm y `package-lock.json`.
-- Raúl administra `.env`. No leer, imprimir, copiar ni incorporar credenciales a
+- El usuario administra `.env`. No leer, imprimir, copiar ni incorporar credenciales a
   código, logs, capturas o commits. Usar `.env.example` como referencia de variables;
   la carga normal del entorno por Next y los scripts está permitida.
 - MySQL es de sólo lectura. No crear migraciones ni modificar el esquema o los
   registros reales como parte del trabajo del portal.
 - No enviar al cliente campos de personas ni detalles internos de conexión.
-  Historias y pruebas usan datos ficticios.
+  Las pruebas usan datos ficticios.
 - Conservar `public/fotos/` y `.revision-fotos/`: están fuera de Git, pero contienen
   imágenes aplicadas y decisiones editoriales. No tratarlas como temporales.
 - El revisor de imágenes es una herramienta local, no una ruta pública del portal.
@@ -26,15 +26,34 @@
 ## Organización y nombres
 
 - Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
-- Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
-  Una carpeta por módulo en `src/lib/`, con pruebas y fixtures junto al módulo.
-- Componentes y funciones en inglés. Conservar nombres de entidades y
-  campos del dominio en español; textos visibles y URLs también en español.
-- Imports al archivo concreto, sin barriles `index.js`.
-- Átomos y moléculas no importan catálogo ni lógica de datos del dominio. Cálculo y datos
-  pertenecen a `src/lib/`, sin React.
-- Mantener componentes de hasta 150 líneas y props claras con valores predeterminados cuando corresponda. Extraer
-  responsabilidades cuando haga falta; no comprimir código para cumplir el límite.
+- Una carpeta por componente: `Component/Component.jsx` y su CSS Module.
+  Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas junto al módulo.
+  Los datos de prueba viven en `tests/datosPrueba/` y se importan con `@datosPrueba/`.
+- Componentes, hooks, funciones, props, variables, variantes, clases CSS, tokens y atributos
+  técnicos en inglés. Conservan el español las entidades y campos del catálogo (`laboratorio`,
+  `catalogo`, `sede`, `disciplina`, `grupo`, `red`, `equipos`, `servicios`, `filtro`, `opcion`,
+  `eje`, `clave`, `etiqueta`, `fotos`…) y las variables que contienen exactamente uno de ellos;
+  una variable genérica se nombra en inglés aunque guarde datos del dominio (`rows`, `criteria`,
+  `valid`, `words`, `response`). Textos visibles, URLs y comentarios en español. Nunca dos
+  nombres para la misma cosa en un archivo: sin alias en destructuring ni al devolver datos.
+- Componentes como arrow functions con nombre (`const Component = () => { ... };`) y
+  `export default Component;` al final. Conservar el nombre al importarlos.
+  Hooks y utilidades mantienen exportaciones nombradas; respetar los exports propios de Next.
+- Un único barril `src/components/index.js` con reexports nombrados explícitos para páginas y layouts
+  (`import { Button } from "@/components"`). Sin `"use client"` en el barril.
+  Entre componentes y en cargas diferidas usar imports directos al archivo
+  (default sin llaves) para evitar ciclos. Hooks y módulos de `src/lib/` mantienen imports directos.
+- Backend en `src/server/`, sólo con carpetas de entidades más `config/` para la conexión:
+  DAO con SQL y conversión de filas, servicios con reglas y controladores HTTP.
+  Lo que trabaja sobre laboratorios (catálogo en memoria, búsqueda, filtros, portada) vive en
+  `laboratorios/`. Páginas llaman servicios y componen sus datos, no su propia API.
+- Componentes y utilidades compartidas no importan `src/server/`. `src/lib/` contiene funciones
+  y constantes compartidas, sin acceso a MySQL o al sistema de archivos. No crear capas genéricas
+  ni controladores para entidades que no tienen endpoint.
+- Priorizar componentes con una responsabilidad y props claras. Las 150 líneas son una
+  referencia para revisar responsabilidades, no un límite: nunca comprimir JSX o quitar comentarios para cumplirlo.
+- Usar `npm run format` y conservar llaves en todos los `if`. Separar imports, preparación
+  de datos, eventos y JSX. Explicar en español las decisiones complejas y sus invariantes.
 - Server Components por defecto. Añadir una frontera cliente sólo si se necesita
   interacción. Conservar el renderizado servidor de catálogo y ficha individual.
 - CSS Modules junto al componente; globales sólo en `src/app/globals.css` para tokens,
@@ -76,7 +95,7 @@
 - En cambios de código ejecutar lint y build; ampliar pruebas ante fallos o riesgos
   concretos. Para documentación basta comprobar exactitud, rutas y diff.
 - Verificar Escape, foco, teclado, desbordamiento e imágenes al modificar diálogos
-  o componentes visuales; actualizar historias cuando cambien sus estados.
+  o componentes visuales.
 - Para comprobar producción, construir e iniciar un puerto libre y pasar
   `PLAYWRIGHT_BASE_URL` a las pruebas. No detener procesos ajenos.
 - No silenciar hallazgos de accesibilidad. El contraste blanco/naranja tiene una

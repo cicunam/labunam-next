@@ -16,18 +16,22 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | --- | --- | --- |
 | `src/app/` | Páginas, layout y endpoints | `src/app/laboratorios/page.jsx` |
 | `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
-| `src/components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
+| `src/components/molecules/` | Combinaciones genéricas | `Tab`, `Gallery` |
 | `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
-| `src/lib/` | Datos y funciones sin React | `catalogo`, `buscador`, `fotos` |
+| `src/server/` | Backend, una carpeta por entidad | `laboratorios/`, `disciplinas/`, `fotos/`, `solicitudes/`; `config/` con la conexión |
+| `src/lib/` | Funciones compartidas sin React | `texto`, `buscador`, `fotos` |
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
 | `tests/e2e/` | Pruebas en navegador | Catálogo, fichas, carrusel |
-| `.storybook/` | Configuración del explorador de componentes | Historias, estilos y viewports |
+| `tests/datosPrueba/` | Datos ficticios para pruebas | `catalogo.js` |
 | `docs/` | Guías y acuerdos | Este documento |
 
 `@/` en un import apunta a `src/`, por ejemplo
-`@/lib/catalogo/catalogo`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
-la raíz. No usamos barriles `index.js`.
+`@/server/laboratorios/laboratoriosService`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
+la raíz. Las páginas y layouts usan `@/components`, que apunta al único barril
+`src/components/index.js`. Este archivo reúne los componentes mediante reexports
+nombrados. Entre componentes se usan rutas directas para evitar ciclos.
+El barril no lleva `"use client"`; la frontera permanece en cada componente interactivo.
 
 ## Una carpeta define una URL
 
@@ -43,8 +47,8 @@ la raíz. No usamos barriles `index.js`.
 
 Los CSS Modules de una página viven junto a su `page.jsx`: por ejemplo,
 `src/app/laboratorios/Laboratorios.module.css` y
-`src/app/laboratorios/[id]/Laboratorio.module.css`. `Inicio.module.css` permanece en
-`src/app/` porque corresponde a `/`; `globals.css` contiene los estilos compartidos.
+`src/app/laboratorios/[id]/Laboratorio.module.css`. Las secciones de portada tienen sus CSS Modules junto a cada organismo;
+`globals.css` contiene los estilos compartidos.
 
 `page.jsx` exporta por defecto un componente. `route.js` exporta funciones HTTP
 como `GET`. Una carpeta cualquiera no se convierte en página sin su archivo
@@ -75,15 +79,20 @@ normal del servidor no se puede pasar como callback de clic a esa frontera.
 ```mermaid
 flowchart TD
   A[GET /laboratorios?q=microscopia] --> B[Página de servidor]
-  B --> C[loadCatalog]
+  B --> S[searchLaboratorios en laboratoriosService]
+  S --> C[loadCatalog]
   C --> D{Caché vigente}
   D -->|Sí| E[Catálogo normalizado]
-  D -->|No| F[Seis consultas SELECT a MySQL]
-  F --> E
+  D -->|No| F[Dos consultas: laboratorios con sus relaciones y disciplinas]
+  F --> M[LaboratorioDao convierte filas y laboratoriosCatalogo arma el catálogo]
+  M --> E
   E --> G[Búsqueda y facetas en lib]
   G --> H[HTML de tarjetas y datos públicos para controles]
   H --> I[Navegador: filtros y modal]
   I --> J[API de filtros o ficha cuando se necesita]
+  J --> K[Controller]
+  K --> L[Servicio compartido]
+  L --> C
 ```
 
 La caché dura 600 segundos por defecto y conserva la copia anterior si falla una
@@ -91,15 +100,16 @@ recarga. Vive en memoria de cada proceso, no en una base aparte. El navegador no
 recibe todo el catálogo de servicios y equipos para hacer las búsquedas.
 
 El modal usa History API para cambiar la URL sin desmontar el catálogo. Atrás,
-Adelante y cerrar conservan contexto. Si compartes o recargas esa URL, Next sirve
+Adelante y cerrar conservan contexto; esa lógica vive en `useLaboratoryDialog`, junto
+al componente. Si compartes o recargas esa URL, Next sirve
 la ficha individual. Ambas vistas reutilizan `LaboratoryDetails`.
 
 ## Cómo decidir dónde editar
 
-Texto de portada: `src/app/page.jsx`. Estilo de una tarjeta: su CSS Module.
-Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/lib/catalogo/`.
-Interacción del carrusel: `public/js/carrusel.js` y su organismo; es una mejora
-sobre HTML de servidor y no exige convertir toda la portada a cliente.
+Orden de portada: `src/app/page.jsx`. Textos de redes: `LaboratoryNetworks`. Noticias de ejemplo: `NewsSection`. Estilo de una tarjeta: su CSS Module.
+Regla de búsqueda: `src/lib/buscador/`. Consulta SQL: `src/server/<entidad>/*Dao.js`.
+Interacción del carrusel: `useCarousel` junto a su organismo; el componente es la única
+frontera cliente de esa sección y no exige convertir toda la portada a cliente.
 
 Antes de añadir una dependencia o cambiar la estrategia de renderizado, consulta
 las decisiones del README. La documentación de la versión instalada está en

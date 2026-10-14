@@ -2,20 +2,20 @@
 .sobre {
   position: fixed;
   top: 50%;
-  right: var(--espacio-base);
+  right: var(--space-base);
   translate: 0 -50%;
   z-index: 800;
   display: grid;
   place-items: center;
   width: 56px;
   height: 56px;
-  border-radius: var(--radio-full);
+  border-radius: var(--radius-full);
   /* El naranja de marca no alcanza 3:1 con el ícono blanco; el oscuro llega a 3.7:1. */
-  background: var(--color-brand-oscuro);
-  box-shadow: var(--sombra);
+  background: var(--color-brand-dark);
+  box-shadow: var(--shadow);
   transition: background-color .2s ease;
 }
 .sobre:hover { background: var(--color-brand-ink); }
 .sobre:focus-visible { outline: 3px solid var(--color-brand-ink); outline-offset: 3px; }
 .sobre img { width: 28px; height: auto; }
-@media (min-width: 1128px) { .sobre { right: var(--espacio-xl); } }
+@media (min-width: 1128px) { .sobre { right: var(--space-xl); } }

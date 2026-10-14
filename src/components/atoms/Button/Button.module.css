@@ -1,18 +1,41 @@
-.boton {
+/* LabUNAM
+   Estilos
+   Button.module.css (botón con tamaños del portal)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--espacio-sm);
+  gap: var(--space-sm);
   border: 0;
-  border-radius: var(--radio-full);
+  border-radius: var(--radius-full);
   background: var(--color-brand);
-  color: var(--color-sobre-brand);
+  color: var(--color-on-brand);
   cursor: pointer;
   font: var(--font-medium-semibold);
 }
-.boton:hover:not(:disabled) { background: var(--color-brand-oscuro); }
-.boton:focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 3px; }
-.boton:disabled { opacity: .5; cursor: not-allowed; }
-.pequeno { min-height: 36px; padding: var(--espacio-sm) var(--espacio-base); }
-.mediano { min-height: 44px; padding: var(--espacio-md) var(--espacio-lg); }
-.grande { min-height: 52px; padding: var(--espacio-base) var(--espacio-xl); font: var(--font-large-semibold); }
+.button:hover:not(:disabled) {
+  background: var(--color-brand-dark);
+}
+.button:focus-visible {
+  outline: 2px solid var(--color-primary-dark);
+  outline-offset: 3px;
+}
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.small {
+  min-height: 36px;
+  padding: var(--space-sm) var(--space-base);
+}
+.medium {
+  min-height: 44px;
+  padding: var(--space-md) var(--space-lg);
+}
+.large {
+  min-height: 52px;
+  padding: var(--space-base) var(--space-xl);
+  font: var(--font-large-semibold);
+}

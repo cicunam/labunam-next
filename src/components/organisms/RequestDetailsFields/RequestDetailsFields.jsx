@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
-import { FormSection } from "../../molecules/FormSection/FormSection";
-import { FormField } from "../../molecules/FormField/FormField";
-import { ChoiceGroup } from "../../molecules/ChoiceGroup/ChoiceGroup";
-import { Select } from "../../atoms/Select/Select";
-import { TextArea } from "../../atoms/TextArea/TextArea";
-import { AnalysisFields } from "../AnalysisFields/AnalysisFields";
+import FormSection from "../../molecules/FormSection/FormSection";
+import FormField from "../../molecules/FormField/FormField";
+import ChoiceGroup from "../../molecules/ChoiceGroup/ChoiceGroup";
+import Select from "../../atoms/Select/Select";
+import TextArea from "../../atoms/TextArea/TextArea";
+import AnalysisFields from "../AnalysisFields/AnalysisFields";
 import { REGLAS, TIPOS_SOLICITUD, sectionFor } from "@/lib/solicitudes/solicitudes";
 // Cada tipo de solicitud guarda su texto principal en la misma columna `descripcion`.
 const descripciones = {
@@ -13,7 +13,7 @@ const descripciones = {
     capacitacion: "Descripción de la capacitación",
     otra: "Especifica tu solicitud",
 };
-export function RequestDetailsFields({ catalogos }) {
+const RequestDetailsFields = ({ catalogos }) => {
     const [tipo, setTipo] = useState("");
     const seccion = sectionFor(TIPOS_SOLICITUD, tipo);
     return <FormSection titulo="Datos de la solicitud">
@@ -29,4 +29,6 @@ export function RequestDetailsFields({ catalogos }) {
       <TextArea key={seccion} id="solicitud-descripcion" name="descripcion" required {...REGLAS.descripcion}/>
     </FormField>}
   </FormSection>;
-}
+};
+
+export default RequestDetailsFields;

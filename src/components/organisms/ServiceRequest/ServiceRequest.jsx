@@ -1,8 +1,8 @@
-import { AppLink } from "../../atoms/AppLink/AppLink";
-import { ServiceRequestForm } from "../ServiceRequestForm/ServiceRequestForm";
+import AppLink from "../../atoms/AppLink/AppLink";
+import ServiceRequestForm from "../ServiceRequestForm/ServiceRequestForm";
 import styles from "./ServiceRequest.module.css";
-export function ServiceRequest({ laboratorio: lab, catalogos }) {
-    return <section className={`contenido ${styles.solicitud}`} aria-labelledby="solicitud-titulo">
+const ServiceRequest = ({ laboratorio: lab, catalogos }) => {
+    return <section className={`content ${styles.solicitud}`} aria-labelledby="solicitud-titulo">
     <header className={styles.cabecera}><h1 id="solicitud-titulo">Solicitud de servicio</h1><p>Cuéntanos qué necesitas para tu proyecto y te pondremos en contacto con el laboratorio adecuado.</p></header>
     <div className={styles.columnas}>
       <aside className={styles.informacion} aria-label={lab ? "Laboratorio seleccionado" : "Antes de empezar"}>
@@ -25,4 +25,6 @@ export function ServiceRequest({ laboratorio: lab, catalogos }) {
       </div>
     </div>
   </section>;
-}
+};
+
+export default ServiceRequest;

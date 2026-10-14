@@ -1,13 +1,50 @@
-.opcion {
-  position: relative; display: inline-flex; align-items: center;
-  min-height: 40px; padding: var(--espacio-sm) var(--espacio-base);
-  border: 1px solid var(--filete); border-radius: var(--radio-full);
-  color: var(--color-black); font: var(--font-medium-regular); cursor: pointer;
+/* LabUNAM
+   Estilos
+   FilterOption.module.css (opción de radio con su conteo)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: var(--space-sm) var(--space-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--color-black);
+  font: var(--font-medium-regular);
+  cursor: pointer;
 }
-.opcion > input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
-.opcion:hover { border-color: var(--color-black); }
-.opcion:has(input:checked) { border-color: var(--color-black); background: var(--color-black); color: var(--color-white); }
-.cuenta { margin-left: var(--espacio-xs); color: var(--color-neutral-dark); font: var(--font-small-regular); }
-.opcion:has(input:checked) > .cuenta { color: inherit; }
-.opcion[data-vacia] { opacity: .4; cursor: default; }
-.opcion:has(input:focus-visible) { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.option > input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+.option:hover {
+  border-color: var(--color-black);
+}
+.option:has(input:checked) {
+  border-color: var(--color-black);
+  background: var(--color-black);
+  color: var(--color-white);
+}
+.count {
+  margin-left: var(--space-xs);
+  color: var(--color-neutral-dark);
+  font: var(--font-small-regular);
+}
+.option:has(input:checked) > .count {
+  color: inherit;
+}
+.option[data-empty] {
+  opacity: 0.4;
+  cursor: default;
+}
+.option:has(input:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

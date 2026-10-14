@@ -1,52 +1,152 @@
+"use client";
+
+// LabUNAM
+// Organismos
+// LaboratoryDetails (contenido de la ficha: galería, pestañas y acciones)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import Link from "next/link";
 import { useState } from "react";
-import { formatCounts, redes } from "@/lib/presentacion/presentacion";
-import { Gallery } from "../../molecules/Gallery/Gallery";
-import { Tab } from "../../molecules/Tab/Tab";
-import { Badge } from "../../atoms/Badge/Badge";
+import { redes } from "@/lib/redes/redes";
+import { formatCounts } from "@/lib/presentacion/presentacion";
+
+// Componentes
+import Gallery from "../../molecules/Gallery/Gallery";
+import Tab from "../../molecules/Tab/Tab";
+import Badge from "../../atoms/Badge/Badge";
+
+// Estilos
 import styles from "./LaboratoryDetails.module.css";
-const pestanas = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
-export function LaboratoryDetails({ laboratorio: lab, pagina = false }) {
-    const [activa, setActive] = useState(0);
-    const Titulo = pagina ? "h1" : "h2";
-    const contenido = [lab.servicios, lab.equipos, lab.distinciones, [lab.sedeNombre, lab.ubicacion].filter(Boolean)];
-    return <>
-        <div className={styles["ficha-cuerpo"]}>
-          <Gallery imagenes={lab.galeria}/>
-          <div className={styles["ficha-encabezado"]}>
-            <Badge tono={redes[lab.tipo].tono}>{redes[lab.tipo].singular}</Badge>
-            <Titulo id="ficha-titulo" className={styles["ficha-titulo"]}>{lab.nombre}</Titulo>
-            <p className={styles["ficha-entidad"]}>{lab.entidad}</p><p className={styles["ficha-sede"]}>{lab.sedeNombre}</p>
-          </div>
-          <div className={styles["ficha-pestanas"]} role="tablist" aria-label="Información del laboratorio">
-            {pestanas.map((nombre, i) => <Tab key={nombre} id={`ficha-pestana-${i}`} panelId={`ficha-panel-${i}`} seleccionada={activa === i} onClick={() => setActive(i)} onKeyDown={(event) => {
-                let siguiente = i;
-                if (event.key === "ArrowRight")
-                    siguiente = (i + 1) % 4;
-                else if (event.key === "ArrowLeft")
-                    siguiente = (i + 3) % 4;
-                else if (event.key === "Home")
-                    siguiente = 0;
-                else if (event.key === "End")
-                    siguiente = 3;
-                else
-                    return;
-                event.preventDefault();
-                setActive(siguiente);
-                document.querySelector(`#ficha-pestana-${siguiente}`)?.focus();
-            }}>{nombre}</Tab>)}
-          </div>
-          {contenido.map((lista, i) => <div key={i} className={styles["ficha-panel"]} id={`ficha-panel-${i}`} role="tabpanel" aria-labelledby={`ficha-pestana-${i}`} tabIndex={0} hidden={activa !== i}>
-            {lista.length ? <ul className={styles["ficha-lista"]}>{lista.map((texto, n) => <li key={n}>{texto}</li>)}</ul> : <p className={styles["ficha-vacio"]}>Sin información registrada todavía.</p>}
-            {i === 3 && lab.mapa && <a className={styles["ficha-mapa"]} href={lab.mapa} target="_blank" rel="noopener">Ver en el mapa</a>}
-          </div>)}
+
+// Constantes
+const tabs = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
+
+// Definición del componente
+const LaboratoryDetails = ({
+  laboratorio, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, servicios, equipos, distinciones y galeria
+  isPage = false, // Boolean Optional - Usa h1 cuando la ficha es la página completa y h2 dentro del modal
+}) => {
+  // Estado
+  const [activeIndex, setActive] = useState(0);
+
+  // Preparación de datos
+  const Title = isPage ? "h1" : "h2";
+  const content = [
+    laboratorio.servicios,
+    laboratorio.equipos,
+    laboratorio.distinciones,
+    [laboratorio.sedeNombre, laboratorio.ubicacion].filter(Boolean),
+  ];
+
+  // Interfaz
+  return (
+    <>
+      <div className={styles["details-body"]}>
+        <Gallery images={laboratorio.galeria} />
+        <div className={styles["details-header"]}>
+          <Badge tone={redes[laboratorio.tipo].tone}>{redes[laboratorio.tipo].singular}</Badge>
+          <Title
+            id="details-title"
+            className={styles["details-title"]}
+          >
+            {laboratorio.nombre}
+          </Title>
+          <p className={styles["details-entity"]}>{laboratorio.entidad}</p>
+          <p className={styles["details-location"]}>{laboratorio.sedeNombre}</p>
         </div>
-        <footer className={styles["ficha-pie"]}>
-          <p className={styles["ficha-pie-nota"]}>{formatCounts(lab.servicios.length, lab.equipos.length)}</p>
-          <div className={styles["ficha-pie-acciones"]}>
-            {lab.sitio && <a className={styles["ficha-mapa"]} href={lab.sitio} target="_blank" rel="noopener">Sitio web ↗</a>}
-            <Link className={styles["ficha-sitio"]} href={`/solicitud?laboratorio=${lab.idLab}`} prefetch={false}>Solicitar un servicio →</Link>
+        <div
+          className={styles["details-tabs"]}
+          role="tablist"
+          aria-label="Información del laboratorio"
+        >
+          {tabs.map((name, i) => (
+            <Tab
+              key={name}
+              id={`details-tab-${i}`}
+              panelId={`details-panel-${i}`}
+              selected={activeIndex === i}
+              onClick={() => setActive(i)}
+              onKeyDown={(event) => {
+                let nextIndex = i;
+                if (event.key === "ArrowRight") {
+                  nextIndex = (i + 1) % 4;
+                } else if (event.key === "ArrowLeft") {
+                  nextIndex = (i + 3) % 4;
+                } else if (event.key === "Home") {
+                  nextIndex = 0;
+                } else if (event.key === "End") {
+                  nextIndex = 3;
+                } else {
+                  return;
+                }
+                event.preventDefault();
+                setActive(nextIndex);
+                document.querySelector(`#details-tab-${nextIndex}`)?.focus();
+              }}
+            >
+              {name}
+            </Tab>
+          ))}
+        </div>
+        {content.map((list, i) => (
+          <div
+            key={i}
+            className={styles["details-panel"]}
+            id={`details-panel-${i}`}
+            role="tabpanel"
+            aria-labelledby={`details-tab-${i}`}
+            tabIndex={0}
+            hidden={activeIndex !== i}
+          >
+            {list.length ? (
+              <ul className={styles["details-list"]}>
+                {list.map((text, n) => (
+                  <li key={n}>{text}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className={styles["details-empty"]}>Sin información registrada todavía.</p>
+            )}
+            {i === 3 && laboratorio.mapa && (
+              <a
+                className={styles["details-mapa"]}
+                href={laboratorio.mapa}
+                target="_blank"
+                rel="noopener"
+              >
+                Ver en el mapa
+              </a>
+            )}
           </div>
-        </footer>
-  </>;
-}
+        ))}
+      </div>
+      <footer className={styles["details-footer"]}>
+        <p className={styles["details-footer-note"]}>
+          {formatCounts(laboratorio.servicios.length, laboratorio.equipos.length)}
+        </p>
+        <div className={styles["details-footer-actions"]}>
+          {laboratorio.sitio && (
+            <a
+              className={styles["details-mapa"]}
+              href={laboratorio.sitio}
+              target="_blank"
+              rel="noopener"
+            >
+              Sitio web ↗
+            </a>
+          )}
+          <Link
+            className={styles["details-website"]}
+            href={`/solicitud?laboratorio=${laboratorio.idLab}`}
+            prefetch={false}
+          >
+            Solicitar un servicio →
+          </Link>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default LaboratoryDetails;

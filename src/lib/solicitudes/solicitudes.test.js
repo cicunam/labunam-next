@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { REGLAS, TIPOS_SOLICITANTE, TIPOS_SOLICITUD, findOption, isUnam, requiresState, sectionFor } from "./solicitudes";
-import { catalogosEjemplo } from "./solicitudes.fixtures";
+import { catalogosEjemplo } from "@datosPrueba/solicitudes";
 // Reproduce cómo el navegador evalúa `pattern`: valor completo y bandera v.
 const cumple = (regla, valor) => new RegExp(`^(?:${regla.pattern})$`, "v").test(valor);
 describe("secciones", () => {

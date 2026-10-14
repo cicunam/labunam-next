@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
-import { FormSection } from "../../molecules/FormSection/FormSection";
-import { FormField } from "../../molecules/FormField/FormField";
-import { SuggestionField } from "../../molecules/SuggestionField/SuggestionField";
-import { ChoiceGroup } from "../../molecules/ChoiceGroup/ChoiceGroup";
-import { Input } from "../../atoms/Input/Input";
-import { Select } from "../../atoms/Select/Select";
-import { InstitutionFields } from "../InstitutionFields/InstitutionFields";
+import FormSection from "../../molecules/FormSection/FormSection";
+import FormField from "../../molecules/FormField/FormField";
+import SuggestionField from "../../molecules/SuggestionField/SuggestionField";
+import ChoiceGroup from "../../molecules/ChoiceGroup/ChoiceGroup";
+import Input from "../../atoms/Input/Input";
+import Select from "../../atoms/Select/Select";
+import InstitutionFields from "../InstitutionFields/InstitutionFields";
 import { REGLAS, TAMANOS_EMPRESA, TIPOS_SOLICITANTE, findOption, requiresState, sectionFor } from "@/lib/solicitudes/solicitudes";
-export function OrganizationFields({ catalogos }) {
+const OrganizationFields = ({ catalogos }) => {
     const [textoPais, setPais] = useState("");
     const [textoEstado, setEstado] = useState("");
     const [tipo, setTipo] = useState("");
@@ -43,4 +43,6 @@ export function OrganizationFields({ catalogos }) {
       <Input id="solicitud-tipo-otro" name="tipo_solicitante_otro" required {...REGLAS.organizacion}/>
     </FormField>}
   </FormSection>;
-}
+};
+
+export default OrganizationFields;

@@ -1,8 +1,8 @@
-import { FormSection } from "../../molecules/FormSection/FormSection";
-import { FormField } from "../../molecules/FormField/FormField";
-import { Input } from "../../atoms/Input/Input";
+import FormSection from "../../molecules/FormSection/FormSection";
+import FormField from "../../molecules/FormField/FormField";
+import Input from "../../atoms/Input/Input";
 import { REGLAS } from "@/lib/solicitudes/solicitudes";
-export function RequesterFields() {
+const RequesterFields = () => {
     return <FormSection titulo="Datos de contacto">
     <FormField etiqueta="Nombre(s)" controlId="solicitud-nombre" obligatorio ancho>
       <Input id="solicitud-nombre" name="nombre" required autoComplete="given-name" {...REGLAS.nombre}/>
@@ -20,4 +20,6 @@ export function RequesterFields() {
       <Input id="solicitud-telefono" name="telefono" type="tel" inputMode="numeric" required autoComplete="tel" aria-describedby="solicitud-telefono-ayuda" {...REGLAS.telefono}/>
     </FormField>
   </FormSection>;
-}
+};
+
+export default RequesterFields;

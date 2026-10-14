@@ -1,0 +1,57 @@
+/* LabUNAM
+   Estilos
+   RecentLaboratories.module.css (laboratorios actualizados recientemente en la portada)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.featured {
+  padding-block: var(--space-section);
+}
+
+.featured {
+  border-top: 1px solid var(--border-soft);
+}
+
+.featured-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.featured-all {
+  color: var(--color-black);
+  font: var(--font-medium-semibold);
+  text-underline-offset: 3px;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+}
+
+.featured .grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg) var(--space-base);
+  margin-top: var(--space-lg);
+}
+
+@media (min-width: 744px) {
+  .featured .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 992px) {
+  .featured .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1128px) {
+  .featured .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

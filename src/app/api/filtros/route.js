@@ -1,13 +1,7 @@
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { normalizeCriteria } from "@/lib/buscador/buscador";
-import { prepareFilters } from "@/lib/filtros/filtros";
-export async function GET(request) {
-    try {
-        const catalogo = await loadCatalog();
-        const criterios = normalizeCriteria(catalogo.laboratorios, Object.fromEntries(new URL(request.url).searchParams));
-        return Response.json(prepareFilters(catalogo, criterios));
-    }
-    catch {
-        return Response.json({ error: "No se pudieron actualizar los conteos." }, { status: 503 });
-    }
-}
+// LabUNAM
+// Rutas de API
+// /api/filtros (conteos del diálogo de filtros para los criterios del borrador)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Definición de la ruta
+export { getFilters as GET } from "@/server/laboratorios/laboratoriosController";

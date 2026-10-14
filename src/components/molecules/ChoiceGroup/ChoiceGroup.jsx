@@ -1,5 +1,5 @@
 import styles from "./ChoiceGroup.module.css";
-export function ChoiceGroup({ leyenda, nombre, opciones = [], obligatorio = false, valor, onChange, ancho = true }) {
+const ChoiceGroup = ({ leyenda, nombre, opciones = [], obligatorio = false, valor, onChange, ancho = true }) => {
     return <fieldset className={`${styles.grupo} ${ancho ? styles.ancho : ""}`}>
     <legend className={styles.leyenda}>{leyenda}{obligatorio && <span className={styles.marca} aria-hidden="true"> *</span>}</legend>
     <div className={styles.opciones}>
@@ -9,4 +9,6 @@ export function ChoiceGroup({ leyenda, nombre, opciones = [], obligatorio = fals
         </label>)}
     </div>
   </fieldset>;
-}
+};
+
+export default ChoiceGroup;

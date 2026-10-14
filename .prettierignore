@@ -1,0 +1,7 @@
+node_modules/
+.next/
+public/fotos/
+.revision-fotos/
+test-results/
+playwright-report/
+package-lock.json

@@ -1,0 +1,103 @@
+/* LabUNAM
+   Estilos
+   LaboratoryNetworks.module.css (tarjetas de las redes de laboratorios en la portada)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.networks {
+  padding-block: var(--space-section);
+}
+
+.networks-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.network {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  color: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: var(--radius-md);
+  }
+}
+
+.network-photo {
+  aspect-ratio: 3 / 2;
+
+  border-radius: var(--radius-md);
+  background-color: var(--surface-strong);
+  background-image: var(--photo);
+  background-size: cover;
+  background-position: center;
+
+  transition: scale 0.3s var(--soft);
+
+  .network:hover & {
+    scale: 1.01;
+  }
+}
+
+.network-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.network-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+
+  color: var(--color-black);
+  font: var(--font-title-small);
+  letter-spacing: var(--tracking-small);
+
+  &::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--dot, var(--color-neutral));
+  }
+}
+
+.network[data-type="nacionales"] {
+  --dot: var(--color-type-nacionales);
+}
+.network[data-type="universitarios"] {
+  --dot: var(--color-type-universitarios);
+}
+.network[data-type="unidades"] {
+  --dot: var(--color-type-unidades);
+}
+
+.network-text {
+  color: var(--color-neutral-dark);
+  font: var(--font-medium-regular);
+}
+
+.network-count {
+  color: var(--color-brand-ink);
+  font: var(--font-small-semibold);
+  letter-spacing: var(--tracking-small);
+  text-transform: uppercase;
+}
+
+@media (min-width: 744px) {
+  .networks-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-base);
+  }
+}

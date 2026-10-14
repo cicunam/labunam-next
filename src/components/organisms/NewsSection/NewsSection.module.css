@@ -1,0 +1,8 @@
+/* LabUNAM
+   Estilos
+   NewsSection.module.css (noticias de la portada en carrusel)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.news {
+  padding-block: var(--space-section);
+}

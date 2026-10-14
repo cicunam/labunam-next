@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CAMPOS_FORMULARIO, validateRequest } from "./validacionSolicitud";
-import { catalogosEjemplo } from "../solicitudes/solicitudes.fixtures";
-import { institucionesEjemplo } from "../instituciones/instituciones.fixtures";
+import { catalogosEjemplo, institucionesEjemplo } from "@datosPrueba/solicitudes";
 const catalogos = { publicos: catalogosEjemplo, instituciones: institucionesEjemplo };
 // Solicitud mínima válida: persona física que pide una capacitación.
 const base = {
@@ -104,7 +103,7 @@ describe("tipo de solicitud", () => {
     });
     it("exige la descripción en todos los tipos", () => {
         for (const tipo of ["1", "2", "3", "4"])
-            expect(validar({ id_tipo_solicitud: tipo, descripcion: "" }).errores.descripcion).toBe("Este campo es obligatorio.");
+            {expect(validar({ id_tipo_solicitud: tipo, descripcion: "" }).errores.descripcion).toBe("Este campo es obligatorio.");}
     });
 });
 it("declara los nombres que puede enviar el formulario", () => {

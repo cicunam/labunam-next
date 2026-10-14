@@ -1,17 +1,40 @@
-.campo {
+/* LabUNAM
+   Estilos
+   Input.module.css (campo de texto del portal)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.input {
   width: 100%;
   min-width: 0;
-  padding: var(--espacio-md);
-  border: 1px solid var(--filete);
-  border-radius: var(--radio-sm);
-  background: var(--superficie);
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
   color: var(--color-black);
   font: var(--font-medium-regular);
 }
-.campo::placeholder { color: var(--color-neutral-dark); opacity: 1; }
-.campo:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-.campo:disabled { opacity: .5; }
+.input::placeholder {
+  color: var(--color-neutral-dark);
+  opacity: 1;
+}
+.input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.input:disabled {
+  opacity: 0.5;
+}
 /* :user-invalid marca el error sólo después de que la persona interactúa con el campo. */
-.campo[aria-invalid="true"], .campo:user-invalid { border-color: var(--color-tipo-nacionales); }
-.integrado { padding: 0; border: 0; border-radius: 0; background: transparent; }
-.integrado:focus-visible { outline-offset: 3px; }
+.input[aria-invalid="true"],
+.input:user-invalid {
+  border-color: var(--color-type-nacionales);
+}
+.integrated {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.integrated:focus-visible {
+  outline-offset: 3px;
+}

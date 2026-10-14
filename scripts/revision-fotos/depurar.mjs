@@ -1,16 +1,32 @@
+// LabUNAM
+// Scripts
+// depurar (descarta candidatas institucionales o genéricas y resume la revisión)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import {readFile,writeFile,rename} from 'node:fs/promises';
+
+// Constantes
+// Candidatas y selecciones guardadas; los laboratorios ya aprobados no se depuran.
 const file='.revision-fotos/candidatas.json';
 const labs=JSON.parse(await readFile(file,'utf8'));
 const state=JSON.parse(await readFile('.revision-fotos/seleccion.json','utf8').catch(()=>'{}'));
+// Logos y gráficos de facultades, institutos o licencias que no identifican al laboratorio.
 const institutional=/biomedicas(?:-retina)?\.png|logo-vector-iim|logoicml|logomy|manchalogowebenes|logo-enes|logo-geofisica|logo-cfata|logomatem|logoiiw|logocovi|logo_ib_o|logo-inb|logo-ciga|facmed|di_bco|475_w|gmailogo|logopsicologia|logo_psico|logo_dimeies|creative-commons|idea_wild|logo-vinculacion|diseno-industrial_blanco|\/img\/di\.png|logo%20ie%20blanco|paginas_personales_logo/i;
+// Laboratorios cuyas candidatas se descartan por completo.
 const excluded=new Set([15,23,27]);
+
+// Ejecución
 for(const lab of labs){
- if(state[lab.idLab]?.estado==='aprobado')continue;
+ if(state[lab.idLab]?.estado==='aprobado'){continue;}
  const before=lab.imagenes.length;
- const keep=i=>{
+ // Conserva la imagen si no parece institucional ni un logo de otra dependencia.
+ const keep=(
+  i, // Object - Imagen candidata; se usan url, alt y tipo
+ )=>{
   const label=i.url+' '+(i.alt||'');
-  if(institutional.test(label))return false;
-  if(i.tipo==='logo'&&/instituto|facultad|divisi[oó]n|ENES|CIGA|ICF/i.test(i.alt||''))return false;
+  if(institutional.test(label)){return false;}
+  if(i.tipo==='logo'&&/instituto|facultad|divisi[oó]n|ENES|CIGA|ICF/i.test(i.alt||'')){return false;}
   return true;
  };
  lab.imagenes=excluded.has(lab.idLab)?[]:lab.imagenes.filter(keep);

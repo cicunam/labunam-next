@@ -20,12 +20,11 @@ conocen React pero todavía no han trabajado con Next.js:
 - [Crear componentes](docs/03-componentes.md).
 - [Consultar la base de datos](docs/04-base-de-datos.md).
 - [Crear y ejecutar pruebas](docs/05-pruebas.md).
-- [Trabajar con Storybook](docs/06-storybook.md).
-- [Imágenes y entrega de cambios](docs/07-imagenes-y-entrega.md).
+- [Imágenes y entrega de cambios](docs/06-imagenes-y-entrega.md).
 
-Las [decisiones técnicas](docs/decisiones-tecnicas.md) describen los criterios de
-arquitectura. `AGENTS.md` contiene instrucciones compartidas para asistentes;
-`CLAUDE.md` las importa y añade un mapa de archivos.
+La [guía de arquitectura](docs/02-arquitectura.md) explica cómo está dividido el
+portal. Las decisiones técnicas y las instrucciones compartidas para asistentes
+están en `AGENTS.md`; `CLAUDE.md` las importa y añade un mapa de archivos.
 
 ## Requisitos y arranque
 
@@ -41,7 +40,7 @@ npm run dev
 Abrir [el portal de desarrollo](http://localhost:3000). Configurar `.env` siguiendo
 `.env.example` y obtener el acceso a través del responsable del proyecto. Nunca
 incorporar credenciales al repositorio. La portada y el catálogo requieren MySQL;
-Storybook y las pruebas unitarias no.
+las pruebas unitarias no.
 
 | Variable | Uso |
 | --- | --- |
@@ -69,22 +68,31 @@ el sitio en la UNAM.
 | `src/components/atoms/` | Piezas básicas de interfaz |
 | `src/components/molecules/` | Combinaciones genéricas de piezas |
 | `src/components/organisms/` | Secciones y comportamiento del portal |
-| `src/lib/` | MySQL, normalización, búsqueda, filtros y fotos |
+| `src/server/` | Una carpeta por entidad (DAO, servicio, controlador) y `config/` con la conexión |
+| `src/lib/` | Funciones y constantes compartidas |
 | `public/` | Recursos estáticos, fuente, iconos e ilustraciones |
 | `scripts/` | Generación de imágenes y revisión editorial |
 | `tests/e2e/` | Pruebas de navegador |
-| `.storybook/` | Configuración de historias y revisión visual |
+| `tests/datosPrueba/` | Datos ficticios para pruebas unitarias (`@datosPrueba/`) |
 | `docs/` | Guías y acuerdos técnicos |
 
-Cada componente tiene su carpeta, CSS Module e historia. Cada módulo de `src/lib/`
-agrupa su lógica, pruebas y fixtures. Los CSS Modules de páginas viven junto a
+Cada componente tiene su carpeta y su CSS Module. Los módulos de `src/lib/` y `src/server/`
+agrupan su lógica y pruebas. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
-Los imports apuntan al archivo concreto, sin barriles `index.js`.
+Las páginas y layouts importan componentes desde un único barril `src/components/index.js`:
+`import { Header, Footer } from "@/components"`. Entre componentes
+se mantienen imports directos para evitar ciclos. Los módulos de `src/lib/` también se importan directamente.
 
-Componentes y funciones se nombran en inglés; entidades y campos del dominio,
+Componentes, funciones, props, variables, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del catálogo,
 textos visibles y URLs se mantienen en español. Los comentarios explican decisiones
 en español. La fuente Inter se sirve desde `public/assets/fonts`, con su licencia
 OFL, sin depender de una descarga de Google.
+
+El backend sigue el recorrido **Controller → Service → DAO → MySQL**. Las páginas
+renderizadas en servidor llaman al servicio directamente. Los DAO contienen SQL;
+`toLaboratorio` en el DAO convierte filas y los servicios preparan datos públicos. La caché del
+catálogo está separada. La conexión vive en `src/server/config/dbconnection.js`.
+La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido completo.
 
 ## Páginas y funcionamiento
 
@@ -107,13 +115,14 @@ un estado abre el catálogo con `?sede=...`. Los trazados SVG se sirven localmen
 desde `public/assets/maps/`, con origen y licencia en su archivo `CREDITOS.md`.
 No se consulta un servicio externo de mapas ni se muestran ubicaciones exactas.
 
-El catálogo se renderiza en servidor. `loadCatalog()` combina seis consultas de
-sólo lectura y reutiliza una caché en memoria. Las peticiones concurrentes comparten
+El catálogo se renderiza en servidor. `loadCatalog()` combina dos consultas de
+sólo lectura (laboratorios con sus relaciones y disciplinas) y reutiliza una caché en memoria. Las peticiones concurrentes comparten
 la carga; si una actualización falla, se conserva la última copia válida.
 Cada proceso Node tiene su propia caché.
 
-El formulario de `/solicitud` usa `loadRequestCatalogs()`, con la misma política
-de caché, para siete catálogos de sólo lectura. Países, estados de México y EUA,
+El formulario de `/solicitud` usa `loadRequestCatalogs()`
+(`src/server/solicitudes/`), con la misma política de caché, para siete catálogos
+de sólo lectura. Países, estados de México y EUA,
 dependencias vigentes, cargos y tipos de muestra y colaboración viajan con la
 página; las instituciones vigentes (miles) se quedan en el servidor y se buscan
 desde `/api/solicitudes/instituciones`.
@@ -138,7 +147,7 @@ la pestaña oculta, y desactiva el avance automático con movimiento reducido.
 Las rutas heredadas `/nacionales`, `/universitarios`, `/unidades`,
 `/internacionales` y `/buscar` tienen redirecciones 301 que conservan la búsqueda.
 
-## Pruebas y Storybook
+## Pruebas
 
 ```sh
 npm run lint
@@ -146,11 +155,9 @@ npm test
 npm run build
 npx playwright install chromium
 npm run test:e2e
-npm run storybook
-npm run build-storybook
 ```
 
-Storybook se abre en [el puerto 6006](http://localhost:6006). Vitest comprueba reglas,
+Vitest comprueba reglas,
 normalización, caché y acceso a datos mediante mocks. Playwright comprueba el portal
 a 375, 1024 y 1400 px, incluyendo filtros, historial, teclado y arrastre.
 
@@ -160,10 +167,8 @@ Para probar una instancia ya iniciada, pasar su URL:
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3007 npm run test:e2e
 ```
 
-El addon de accesibilidad permanece activo. Existe una excepción documentada de
-contraste blanco/naranja para el botón de marca; no extenderla a otros componentes.
-Storybook puede emitir avisos de empaquetado sobre `use client` y tamaño de chunks;
-no equivalen por sí solos a un fallo, pero los errores nuevos deben investigarse.
+Existe una excepción documentada de contraste blanco/naranja para el botón de marca;
+no extenderla a otros componentes.
 
 ## Imágenes
 
@@ -192,7 +197,7 @@ muestran completos, sin recorte.
 `public/fotos/` y `.revision-fotos/` están ignoradas por Git. Conservar y transferir
 estos datos mediante el procedimiento del equipo: contienen imágenes aplicadas y
 decisiones editoriales que no se recuperan al clonar. Los SVG sí están versionados.
-Ver [el procedimiento completo](docs/07-imagenes-y-entrega.md).
+Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
 
 ## Pendientes y límites conocidos
 
@@ -203,8 +208,7 @@ Ver [el procedimiento completo](docs/07-imagenes-y-entrega.md).
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
 - Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún
-  automatización de despliegue en este repositorio; consultar los
-  [acuerdos de servidor](docs/preguntas-servidor.md).
+  automatización de despliegue en este repositorio.
 - Resolver el presupuesto de 120 KB gzip de JS+CSS y repetir las mediciones en el
   servidor de destino. La medición del 4 de octubre de 2026 fue de 154,585 bytes;
   Lighthouse móvil dio 96, con LCP 2.64 s, TBT 23 ms y CLS 0. Es una medición de
@@ -219,3 +223,37 @@ Revisar las convenciones, ejecutar las comprobaciones adecuadas al cambio y
 actualizar la documentación si cambia un procedimiento. Los commits son breves,
 en español y sin trailers de atribución. Coordinar ramas, revisión y publicación
 con el equipo; un commit o push no equivale a un despliegue.
+
+## Legibilidad del código
+
+Los componentes, páginas y layouts se declaran como arrow functions con nombre y
+se exportan al final con `export default Nombre;`. El barril los reexporta con nombre
+para importarlos con llaves desde `@/components`. Los imports directos entre componentes
+usan el default sin llaves. Hooks y utilidades usan exportaciones nombradas.
+
+Ejecutar `npm run format` antes de entregar cambios y `npm run format:check` para
+comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llaves
+incluso en condiciones de una sola instrucción.
+
+La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
+textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
+las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
+junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar,
+`useHeaderMenu` / `useCompactSearch` en Header, `useLaboratoryDialog` en LaboratoryDialog
+(apertura, carga e historial del modal y el contrato `data-details`), `useFilterDraft` en
+FilterDialog (borrador de filtros con conteos en vivo), `useDragScroll` en DisciplineBar
+(arrastre y flechas de la franja) y `useCarousel` en Carousel (arrastre, avance automático
+y pausas de las noticias). Las consultas SQL están en los DAO de `src/server/`.
+En `src/server/laboratorios/`, `laboratoriosCatalogo.js` carga y guarda en caché todos los
+laboratorios y `laboratoriosService.js` responde la ficha, la búsqueda, los filtros y la portada.
+
+Los comentarios explican decisiones y comportamientos que deben conservarse:
+historial del modal, peticiones concurrentes, conteos de filtros, datos heredados
+y pausas del carrusel. La prioridad es poder seguir el flujo del código sin
+comprimirlo para cumplir un número de líneas.
+
+ESLint verifica esta convención con `npm run lint`: componentes arrow y
+`export default Nombre;` como última instrucción. Los hooks, las utilidades
+y los endpoints quedan fuera de esta regla de componentes.
+Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
+antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.

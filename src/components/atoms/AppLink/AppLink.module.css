@@ -1,3 +1,18 @@
-.enlace { color: var(--color-brand-ink); font: var(--font-medium-semibold); text-underline-offset: 3px; }
-.enlace:hover { color: var(--color-black); }
-.enlace:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radio-xs); }
+/* LabUNAM
+   Estilos
+   AppLink.module.css (enlace interno con el estilo del portal)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.link {
+  color: var(--color-brand-ink);
+  font: var(--font-medium-semibold);
+  text-underline-offset: 3px;
+}
+.link:hover {
+  color: var(--color-black);
+}
+.link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}

@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
-import { FormField } from "../../molecules/FormField/FormField";
-import { ChoiceGroup } from "../../molecules/ChoiceGroup/ChoiceGroup";
-import { Input } from "../../atoms/Input/Input";
-import { Select } from "../../atoms/Select/Select";
-import { TextArea } from "../../atoms/TextArea/TextArea";
+import FormField from "../../molecules/FormField/FormField";
+import ChoiceGroup from "../../molecules/ChoiceGroup/ChoiceGroup";
+import Input from "../../atoms/Input/Input";
+import Select from "../../atoms/Select/Select";
+import TextArea from "../../atoms/TextArea/TextArea";
 import { CERTIFICACIONES, REGLAS, TIEMPOS_ESPERA, TIEMPO_CON_DIAS } from "@/lib/solicitudes/solicitudes";
-export function AnalysisFields({ catalogos }) {
+const AnalysisFields = ({ catalogos }) => {
     const [tiempo, setTiempo] = useState("");
     return <>
     <FormField etiqueta="Descripción del análisis o prueba" controlId="solicitud-descripcion" obligatorio ancho>
@@ -38,4 +38,6 @@ export function AnalysisFields({ catalogos }) {
       <TextArea id="solicitud-equipo" name="equipo_especifico" {...REGLAS.descripcion}/>
     </FormField>
   </>;
-}
+};
+
+export default AnalysisFields;

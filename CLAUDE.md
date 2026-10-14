@@ -20,20 +20,20 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 | Trabajo | Archivos de entrada |
 | --- | --- |
-| Portada y noticias | `src/app/page.jsx`, `src/app/Inicio.module.css` |
-| Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/lib/filtros/filtros.js` |
-| Consultas SQL y caché | `src/lib/db/db.js`, `src/lib/catalogo/catalogo.js` |
-| Filas SQL y modelo público | `src/lib/normalizeCatalog/normalizeCatalog.js`, `src/lib/catalogo/catalogo.fixtures.js` |
-| Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
+| Portada y noticias | `src/app/page.jsx`, organismos `LaboratoryNetworks` (textos de redes; sus nombres en `src/lib/redes/redes.js`), `RecentLaboratories`, `DisciplineSection` y `NewsSection` (noticias de ejemplo) |
+| Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/laboratorios/laboratoriosService.js` |
+| Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/laboratorios/laboratoriosCatalogo.js` |
+| Filas SQL y modelo público | `src/server/laboratorios/LaboratorioDao.js`, `tests/datosPrueba/catalogo.js` |
+| Búsqueda y filtros | `src/lib/buscador/buscador.js` (tabla `filtros` con los seis ejes), `src/lib/capacidades/capacidades.js` |
 | Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |
-| API de filtros | `src/app/api/filtros/route.js` |
-| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/lib/ficha/ficha.js` |
+| API de filtros | `src/app/api/filtros/route.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/api/api.js` |
+| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/api/api.js` |
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
 | Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
-| Carrusel | `src/components/organisms/Carousel/`, `public/js/carrusel.js` |
-| Selección y presentación de imágenes | `src/lib/selectPhotos/selectPhotos.js`, `src/lib/fotos/fotos.js` |
-| Procesamiento de originales | `scripts/fotos.js` |
+| Carrusel | `src/components/organisms/Carousel/` (`useCarousel.js` tiene la interacción) |
+| Selección y presentación de imágenes | `src/server/fotos/fotosService.js`, `src/lib/fotos/fotos.js` |
+| Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
 | Pruebas de interacción | `tests/e2e/`, `playwright.config.js` |
 
@@ -43,17 +43,15 @@ historial de conversaciones. El README contiene los procedimientos completos.
 nvm use
 npm ci
 npm run dev                 # portal: http://localhost:3000
-npm run storybook           # componentes: http://localhost:6006
 npm run fotos:revisar       # revisión local: http://127.0.0.1:8767
 npm run lint
 npm test
 npm run build
 npm run test:e2e
-npm run build-storybook
 ```
 
 `npm ci` se necesita al preparar el entorno o cambiar el lockfile, no en cada
-turno. La portada y el catálogo necesitan MySQL; Storybook y unitarias no.
+turno. La portada y el catálogo necesitan MySQL; las unitarias no.
 Si Playwright no tiene Chromium, instalarlo con `npx playwright install chromium`.
 Para una instancia de producción en un puerto libre:
 
@@ -69,14 +67,21 @@ son locales y no definen la configuración del servidor de la UNAM.
 
 ## Detalles que suelen causar confusión
 
+- Los seis filtros se definen una sola vez en la tabla `filtros` de `buscador.js`. Los
+  parámetros de URL son heredados: `disciplina` filtra por área y `especialidad` por
+  cada una de las 38 disciplinas; la red (`tipo`) se elige en el buscador, no en el diálogo.
 - La búsqueda combina palabras normalizadas sobre el catálogo ya cargado; no es
   una consulta SQL nueva por cada chip. Las sugerencias proceden de disciplinas
-  y equipos del catálogo. Revisar implementación y fixtures antes de cambiar reglas.
-- El catálogo carga seis consultas de sólo lectura y comparte una promesa entre
+  y equipos del catálogo. Revisar implementación y datos de prueba antes de cambiar reglas.
+- El catálogo carga dos consultas de sólo lectura y comparte una promesa entre
   peticiones concurrentes. La caché vive por proceso (600 segundos por defecto,
   configurable con `LABUNAM_CATALOGO_SEGUNDOS`), no es persistencia compartida.
-- `public/js/carrusel.js` mejora HTML de servidor y administra montaje/limpieza
-  durante navegación Next. Probar entrada/salida de la página y no sólo una carga.
+- Equipos, certificaciones y acreditaciones llegan en la consulta de laboratorios con
+  `JSON_ARRAYAGG`. No cambiarlo a `GROUP_CONCAT`: su límite de 1024 bytes truncaría
+  listas reales. Las listas se usan en el orden en que llegan, sin ordenarlas en JavaScript;
+  las distinciones ya no salen de la más reciente a la más antigua.
+- `useCarousel` trabaja sobre el HTML que renderiza `Carousel` y libera listeners y
+  observadores al desmontar. Probar entrada/salida de la página y no sólo una carga.
 - `manifiesto.json` contiene originales y tiene prioridad por laboratorio sobre
   `manifiesto-web.json`. Dentro de una selección, las fotos preceden a los logos.
 - Guardar una revisión de imágenes no equivale a aplicarla. La importación corre

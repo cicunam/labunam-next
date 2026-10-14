@@ -1,5 +1,5 @@
-.campo { display: grid; gap: var(--espacio-sm); min-width: 0; align-content: start; }
+.campo { display: grid; gap: var(--space-sm); min-width: 0; align-content: start; }
 .ancho { grid-column: 1 / -1; }
 .etiqueta { font: var(--font-medium-semibold); color: var(--color-black); }
-.marca { color: var(--color-tipo-nacionales); }
+.marca { color: var(--color-type-nacionales); }
 .ayuda { font: var(--font-small-regular); color: var(--color-neutral-dark); }

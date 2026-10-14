@@ -1,0 +1,109 @@
+/* LabUNAM
+   Estilos
+   DisciplineSection.module.css (áreas de la portada con su número de laboratorios)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.disciplines {
+  padding-block: var(--space-section);
+}
+
+.band-tint {
+  position: relative;
+  background: var(--surface-tint);
+}
+
+.band-tint::before,
+.band-tint::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+
+  background: var(--surface-tint);
+
+  -webkit-mask: var(--wave) 0 0 / 100% 100% no-repeat;
+  mask: var(--wave) 0 0 / 100% 100% no-repeat;
+
+  pointer-events: none;
+}
+
+.band-tint::before {
+  top: -47px;
+}
+.band-tint::after {
+  bottom: -47px;
+  scale: 1 -1;
+}
+
+.band-tint-flat::after {
+  display: none;
+}
+
+@media (max-width: 743px) {
+  .band-tint::before,
+  .band-tint::after {
+    height: 24px;
+  }
+
+  .band-tint::before {
+    top: -23px;
+  }
+  .band-tint::after {
+    bottom: -23px;
+  }
+}
+
+.disciplines-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-base);
+
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.discipline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  padding: var(--space-sm) 0;
+
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .discipline-name {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+}
+
+.discipline-name {
+  color: var(--color-black);
+  font: var(--font-medium-semibold);
+}
+
+.discipline-count {
+  color: var(--color-neutral-dark);
+  font: var(--font-small-regular);
+}
+
+@media (min-width: 744px) {
+  .disciplines-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1128px) {
+  .disciplines-list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

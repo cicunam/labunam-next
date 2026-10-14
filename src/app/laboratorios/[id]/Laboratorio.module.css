@@ -1,1 +1,8 @@
-.detalle { padding-top: 24px; }
+/* LabUNAM
+   Estilos
+   Laboratorio.module.css (página de la ficha individual de laboratorio)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
+.detail {
+  padding-top: 24px;
+}

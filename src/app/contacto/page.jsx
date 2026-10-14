@@ -1,15 +1,41 @@
+// LabUNAM
+// Páginas
+// Contacto (/contacto)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { notFound } from "next/navigation";
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { Contact } from "@/components/organisms/Contact/Contact";
-export const metadata = { title: "Contacto", description: "Consulta los canales de contacto de LabUNAM y la Coordinación de la Investigación Científica de la UNAM." };
-export default async function ContactPage({ searchParams }) {
-    const { laboratorio } = await searchParams;
-    if (laboratorio === undefined)
-        return <Contact />;
-    if (typeof laboratorio !== "string" || !/^[1-9]\d*$/.test(laboratorio))
-        notFound();
-    const lab = (await loadCatalog()).laboratorios.find((item) => item.idLab === Number(laboratorio));
-    if (!lab)
-        notFound();
-    return <Contact laboratorio={{ idLab: lab.idLab, nombre: lab.nombre, entidad: lab.entidad, servicios: lab.servicios, sitio: lab.sitio }}/>;
-}
+
+// Servicios
+import { getContactDetails } from "@/server/laboratorios/laboratoriosService";
+
+// Componentes
+import { Contact } from "@/components";
+
+// Configuración de Next
+export const metadata = {
+  title: "Contacto",
+  description:
+    "Consulta los canales de contacto de LabUNAM y la Coordinación de la Investigación Científica de la UNAM.",
+};
+
+// Definición de la página
+const ContactPage = async ({
+  searchParams, // Promise - Resuelve al objeto con los parámetros de la URL; laboratorio es el id del laboratorio solicitado
+}) => {
+  // Datos
+  // Sin laboratorio se muestra el contacto general; con un id inexistente, la página 404.
+  const { laboratorio } = await searchParams;
+  if (laboratorio === undefined) {
+    return <Contact />;
+  }
+  const lab = await getContactDetails(laboratorio);
+  if (!lab) {
+    notFound();
+  }
+
+  // Interfaz
+  return <Contact laboratorio={lab} />;
+};
+
+export default ContactPage;

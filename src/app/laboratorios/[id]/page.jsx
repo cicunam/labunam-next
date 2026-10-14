@@ -1,27 +1,64 @@
+// LabUNAM
+// Páginas
+// Ficha de laboratorio (/laboratorios/[id])
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { notFound } from "next/navigation";
-import { loadCatalog } from "@/lib/catalogo/catalogo";
-import { getPhotos, readPhotos } from "@/lib/fotos/fotos";
-import { LaboratoryDialog } from "@/components/organisms/LaboratoryDialog/LaboratoryDialog";
-import { AppLink } from "@/components/atoms/AppLink/AppLink";
+
+// Servicios
+import { getById } from "@/server/laboratorios/laboratoriosService";
+
+// Componentes
+import { LaboratoryDialog, AppLink } from "@/components";
+
+// Estilos
 import styles from "./Laboratorio.module.css";
+
+// Configuración de Next
 export const dynamic = "force-dynamic";
-async function findLaboratorio(id) {
-    if (!/^[1-9]\d*$/.test(id))
-        notFound();
-    const lab = (await loadCatalog()).laboratorios.find((lab) => lab.idLab === Number(id));
-    if (!lab)
-        notFound();
-    return lab;
+
+// Utilidades
+// Busca la ficha pública o responde 404 si el laboratorio no existe.
+async function findLaboratorio(
+  id, // String - Identificador del laboratorio tomado de la URL
+) {
+  const lab = await getById(id);
+  if (!lab) {
+    notFound();
+  }
+  return lab;
 }
-export async function generateMetadata({ params }) {
-    const lab = await findLaboratorio((await params).id);
-    return { title: lab.nombre, description: `${lab.nombre}. ${lab.entidad}. ${lab.sedeNombre}. Consulta sus servicios, equipamiento y ubicación.` };
+
+// Configuración de Next
+// Título y descripción de la pestaña a partir de la ficha del laboratorio.
+export async function generateMetadata({
+  params, // Promise - Resuelve al objeto con los segmentos de la ruta; params.id es el laboratorio
+}) {
+  const lab = await findLaboratorio((await params).id);
+  return {
+    title: lab.nombre,
+    description: `${lab.nombre}. ${lab.entidad}. ${lab.sedeNombre}. Consulta sus servicios, equipamiento y ubicación.`,
+  };
 }
-export default async function LaboratoryPage({ params }) {
-    const lab = await findLaboratorio((await params).id);
-    const { idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, servicios, equipos, distinciones, sitio } = lab;
-    return <div className={`contenido ${styles.detalle}`}>
-    <AppLink href="/laboratorios">← Volver al catálogo</AppLink>
-    <LaboratoryDialog key={idLab} inicial={{ idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, servicios, equipos, distinciones, sitio, galeria: getPhotos(idLab, await readPhotos(), lab.grupos) }}/>
-  </div>;
-}
+
+// Definición de la página
+const LaboratoryPage = async ({
+  params, // Promise - Resuelve al objeto con los segmentos de la ruta; params.id es el laboratorio
+}) => {
+  // Datos
+  const lab = await findLaboratorio((await params).id);
+
+  // Interfaz
+  return (
+    <div className={`content ${styles.detail}`}>
+      <AppLink href="/laboratorios">← Volver al catálogo</AppLink>
+      <LaboratoryDialog
+        key={lab.idLab}
+        initialLaboratorio={lab}
+      />
+    </div>
+  );
+};
+
+export default LaboratoryPage;

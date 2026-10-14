@@ -1,76 +1,95 @@
 "use client";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { fetchLaboratorioDetails } from "@/lib/ficha/ficha";
-import { Icon } from "../../atoms/Icon/Icon";
+
+// LabUNAM
+// Organismos
+// LaboratoryDialog (ficha de laboratorio en modal o como página)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
+import { lazy, Suspense } from "react";
+import { fetchLaboratorioDetails } from "@/lib/api/api";
+
+// Mecanismos
+import { useLaboratoryDialog } from "./useLaboratoryDialog";
+
+// Componentes
+import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
 import styles from "./LaboratoryDialog.module.css";
-const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails").then((modulo) => ({ default: modulo.LaboratoryDetails })));
-export function LaboratoryDialog({ loadDetails = fetchLaboratorioDetails, inicial = null }) {
-    const dialogo = useRef(null);
-    const disparador = useRef(null);
-    const memoria = useRef(new Map());
-    const peticion = useRef(0);
-    const enHistorial = useRef(false);
-    const [lab, setLab] = useState(inicial);
-    const [error, setError] = useState("");
-    useEffect(() => {
-        if (inicial)
-            return;
-        let vigente = true;
-        async function show(id) {
-            const turno = ++peticion.current;
-            setLab(null);
-            setError("");
-            dialogo.current?.showModal();
-            if (!memoria.current.has(id))
-                memoria.current.set(id, loadDetails(id).catch((error) => { memoria.current.delete(id); throw error; }));
-            try {
-                const datos = await memoria.current.get(id);
-                if (vigente && turno === peticion.current)
-                    setLab(datos);
-            }
-            catch {
-                if (vigente && turno === peticion.current)
-                    setError("No se pudo cargar la ficha. Ciérrala y vuelve a intentarlo.");
-            }
-        }
-        function open(event) {
-            const boton = event.target.closest("[data-ficha]");
-            const id = Number(boton?.dataset.ficha);
-            if (!boton || !Number.isSafeInteger(id) || id <= 0)
-                return;
-            disparador.current = boton;
-            window.history.pushState({ fichaLabunam: id }, "", `/laboratorios/${id}`);
-            enHistorial.current = true;
-            void show(id);
-        }
-        function syncHistory() {
-            const id = window.history.state?.fichaLabunam;
-            enHistorial.current = Number.isSafeInteger(id) && id > 0;
-            if (enHistorial.current)
-                void show(id);
-            else {
-                peticion.current++;
-                dialogo.current?.close();
-            }
-        }
-        document.addEventListener("click", open);
-        window.addEventListener("popstate", syncHistory);
-        syncHistory();
-        return () => { vigente = false; document.removeEventListener("click", open); window.removeEventListener("popstate", syncHistory); };
-    }, [loadDetails, inicial]);
-    const ficha = <>
-      {!lab ? <div className={styles.estado}><h2 id="ficha-titulo">Ficha del laboratorio</h2><p role={error ? "alert" : "status"}>{error || "Cargando…"}</p></div> : <>
-        <Suspense fallback={<p id="ficha-titulo" role="status">Cargando ficha…</p>}><LaboratoryDetails key={lab.idLab} laboratorio={lab} pagina={Boolean(inicial)}/></Suspense>
-      </>}
-  </>;
-    if (inicial)
-        return <article className={styles.pagina} aria-labelledby="ficha-titulo">{ficha}</article>;
-    return <dialog ref={dialogo} className={styles.ficha} aria-labelledby="ficha-titulo" onClose={() => { peticion.current++; if (enHistorial.current) {
-        enHistorial.current = false;
-        window.history.back();
-    } disparador.current?.focus({ preventScroll: true }); }} onClick={(event) => { if (event.target === event.currentTarget)
-        dialogo.current?.close(); }}>
-    <button type="button" className={styles["ficha-cerrar"]} aria-label="Cerrar ficha" onClick={() => dialogo.current?.close()}><Icon nombre="cerrar" tamano={16}/></button>
-    {ficha}
-  </dialog>;
-}
+
+// La ficha se carga sólo cuando se abre el modal; no forma parte del JavaScript inicial.
+const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails"));
+
+// Definición del componente
+// Sin initialLaboratorio es un modal que se abre al pulsar cualquier elemento con data-details
+// (el contrato está en useLaboratoryDialog); con él se dibuja como página completa.
+const LaboratoryDialog = ({
+  loadDetails = fetchLaboratorioDetails, // Function Optional - Recibe el id (Number) y devuelve una promesa con la ficha; por defecto consulta /api/laboratorios/[id]
+  initialLaboratorio = null, // Object Optional - Ficha ya cargada por la página /laboratorios/[id], con la forma que devuelve getById
+}) => {
+  // Mecanismos
+  const { lab, error, dialog, closeDialog, handleBackdropClick, handleClose } = useLaboratoryDialog(
+    { loadDetails, initialLaboratorio },
+  );
+
+  // Interfaz
+  const details = !lab ? (
+    <div className={styles.status}>
+      <h2 id="details-title">Ficha del laboratorio</h2>
+      <p role={error ? "alert" : "status"}>{error || "Cargando…"}</p>
+    </div>
+  ) : (
+    <Suspense
+      fallback={
+        <p
+          id="details-title"
+          role="status"
+        >
+          Cargando ficha…
+        </p>
+      }
+    >
+      <LaboratoryDetails
+        key={lab.idLab}
+        laboratorio={lab}
+        isPage={Boolean(initialLaboratorio)}
+      />
+    </Suspense>
+  );
+
+  if (initialLaboratorio) {
+    return (
+      <article
+        className={styles.page}
+        aria-labelledby="details-title"
+      >
+        {details}
+      </article>
+    );
+  }
+  return (
+    <dialog
+      ref={dialog}
+      className={styles.details}
+      aria-labelledby="details-title"
+      onClose={handleClose}
+      onClick={handleBackdropClick}
+    >
+      <button
+        type="button"
+        className={styles["details-close"]}
+        aria-label="Cerrar ficha"
+        onClick={closeDialog}
+      >
+        <Icon
+          name="close"
+          size={16}
+        />
+      </button>
+      {details}
+    </dialog>
+  );
+};
+
+export default LaboratoryDialog;

@@ -1,23 +1,109 @@
-import { redes } from "@/lib/presentacion/presentacion";
+// LabUNAM
+// Organismos
+// LaboratoryCard (tarjeta de laboratorio en catálogo y portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
+import { redes } from "@/lib/redes/redes";
 import { getCapabilities, getCapabilityExcerpt } from "@/lib/capacidades/capacidades";
-import { Icon } from "../../atoms/Icon/Icon";
+
+// Componentes
+import Icon from "../../atoms/Icon/Icon";
+
+// Estilos
 import styles from "./LaboratoryCard.module.css";
-export function LaboratoryCard({ laboratorio: lab, foto, prioritaria = false, coincidencias = [], busqueda = "" }) {
-    const capacidades = getCapabilities(lab.servicios, lab.equipos, coincidencias);
-    const area = lab.grupos?.length === 1 ? lab.grupos[0] : "general";
-    const coincidencia = capacidades.coincide ? capacidades.items[0] : undefined;
-    const detalle = coincidencia ? getCapabilityExcerpt(coincidencia.texto, busqueda) : lab.sedeNombre;
-    return (<article className={styles.tarjeta}>
-      <div className={styles.visual} data-tipo-imagen={foto.tipo} data-area={area}>
-        {foto.tipo === "ilustracion" ? <div className={styles.ilustracion} aria-hidden="true"><span className={styles.orbita}/><span className={styles.simbolo}><Icon nombre={area} tamano={76}/></span></div> :
-            <img src={foto.src} srcSet={foto.srcSet} sizes="(min-width: 1128px) 25vw, (min-width: 744px) 33vw, 100vw" alt="" loading={prioritaria ? "eager" : "lazy"} fetchPriority={prioritaria ? "high" : "auto"} decoding="async"/>}
-        <span className={styles.insignia} data-tipo={lab.tipo}>{redes[lab.tipo].singular}</span>
-        <span className={styles.flecha} aria-hidden="true">↗</span>
+
+// Definición del componente
+const LaboratoryCard = ({
+  laboratorio, // Object - Laboratorio del catálogo: idLab, nombre, entidad, sedeNombre, tipo, servicios, equipos y grupos
+  photo, // Object - Imagen elegida por getPhotos: src, srcSet y tipo ("foto", "logo" o "illustration")
+  priority = false, // Boolean Optional - Carga la imagen de inmediato; sólo la primera tarjeta visible
+  matches = [], // Array Optional - Servicios o equipos que coinciden con la búsqueda; el primero sustituye a la sede
+  query = "", // String Optional - Texto buscado, para acercar el fragmento a la palabra
+}) => {
+  // Preparación de datos
+  const capacidades = getCapabilities(laboratorio.servicios, laboratorio.equipos, matches);
+  const area = laboratorio.grupos?.length === 1 ? laboratorio.grupos[0] : "general";
+  const match = capacidades.coincide ? capacidades.items[0] : undefined;
+  const detail = match ? getCapabilityExcerpt(match.texto, query) : laboratorio.sedeNombre;
+
+  // Interfaz
+  // El título es un botón con data-details: useLaboratoryDialog (en LaboratoryDialog) escucha
+  // ese atributo para abrir la ficha sin que la tarjeta conozca el diálogo.
+  return (
+    <article className={styles.card}>
+      <div
+        className={styles.visual}
+        data-image-type={photo.tipo}
+        data-area={area}
+      >
+        {photo.tipo === "illustration" ? (
+          <div
+            className={styles.illustration}
+            aria-hidden="true"
+          >
+            <span className={styles.orbit} />
+            <span className={styles.symbol}>
+              <Icon
+                name={area}
+                size={76}
+              />
+            </span>
+          </div>
+        ) : (
+          <img
+            src={photo.src}
+            srcSet={photo.srcSet}
+            sizes="(min-width: 1128px) 25vw, (min-width: 744px) 33vw, 100vw"
+            alt=""
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            decoding="async"
+          />
+        )}
+        <span
+          className={styles.badge}
+          data-type={laboratorio.tipo}
+        >
+          {redes[laboratorio.tipo].singular}
+        </span>
+        <span
+          className={styles.arrow}
+          aria-hidden="true"
+        >
+          ↗
+        </span>
       </div>
-      <div className={styles.contenido}>
-        <h3 className={styles.titulo}><button className={styles.disparador} type="button" data-ficha={lab.idLab} aria-haspopup="dialog" title={lab.nombre}>{lab.nombre}</button></h3>
-        <p className={styles.entidad} title={lab.entidad}>{lab.entidad}</p>
-        {detalle && <p className={styles.detalle} data-coincidencia={Boolean(coincidencia)} title={coincidencia?.texto ?? detalle}>{detalle}</p>}
+      <div className={styles.content}>
+        <h3 className={styles.title}>
+          <button
+            className={styles.trigger}
+            type="button"
+            data-details={laboratorio.idLab}
+            aria-haspopup="dialog"
+            title={laboratorio.nombre}
+          >
+            {laboratorio.nombre}
+          </button>
+        </h3>
+        <p
+          className={styles.entity}
+          title={laboratorio.entidad}
+        >
+          {laboratorio.entidad}
+        </p>
+        {detail && (
+          <p
+            className={styles.detail}
+            data-match={Boolean(match)}
+            title={match?.texto ?? detail}
+          >
+            {detail}
+          </p>
+        )}
       </div>
-    </article>);
-}
+    </article>
+  );
+};
+
+export default LaboratoryCard;

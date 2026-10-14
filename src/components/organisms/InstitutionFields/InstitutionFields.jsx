@@ -1,24 +1,25 @@
 "use client";
 import { useEffect, useState } from "react";
-import { SuggestionField } from "../../molecules/SuggestionField/SuggestionField";
-import { FormField } from "../../molecules/FormField/FormField";
-import { Select } from "../../atoms/Select/Select";
+import SuggestionField from "../../molecules/SuggestionField/SuggestionField";
+import FormField from "../../molecules/FormField/FormField";
+import Select from "../../atoms/Select/Select";
 import { findOption, isUnam } from "@/lib/solicitudes/solicitudes";
-import { MINIMO_BUSQUEDA, fetchInstitutions } from "@/lib/instituciones/instituciones";
+import { MINIMO_BUSQUEDA } from "@/lib/instituciones/instituciones";
+import { fetchInstitutions } from "@/lib/api/api";
 // Las instituciones son miles: se piden al servidor tras una pausa breve en la escritura.
-export function InstitutionFields({ catalogos, buscarInstituciones = fetchInstitutions }) {
+const InstitutionFields = ({ catalogos, buscarInstituciones = fetchInstitutions }) => {
     const [textoInstitucion, setInstitucion] = useState("");
     const [textoDependencia, setDependencia] = useState("");
     const [sugerencias, setSugerencias] = useState({ texto: "", opciones: [] });
     useEffect(() => {
         const texto = textoInstitucion.trim();
         if (texto.length < MINIMO_BUSQUEDA)
-            return;
+            {return;}
         const control = new AbortController();
         const espera = setTimeout(() => {
             buscarInstituciones(texto, control.signal)
                 .then((opciones) => setSugerencias({ texto, opciones }))
-                .catch(() => { if (!control.signal.aborted) setSugerencias({ texto, opciones: [] }); });
+                .catch(() => { if (!control.signal.aborted) {setSugerencias({ texto, opciones: [] });} });
         }, 250);
         return () => { clearTimeout(espera); control.abort(); };
     }, [textoInstitucion, buscarInstituciones]);
@@ -42,4 +43,6 @@ export function InstitutionFields({ catalogos, buscarInstituciones = fetchInstit
       </Select>
     </FormField>
   </>;
-}
+};
+
+export default InstitutionFields;

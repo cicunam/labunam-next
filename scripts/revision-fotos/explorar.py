@@ -1,3 +1,8 @@
+# LabUNAM
+# Scripts
+# explorar.py (recopila imágenes candidatas públicas para la revisión local)
+# Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
 """Recopila candidatas públicas. No publica imágenes ni modifica decisiones."""
 import concurrent.futures, hashlib, html, ipaddress, json, re, socket, threading, time, unicodedata
 from html.parser import HTMLParser
