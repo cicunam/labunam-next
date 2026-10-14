@@ -1,5 +1,10 @@
+/* LabUNAM
+   Estilos
+   FloatingContact.module.css (botón flotante con el sobre que abre /contacto)
+   Ángelo M */
+
 /* Queda por debajo del menú móvil (z-index 900); los diálogos modales usan la capa superior del navegador. */
-.sobre {
+.button {
   position: fixed;
   top: 50%;
   right: var(--space-base);
@@ -13,9 +18,21 @@
   /* El naranja de marca no alcanza 3:1 con el ícono blanco; el oscuro llega a 3.7:1. */
   background: var(--color-brand-dark);
   box-shadow: var(--shadow);
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
-.sobre:hover { background: var(--color-brand-ink); }
-.sobre:focus-visible { outline: 3px solid var(--color-brand-ink); outline-offset: 3px; }
-.sobre img { width: 28px; height: auto; }
-@media (min-width: 1128px) { .sobre { right: var(--space-xl); } }
+.button:hover {
+  background: var(--color-brand-ink);
+}
+.button:focus-visible {
+  outline: 3px solid var(--color-brand-ink);
+  outline-offset: 3px;
+}
+.button img {
+  width: 28px;
+  height: auto;
+}
+@media (min-width: 1128px) {
+  .button {
+    right: var(--space-xl);
+  }
+}

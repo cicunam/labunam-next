@@ -1,21 +1,49 @@
+// LabUNAM
+// Utilidades compartidas
+// instituciones (búsqueda de instituciones por nombre o siglas)
+// Ángelo M
+
+// Dependencias
 import { normalizeText } from "../texto/texto";
-export const MINIMO_BUSQUEDA = 2;
-const LIMITE = 15;
-// Las coincidencias exactas y por inicio aparecen primero para que el nombre completo siempre esté entre las sugerencias.
-export function searchInstitutions(instituciones, texto, limite = LIMITE) {
-    const buscado = normalizeText(texto ?? "");
-    if (buscado.length < MINIMO_BUSQUEDA)
-        {return [];}
-    const resultados = [];
-    for (const institucion of instituciones) {
-        const nombre = normalizeText(institucion.nombre);
-        const siglas = normalizeText(institucion.siglas ?? "");
-        const rango = nombre === buscado || siglas === buscado ? 0 : nombre.startsWith(buscado) ? 1 : nombre.includes(buscado) ? 2 : -1;
-        if (rango >= 0)
-            {resultados.push({ rango, institucion });}
+
+// Constantes
+export const MIN_SEARCH_LENGTH = 2;
+const LIMIT = 15;
+
+// Definición del módulo
+// Las coincidencias exactas y por inicio aparecen primero para que el nombre completo siempre
+// esté entre las sugerencias.
+export function searchInstitutions(
+  instituciones, // Array - Instituciones { clave, nombre, siglas }
+  text, // String - Texto escrito por la persona
+  limit = LIMIT, // Number Optional - Máximo de resultados
+) {
+  const wanted = normalizeText(text ?? "");
+  if (wanted.length < MIN_SEARCH_LENGTH) {
+    return [];
+  }
+  const matches = [];
+  for (const institucion of instituciones) {
+    const nombre = normalizeText(institucion.nombre);
+    const siglas = normalizeText(institucion.siglas ?? "");
+    let rank = -1;
+    if (nombre === wanted || siglas === wanted) {
+      rank = 0;
+    } else if (nombre.startsWith(wanted)) {
+      rank = 1;
+    } else if (nombre.includes(wanted)) {
+      rank = 2;
     }
-    return resultados
-        .sort((a, b) => a.rango - b.rango || a.institucion.nombre.localeCompare(b.institucion.nombre, "es"))
-        .slice(0, limite)
-        .map(({ institucion }) => institucion);
+    if (rank >= 0) {
+      matches.push({ rank, institucion });
+    }
+  }
+  return matches
+    .sort(
+      (first, second) =>
+        first.rank - second.rank ||
+        first.institucion.nombre.localeCompare(second.institucion.nombre, "es"),
+    )
+    .slice(0, limit)
+    .map(({ institucion }) => institucion);
 }

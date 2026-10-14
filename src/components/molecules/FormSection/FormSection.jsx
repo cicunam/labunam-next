@@ -1,9 +1,23 @@
+// LabUNAM
+// Moléculas
+// FormSection (grupo de campos con título y retícula de dos columnas)
+// Ángelo M
+
+// Estilos
 import styles from "./FormSection.module.css";
-const FormSection = ({ titulo, children }) => {
-    return <fieldset className={styles.seccion}>
-    <legend className={styles.titulo}>{titulo}</legend>
-    <div className={styles.campos}>{children}</div>
-  </fieldset>;
+
+// Definición del componente
+const FormSection = ({
+  title, // String - Título visible del grupo de campos
+  children, // ReactNode - Campos de la sección
+}) => {
+  // Interfaz
+  return (
+    <fieldset className={styles.section}>
+      <legend className={styles.title}>{title}</legend>
+      <div className={styles.fields}>{children}</div>
+    </fieldset>
+  );
 };
 
 export default FormSection;

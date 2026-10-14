@@ -42,7 +42,10 @@ it("avisa cuando los conteos no responden bien", async () => {
   );
 });
 it("pide instituciones con el texto codificado y avisa si la respuesta falla", async () => {
-  fetchMock.mockResolvedValue({ ok: true, json: async () => ({ instituciones: [{ clave: "1" }] }) });
+  fetchMock.mockResolvedValue({
+    ok: true,
+    json: async () => ({ instituciones: [{ clave: "1" }] }),
+  });
   expect(await fetchInstitutions("a & b")).toEqual([{ clave: "1" }]);
   expect(fetchMock.mock.calls[0][0]).toBe("/api/solicitudes/instituciones?q=a%20%26%20b");
   fetchMock.mockResolvedValue({ ok: false });

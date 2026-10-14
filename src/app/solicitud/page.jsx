@@ -38,7 +38,12 @@ const ServiceRequestPage = async ({
   }
 
   // Interfaz
-  return <ServiceRequest catalogos={publicos} laboratorio={lab} />;
+  return (
+    <ServiceRequest
+      catalogos={publicos}
+      laboratorio={lab}
+    />
+  );
 };
 
 export default ServiceRequestPage;

@@ -1,118 +1,246 @@
-import { CERTIFICACIONES, REGLAS, TAMANOS_EMPRESA, TIEMPOS_ESPERA, TIEMPO_CON_DIAS, TIPOS_SOLICITANTE, TIPOS_SOLICITUD, isUnam, requiresState, sectionFor } from "../solicitudes/solicitudes";
-const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u;
+// LabUNAM
+// Utilidades compartidas
+// validacionSolicitud (validación en servidor de los campos del formulario de solicitud)
+// Ángelo M
+
+// Dependencias
+import {
+  CERTIFICACIONES,
+  RULES,
+  TAMANOS_EMPRESA,
+  TIEMPOS_ESPERA,
+  TIEMPO_CON_DIAS,
+  TIPOS_SOLICITANTE,
+  TIPOS_SOLICITUD,
+  isUnam,
+  requiresState,
+  sectionFor,
+} from "../solicitudes/solicitudes";
+
+// Constantes
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u;
 // Igual que la versión anterior: los textos libres no admiten enlaces ni etiquetas HTML.
-const NO_PERMITIDO = /[<>]|https?:\/\/|www\./iu;
-const ENTERO = /^[0-9]+$/;
+const FORBIDDEN = /[<>]|https?:\/\/|www\./iu;
+const DIGITS = /^[0-9]+$/;
 // Columnas de la tabla de solicitudes que llena el formulario; lo no aplicable queda en null.
-const COLUMNAS = [
-    "nombre", "apellido1", "apellido2", "correo", "telefono", "id_pais", "id_estado",
-    "id_tipo_solicitante", "organizacion", "tipo_empresa", "id_institucion", "institucion_otra", "id_dependencia", "id_cargo", "tipo_solicitante_otro",
-    "id_tipo_solicitud", "descripcion", "id_tipo_muestra", "norma_lineamiento", "id_tiempo_espera", "dias_respuesta", "objetivos", "certificado_requerido", "equipo_especifico", "id_tipo_colaboracion",
-    "id_laboratorio_micrositio",
+const COLUMNS = [
+  "nombre",
+  "apellido1",
+  "apellido2",
+  "correo",
+  "telefono",
+  "id_pais",
+  "id_estado",
+  "id_tipo_solicitante",
+  "organizacion",
+  "tipo_empresa",
+  "id_institucion",
+  "institucion_otra",
+  "id_dependencia",
+  "id_cargo",
+  "tipo_solicitante_otro",
+  "id_tipo_solicitud",
+  "descripcion",
+  "id_tipo_muestra",
+  "norma_lineamiento",
+  "id_tiempo_espera",
+  "dias_respuesta",
+  "objetivos",
+  "certificado_requerido",
+  "equipo_especifico",
+  "id_tipo_colaboracion",
+  "id_laboratorio_micrositio",
 ];
 // Nombres que puede enviar el formulario; el laboratorio llega como id_laboratorio.
-export const CAMPOS_FORMULARIO = [...COLUMNAS.filter((columna) => columna !== "id_laboratorio_micrositio"), "id_laboratorio"];
-const ids = (opciones) => new Set(opciones.map((opcion) => opcion.id ?? opcion.clave));
-function createReader(entrada, errores) {
-    // Sólo se aceptan cadenas: FormData puede traer archivos y un objeto arbitrario puede traer cualquier cosa.
-    const crudo = (campo) => (typeof entrada[campo] === "string" ? entrada[campo] : "");
-    const fallar = (campo, mensaje) => { errores[campo] = mensaje; return null; };
-    return {
-        vacio: (campo) => !crudo(campo).trim(),
-        texto(campo, regla, { obligatorio = false, multilinea = false } = {}) {
-            const valor = multilinea ? crudo(campo).replace(/\r\n?/gu, "\n").trim() : crudo(campo).replace(/\s+/gu, " ").trim();
-            const largo = [...valor].length;
-            if (!valor)
-                {return obligatorio ? fallar(campo, "Este campo es obligatorio.") : null;}
-            if ((regla.minLength && largo < regla.minLength) || (regla.maxLength && largo > regla.maxLength))
-                {return fallar(campo, `Debe tener entre ${regla.minLength ?? 1} y ${regla.maxLength} caracteres.`);}
-            if (NO_PERMITIDO.test(valor))
-                {return fallar(campo, "No incluyas enlaces ni etiquetas HTML.");}
-            if (regla.pattern && !new RegExp(`^(?:${regla.pattern})$`, "v").test(valor))
-                {return fallar(campo, regla.title ?? "Contiene caracteres no permitidos.");}
-            return valor;
-        },
-        correo(campo) {
-            const valor = crudo(campo).trim();
-            if (!valor)
-                {return fallar(campo, "Este campo es obligatorio.");}
-            if (valor.length > REGLAS.correo.maxLength || !CORREO.test(valor))
-                {return fallar(campo, "Escribe un correo electrónico válido.");}
-            return valor;
-        },
-        opcion(campo, permitidas, { obligatorio = false } = {}) {
-            const valor = crudo(campo).trim();
-            if (!valor)
-                {return obligatorio ? fallar(campo, "Elige una opción.") : null;}
-            return permitidas.has(valor) ? valor : fallar(campo, "Elige una opción válida.");
-        },
-        entero(campo, { min, max }, { obligatorio = false } = {}) {
-            const valor = crudo(campo).trim();
-            if (!valor)
-                {return obligatorio ? fallar(campo, "Este campo es obligatorio.") : null;}
-            const numero = ENTERO.test(valor) ? Number(valor) : NaN;
-            return numero >= min && numero <= max ? numero : fallar(campo, `Escribe un número entero entre ${min} y ${max}.`);
-        },
-    };
+export const FORM_FIELDS = [
+  ...COLUMNS.filter((column) => column !== "id_laboratorio_micrositio"),
+  "id_laboratorio",
+];
+
+// Definición del módulo
+// Devuelve { valid, errors, data }: errors usa los nombres de los campos y data, sólo si todo
+// es válido, trae exactamente las columnas por insertar.
+export function validateRequest(
+  input, // Object - Campos recibidos, por ejemplo Object.fromEntries(formData)
+  catalogs, // Object - { publicos, instituciones } de loadRequestCatalogs
+) {
+  const errors = {};
+  const read = createReader(input ?? {}, errors);
+  const data = Object.fromEntries(COLUMNS.map((column) => [column, null]));
+  const { publicos, instituciones } = catalogs;
+
+  data.nombre = read.text("nombre", RULES.nombre, { required: true });
+  data.apellido1 = read.text("apellido1", RULES.nombre, { required: true });
+  data.apellido2 = read.text("apellido2", RULES.nombre);
+  data.correo = read.email("correo");
+  data.telefono = read.text("telefono", RULES.telefono, { required: true });
+  data.id_pais = read.option("id_pais", ids(publicos.paises), { required: true });
+  if (data.id_pais && requiresState(data.id_pais)) {
+    data.id_estado = toNumber(read.option("id_estado", ids(publicos.estados[data.id_pais] ?? [])));
+  }
+  validateRequester(read, data, publicos, instituciones);
+  validateDetails(read, data, publicos);
+  data.id_laboratorio_micrositio = read.integer("id_laboratorio", {
+    min: 1,
+    max: Number.MAX_SAFE_INTEGER,
+  });
+
+  const valid = Object.keys(errors).length === 0;
+  return { valid, errors, data: valid ? data : null };
 }
-const toNumber = (valor) => (valor === null ? null : Number(valor));
-export function validateRequest(entrada, { publicos, instituciones }) {
-    const errores = {};
-    const leer = createReader(entrada ?? {}, errores);
-    const datos = Object.fromEntries(COLUMNAS.map((columna) => [columna, null]));
-    datos.nombre = leer.texto("nombre", REGLAS.nombre, { obligatorio: true });
-    datos.apellido1 = leer.texto("apellido1", REGLAS.nombre, { obligatorio: true });
-    datos.apellido2 = leer.texto("apellido2", REGLAS.nombre);
-    datos.correo = leer.correo("correo");
-    datos.telefono = leer.texto("telefono", REGLAS.telefono, { obligatorio: true });
-    datos.id_pais = leer.opcion("id_pais", ids(publicos.paises), { obligatorio: true });
-    if (datos.id_pais && requiresState(datos.id_pais))
-        {datos.id_estado = toNumber(leer.opcion("id_estado", ids(publicos.estados[datos.id_pais] ?? [])));}
-    validateRequester(leer, datos, publicos, instituciones);
-    validateDetails(leer, datos, publicos);
-    datos.id_laboratorio_micrositio = leer.entero("id_laboratorio", { min: 1, max: Number.MAX_SAFE_INTEGER });
-    const valido = Object.keys(errores).length === 0;
-    return { valido, errores, datos: valido ? datos : null };
-}
+
+// Utilidades
+
 // Sólo se leen los campos de la sección que corresponde al tipo elegido; el resto se descarta.
-function validateRequester(leer, datos, publicos, instituciones) {
-    datos.id_tipo_solicitante = toNumber(leer.opcion("id_tipo_solicitante", ids(TIPOS_SOLICITANTE), { obligatorio: true }));
-    const seccion = sectionFor(TIPOS_SOLICITANTE, String(datos.id_tipo_solicitante));
-    if (seccion === "empresa" || seccion === "sociedad")
-        {datos.organizacion = leer.texto("organizacion", REGLAS.organizacion, { obligatorio: true });}
-    if (seccion === "empresa")
-        {datos.tipo_empresa = leer.opcion("tipo_empresa", ids(TAMANOS_EMPRESA));}
-    if (seccion === "otro")
-        {datos.tipo_solicitante_otro = leer.texto("tipo_solicitante_otro", REGLAS.organizacion, { obligatorio: true });}
-    if (seccion !== "institucion")
-        {return;}
-    // Sin clave del catálogo, la institución escrita a mano es obligatoria.
-    if (leer.vacio("id_institucion"))
-        {datos.institucion_otra = leer.texto("institucion_otra", REGLAS.organizacion, { obligatorio: true });}
-    else {
-        const clave = leer.opcion("id_institucion", ids(instituciones));
-        datos.id_institucion = toNumber(clave);
-        if (isUnam(instituciones.find((institucion) => institucion.clave === clave)?.nombre))
-            {datos.id_dependencia = leer.opcion("id_dependencia", ids(publicos.dependencias));}
+function validateRequester(
+  read, // Object - Lector creado por createReader
+  data, // Object - Columnas en construcción
+  publicos, // Object - Catálogos públicos
+  instituciones, // Array - Instituciones vigentes
+) {
+  data.id_tipo_solicitante = toNumber(
+    read.option("id_tipo_solicitante", ids(TIPOS_SOLICITANTE), { required: true }),
+  );
+  const section = sectionFor(TIPOS_SOLICITANTE, String(data.id_tipo_solicitante));
+  if (section === "empresa" || section === "sociedad") {
+    data.organizacion = read.text("organizacion", RULES.organizacion, { required: true });
+  }
+  if (section === "empresa") {
+    data.tipo_empresa = read.option("tipo_empresa", ids(TAMANOS_EMPRESA));
+  }
+  if (section === "otro") {
+    data.tipo_solicitante_otro = read.text("tipo_solicitante_otro", RULES.organizacion, {
+      required: true,
+    });
+  }
+  if (section !== "institucion") {
+    return;
+  }
+  // Sin clave del catálogo, la institución escrita a mano es obligatoria.
+  if (read.isEmpty("id_institucion")) {
+    data.institucion_otra = read.text("institucion_otra", RULES.organizacion, { required: true });
+  } else {
+    const clave = read.option("id_institucion", ids(instituciones));
+    data.id_institucion = toNumber(clave);
+    if (isUnam(instituciones.find((institucion) => institucion.clave === clave)?.nombre)) {
+      data.id_dependencia = read.option("id_dependencia", ids(publicos.dependencias));
     }
-    datos.id_cargo = toNumber(leer.opcion("id_cargo", ids(publicos.cargos)));
+  }
+  data.id_cargo = toNumber(read.option("id_cargo", ids(publicos.cargos)));
 }
-function validateDetails(leer, datos, publicos) {
-    datos.id_tipo_solicitud = toNumber(leer.opcion("id_tipo_solicitud", ids(TIPOS_SOLICITUD), { obligatorio: true }));
-    const seccion = sectionFor(TIPOS_SOLICITUD, String(datos.id_tipo_solicitud));
-    if (!seccion)
-        {return;}
-    datos.descripcion = leer.texto("descripcion", REGLAS.descripcion, { obligatorio: true, multilinea: true });
-    if (seccion === "colaboracion")
-        {datos.id_tipo_colaboracion = toNumber(leer.opcion("id_tipo_colaboracion", ids(publicos.tiposColaboracion)));}
-    if (seccion !== "analisis")
-        {return;}
-    datos.id_tipo_muestra = toNumber(leer.opcion("id_tipo_muestra", ids(publicos.tiposMuestra)));
-    datos.norma_lineamiento = leer.texto("norma_lineamiento", REGLAS.norma);
-    datos.id_tiempo_espera = toNumber(leer.opcion("id_tiempo_espera", ids(TIEMPOS_ESPERA)));
-    if (String(datos.id_tiempo_espera) === TIEMPO_CON_DIAS)
-        {datos.dias_respuesta = leer.entero("dias_respuesta", REGLAS.dias, { obligatorio: true });}
-    datos.objetivos = leer.texto("objetivos", REGLAS.descripcion, { multilinea: true });
-    datos.certificado_requerido = toNumber(leer.opcion("certificado_requerido", ids(CERTIFICACIONES)));
-    datos.equipo_especifico = leer.texto("equipo_especifico", REGLAS.descripcion, { multilinea: true });
+
+function validateDetails(
+  read, // Object - Lector creado por createReader
+  data, // Object - Columnas en construcción
+  publicos, // Object - Catálogos públicos
+) {
+  data.id_tipo_solicitud = toNumber(
+    read.option("id_tipo_solicitud", ids(TIPOS_SOLICITUD), { required: true }),
+  );
+  const section = sectionFor(TIPOS_SOLICITUD, String(data.id_tipo_solicitud));
+  if (!section) {
+    return;
+  }
+  data.descripcion = read.text("descripcion", RULES.descripcion, {
+    required: true,
+    multiline: true,
+  });
+  if (section === "colaboracion") {
+    data.id_tipo_colaboracion = toNumber(
+      read.option("id_tipo_colaboracion", ids(publicos.tiposColaboracion)),
+    );
+  }
+  if (section !== "analisis") {
+    return;
+  }
+  data.id_tipo_muestra = toNumber(read.option("id_tipo_muestra", ids(publicos.tiposMuestra)));
+  data.norma_lineamiento = read.text("norma_lineamiento", RULES.norma);
+  data.id_tiempo_espera = toNumber(read.option("id_tiempo_espera", ids(TIEMPOS_ESPERA)));
+  if (String(data.id_tiempo_espera) === TIEMPO_CON_DIAS) {
+    data.dias_respuesta = read.integer("dias_respuesta", RULES.dias, { required: true });
+  }
+  data.objetivos = read.text("objetivos", RULES.descripcion, { multiline: true });
+  data.certificado_requerido = toNumber(read.option("certificado_requerido", ids(CERTIFICACIONES)));
+  data.equipo_especifico = read.text("equipo_especifico", RULES.descripcion, { multiline: true });
+}
+
+// Crea las funciones que leen y validan cada campo y anotan sus errores.
+function createReader(
+  input, // Object - Campos recibidos
+  errors, // Object - Errores por campo; se modifica al fallar una regla
+) {
+  // Sólo se aceptan cadenas: FormData puede traer archivos y un objeto arbitrario cualquier cosa.
+  const raw = (field) => (typeof input[field] === "string" ? input[field] : "");
+  const fail = (field, message) => {
+    errors[field] = message;
+    return null;
+  };
+  return {
+    isEmpty: (field) => !raw(field).trim(),
+    text(field, rule, { required = false, multiline = false } = {}) {
+      const value = multiline
+        ? raw(field).replace(/\r\n?/gu, "\n").trim()
+        : raw(field).replace(/\s+/gu, " ").trim();
+      const length = [...value].length;
+      if (!value) {
+        return required ? fail(field, "Este campo es obligatorio.") : null;
+      }
+      if (
+        (rule.minLength && length < rule.minLength) ||
+        (rule.maxLength && length > rule.maxLength)
+      ) {
+        return fail(
+          field,
+          `Debe tener entre ${rule.minLength ?? 1} y ${rule.maxLength} caracteres.`,
+        );
+      }
+      if (FORBIDDEN.test(value)) {
+        return fail(field, "No incluyas enlaces ni etiquetas HTML.");
+      }
+      if (rule.pattern && !new RegExp(`^(?:${rule.pattern})$`, "v").test(value)) {
+        return fail(field, rule.title ?? "Contiene caracteres no permitidos.");
+      }
+      return value;
+    },
+    email(field) {
+      const value = raw(field).trim();
+      if (!value) {
+        return fail(field, "Este campo es obligatorio.");
+      }
+      if (value.length > RULES.correo.maxLength || !EMAIL.test(value)) {
+        return fail(field, "Escribe un correo electrónico válido.");
+      }
+      return value;
+    },
+    option(field, allowed, { required = false } = {}) {
+      const value = raw(field).trim();
+      if (!value) {
+        return required ? fail(field, "Elige una opción.") : null;
+      }
+      return allowed.has(value) ? value : fail(field, "Elige una opción válida.");
+    },
+    integer(field, { min, max }, { required = false } = {}) {
+      const value = raw(field).trim();
+      if (!value) {
+        return required ? fail(field, "Este campo es obligatorio.") : null;
+      }
+      const number = DIGITS.test(value) ? Number(value) : NaN;
+      return number >= min && number <= max
+        ? number
+        : fail(field, `Escribe un número entero entre ${min} y ${max}.`);
+    },
+  };
+}
+
+// Claves válidas de una lista de opciones fijas ({ id }) o de catálogo ({ clave }).
+function ids(
+  options, // Array - Opciones
+) {
+  return new Set(options.map((option) => option.id ?? option.clave));
+}
+
+function toNumber(
+  value, // String | null - Clave validada
+) {
+  return value === null ? null : Number(value);
 }

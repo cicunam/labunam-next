@@ -1,7 +1,39 @@
-.formulario { display: grid; gap: var(--space-xxl); min-width: 0; }
-.aviso { display: grid; gap: var(--space-sm); padding: var(--space-base); border-radius: var(--radius-sm); background: var(--surface-tint); color: var(--color-black); }
-.marca { color: var(--color-type-nacionales); }
-.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.acciones { display: grid; justify-items: start; gap: var(--space-base); }
+/* LabUNAM
+   Estilos
+   ServiceRequestForm.module.css (formulario de solicitud de servicio)
+   Ángelo M */
+
+.form {
+  display: grid;
+  gap: var(--space-xxl);
+  min-width: 0;
+}
+.notice {
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-base);
+  border-radius: var(--radius-sm);
+  background: var(--surface-tint);
+  color: var(--color-black);
+}
+.mark {
+  color: var(--color-type-nacionales);
+}
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-base);
+}
 /* La región de estado permanece en el árbol de accesibilidad para que su anuncio sea fiable. */
-.estado { min-height: 1lh; color: var(--color-primary-dark); font: var(--font-medium-semibold); }
+.status {
+  min-height: 1lh;
+  color: var(--color-primary-dark);
+  font: var(--font-medium-semibold);
+}

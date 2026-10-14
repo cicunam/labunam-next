@@ -1,4 +1,9 @@
-.campo {
+/* LabUNAM
+   Estilos
+   TextArea.module.css (campo de texto largo del portal)
+   Ángelo M */
+
+.textarea {
   width: 100%;
   min-width: 0;
   padding: var(--space-md);
@@ -9,7 +14,18 @@
   font: var(--font-medium-regular);
   resize: vertical;
 }
-.campo::placeholder { color: var(--color-neutral-dark); opacity: 1; }
-.campo:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-.campo:disabled { opacity: .5; }
-.campo[aria-invalid="true"], .campo:user-invalid { border-color: var(--color-type-nacionales); }
+.textarea::placeholder {
+  color: var(--color-neutral-dark);
+  opacity: 1;
+}
+.textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.textarea:disabled {
+  opacity: 0.5;
+}
+.textarea[aria-invalid="true"],
+.textarea:user-invalid {
+  border-color: var(--color-type-nacionales);
+}

@@ -1,43 +1,145 @@
 "use client";
+
+// LabUNAM
+// Organismos
+// AnalysisFields (campos de una solicitud de análisis o prueba)
+// Ángelo M
+
+// Dependencias
 import { useState } from "react";
+import {
+  CERTIFICACIONES,
+  RULES,
+  TIEMPOS_ESPERA,
+  TIEMPO_CON_DIAS,
+} from "@/lib/solicitudes/solicitudes";
+
+// Componentes
 import FormField from "../../molecules/FormField/FormField";
 import ChoiceGroup from "../../molecules/ChoiceGroup/ChoiceGroup";
 import Input from "../../atoms/Input/Input";
 import Select from "../../atoms/Select/Select";
 import TextArea from "../../atoms/TextArea/TextArea";
-import { CERTIFICACIONES, REGLAS, TIEMPOS_ESPERA, TIEMPO_CON_DIAS } from "@/lib/solicitudes/solicitudes";
-const AnalysisFields = ({ catalogos }) => {
-    const [tiempo, setTiempo] = useState("");
-    return <>
-    <FormField etiqueta="Descripción del análisis o prueba" controlId="solicitud-descripcion" obligatorio ancho>
-      <TextArea id="solicitud-descripcion" name="descripcion" required {...REGLAS.descripcion}/>
-    </FormField>
-    <FormField etiqueta="Tipo de muestra" controlId="solicitud-muestra">
-      <Select id="solicitud-muestra" name="id_tipo_muestra" defaultValue="">
-        <option value="">Selecciona un tipo</option>
-        {catalogos.tiposMuestra.map(({ clave, nombre }) => <option key={clave} value={clave}>{nombre}</option>)}
-      </Select>
-    </FormField>
-    <FormField etiqueta="Norma o lineamiento por aplicar" controlId="solicitud-norma">
-      <Input id="solicitud-norma" name="norma_lineamiento" {...REGLAS.norma}/>
-    </FormField>
-    <FormField etiqueta="¿En cuánto tiempo necesitas el resultado?" controlId="solicitud-tiempo">
-      <Select id="solicitud-tiempo" name="id_tiempo_espera" value={tiempo} onChange={(event) => setTiempo(event.target.value)}>
-        <option value="">Selecciona el tiempo</option>
-        {TIEMPOS_ESPERA.map(({ id, texto }) => <option key={id} value={id}>{texto}</option>)}
-      </Select>
-    </FormField>
-    {tiempo === TIEMPO_CON_DIAS && <FormField etiqueta="Cantidad de días" controlId="solicitud-dias" obligatorio>
-      <Input id="solicitud-dias" name="dias_respuesta" type="number" inputMode="numeric" required {...REGLAS.dias}/>
-    </FormField>}
-    <FormField etiqueta="Objetivos y productos esperados" controlId="solicitud-objetivos" ancho>
-      <TextArea id="solicitud-objetivos" name="objetivos" {...REGLAS.descripcion}/>
-    </FormField>
-    <ChoiceGroup leyenda="¿El laboratorio debe contar con alguno de estos requisitos?" nombre="certificado_requerido" opciones={CERTIFICACIONES}/>
-    <FormField etiqueta="Equipo específico que requieres" controlId="solicitud-equipo" ancho>
-      <TextArea id="solicitud-equipo" name="equipo_especifico" {...REGLAS.descripcion}/>
-    </FormField>
-  </>;
+
+// Definición del componente
+const AnalysisFields = ({
+  catalogos, // Object - Catálogos públicos: tiposMuestra
+}) => {
+  // Referencias y estado
+  const [tiempo, setTiempo] = useState("");
+
+  // Interfaz
+  return (
+    <>
+      <FormField
+        label="Descripción del análisis o prueba"
+        controlId="request-descripcion"
+        required
+        wide
+      >
+        <TextArea
+          id="request-descripcion"
+          name="descripcion"
+          required
+          {...RULES.descripcion}
+        />
+      </FormField>
+      <FormField
+        label="Tipo de muestra"
+        controlId="request-muestra"
+      >
+        <Select
+          id="request-muestra"
+          name="id_tipo_muestra"
+          defaultValue=""
+        >
+          <option value="">Selecciona un tipo</option>
+          {catalogos.tiposMuestra.map(({ clave, nombre }) => (
+            <option
+              key={clave}
+              value={clave}
+            >
+              {nombre}
+            </option>
+          ))}
+        </Select>
+      </FormField>
+      <FormField
+        label="Norma o lineamiento por aplicar"
+        controlId="request-norma"
+      >
+        <Input
+          id="request-norma"
+          name="norma_lineamiento"
+          {...RULES.norma}
+        />
+      </FormField>
+      <FormField
+        label="¿En cuánto tiempo necesitas el resultado?"
+        controlId="request-tiempo"
+      >
+        <Select
+          id="request-tiempo"
+          name="id_tiempo_espera"
+          value={tiempo}
+          onChange={(event) => setTiempo(event.target.value)}
+        >
+          <option value="">Selecciona el tiempo</option>
+          {TIEMPOS_ESPERA.map(({ id, label }) => (
+            <option
+              key={id}
+              value={id}
+            >
+              {label}
+            </option>
+          ))}
+        </Select>
+      </FormField>
+      {tiempo === TIEMPO_CON_DIAS && (
+        <FormField
+          label="Cantidad de días"
+          controlId="request-dias"
+          required
+        >
+          <Input
+            id="request-dias"
+            name="dias_respuesta"
+            type="number"
+            inputMode="numeric"
+            required
+            {...RULES.dias}
+          />
+        </FormField>
+      )}
+      <FormField
+        label="Objetivos y productos esperados"
+        controlId="request-objetivos"
+        wide
+      >
+        <TextArea
+          id="request-objetivos"
+          name="objetivos"
+          {...RULES.descripcion}
+        />
+      </FormField>
+      <ChoiceGroup
+        legend="¿El laboratorio debe contar con alguno de estos requisitos?"
+        name="certificado_requerido"
+        options={CERTIFICACIONES}
+      />
+      <FormField
+        label="Equipo específico que requieres"
+        controlId="request-equipo"
+        wide
+      >
+        <TextArea
+          id="request-equipo"
+          name="equipo_especifico"
+          {...RULES.descripcion}
+        />
+      </FormField>
+    </>
+  );
 };
 
 export default AnalysisFields;

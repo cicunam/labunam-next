@@ -10,7 +10,9 @@ import { query } from "../config/dbconnection.js";
 // Cada método devuelve filas con clave y nombre; sólo el formulario de solicitud las usa.
 class CatalogoSolicitudDao {
   async getPaises() {
-    return query("SELECT pais_clave AS clave, pais_nombre AS nombre FROM catalogo_paises ORDER BY pais_nombre");
+    return query(
+      "SELECT pais_clave AS clave, pais_nombre AS nombre FROM catalogo_paises ORDER BY pais_nombre",
+    );
   }
 
   // Sólo México y Estados Unidos tienen estados en el formulario heredado.
