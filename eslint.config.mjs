@@ -18,7 +18,6 @@ export default defineConfig([
   {
     // Componentes y páginas se declaran como arrow con nombre y export default al final.
     files: ["src/components/**/*.jsx", "src/app/**/*.jsx"],
-    ignores: ["**/*.stories.jsx"],
     plugins: { labunam: { rules: { "component-export": componentExport } } },
     rules: {
       "react/function-component-definition": [
@@ -51,7 +50,6 @@ export default defineConfig([
     ".next/**",
     "out/**",
     "build/**",
-    "storybook-static/**",
     "next-env.d.ts",
     "test-results/**",
     "playwright-report/**",

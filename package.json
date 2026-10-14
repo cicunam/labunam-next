@@ -9,14 +9,12 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "storybook": "storybook dev -p 6006 --disable-telemetry",
-    "build-storybook": "storybook build --disable-telemetry",
     "test:e2e": "playwright test",
     "fotos": "node --env-file-if-exists=.env scripts/fotos.js",
     "fotos:revisar": "node scripts/revision-fotos/server.mjs",
     "fotos:buscar": "node --env-file-if-exists=.env scripts/revision-fotos/buscar.mjs",
-    "format": "prettier \"src/**/*.{js,jsx,css,json}\" \"tests/**/*.js\" \"scripts/*.js\" \"eslint-rules/*.js\" \"*.{js,mjs,json}\" \".storybook/*.js\" --write",
-    "format:check": "prettier \"src/**/*.{js,jsx,css,json}\" \"tests/**/*.js\" \"scripts/*.js\" \"eslint-rules/*.js\" \"*.{js,mjs,json}\" \".storybook/*.js\" --check"
+    "format": "prettier \"src/**/*.{js,jsx,css,json}\" \"tests/**/*.js\" \"scripts/*.js\" \"eslint-rules/*.js\" \"*.{js,mjs,json}\" --write",
+    "format:check": "prettier \"src/**/*.{js,jsx,css,json}\" \"tests/**/*.js\" \"scripts/*.js\" \"eslint-rules/*.js\" \"*.{js,mjs,json}\" --check"
   },
   "dependencies": {
     "mysql2": "^3.24.5",
@@ -26,13 +24,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
-    "@storybook/addon-a11y": "^10.6.1",
-    "@storybook/nextjs-vite": "^10.6.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "prettier": "3.9.9",
     "sharp": "^0.35.5",
-    "storybook": "^10.6.1",
     "vitest": "^5.0.3"
   },
   "engines": {

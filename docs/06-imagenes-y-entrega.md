@@ -73,7 +73,7 @@ Next no descarga ni reconstruye automáticamente esas imágenes.
 ## Preparar una entrega
 
 - Revisar el diff para que contenga sólo cambios intencionales y ningún secreto.
-- Actualizar la historia si cambia un componente, y la guía si cambia un procedimiento.
+- Actualizar la guía si cambia un procedimiento.
 - Ejecutar las comprobaciones pertinentes de la [guía de pruebas](05-pruebas.md).
 - Explicar qué cambió, dónde revisarlo y qué pruebas se ejecutaron.
 - Hacer un commit corto en español, minúsculas y sin trailers; coordinar la rama

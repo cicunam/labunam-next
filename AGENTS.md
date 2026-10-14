@@ -18,7 +18,7 @@
 - MySQL es de sólo lectura. No crear migraciones ni modificar el esquema o los
   registros reales como parte del trabajo del portal.
 - No enviar al cliente campos de personas ni detalles internos de conexión.
-  Historias y pruebas usan datos ficticios.
+  Las pruebas usan datos ficticios.
 - Conservar `public/fotos/` y `.revision-fotos/`: están fuera de Git, pero contienen
   imágenes aplicadas y decisiones editoriales. No tratarlas como temporales.
 - El revisor de imágenes es una herramienta local, no una ruta pública del portal.
@@ -26,7 +26,7 @@
 ## Organización y nombres
 
 - Atomic Design en `src/components/atoms`, `molecules` y `organisms`.
-- Una carpeta por componente: `Component/Component.jsx`, su CSS Module e historia.
+- Una carpeta por componente: `Component/Component.jsx` y su CSS Module.
   Una carpeta por módulo en `src/lib/` y por entidad en `src/server/`, con pruebas junto al módulo.
   Los datos de prueba viven en `tests/datosPrueba/` y se importan con `@datosPrueba/`.
 - Componentes, hooks, funciones, props, variables, variantes, clases CSS, tokens y atributos
@@ -41,7 +41,7 @@
   Hooks y utilidades mantienen exportaciones nombradas; respetar los exports propios de Next.
 - Un único barril `src/components/index.js` con reexports nombrados explícitos para páginas y layouts
   (`import { Button } from "@/components"`). Sin `"use client"` en el barril.
-  Entre componentes, en historias y en cargas diferidas usar imports directos al archivo
+  Entre componentes y en cargas diferidas usar imports directos al archivo
   (default sin llaves) para evitar ciclos. Hooks y módulos de `src/lib/` mantienen imports directos.
 - Backend en `src/server/`, sólo con carpetas de entidades más `config/` para la conexión:
   DAO con SQL y conversión de filas, servicios con reglas y controladores HTTP.
@@ -95,7 +95,7 @@
 - En cambios de código ejecutar lint y build; ampliar pruebas ante fallos o riesgos
   concretos. Para documentación basta comprobar exactitud, rutas y diff.
 - Verificar Escape, foco, teclado, desbordamiento e imágenes al modificar diálogos
-  o componentes visuales; actualizar historias cuando cambien sus estados.
+  o componentes visuales.
 - Para comprobar producción, construir e iniciar un puerto libre y pasar
   `PLAYWRIGHT_BASE_URL` a las pruebas. No detener procesos ajenos.
 - No silenciar hallazgos de accesibilidad. El contraste blanco/naranja tiene una

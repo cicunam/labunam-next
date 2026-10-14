@@ -23,15 +23,14 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
 | `tests/e2e/` | Pruebas en navegador | Catálogo, fichas, carrusel |
-| `tests/datosPrueba/` | Datos ficticios para pruebas e historias | `catalogo.js`, `componentes.js` |
-| `.storybook/` | Configuración del explorador de componentes | Historias, estilos y viewports |
+| `tests/datosPrueba/` | Datos ficticios para pruebas | `catalogo.js` |
 | `docs/` | Guías y acuerdos | Este documento |
 
 `@/` en un import apunta a `src/`, por ejemplo
 `@/server/laboratorios/laboratoriosService`. La configuración, `public/`, `scripts/` y las pruebas de navegador permanecen en
 la raíz. Las páginas y layouts usan `@/components`, que apunta al único barril
 `src/components/index.js`. Este archivo reúne los componentes mediante reexports
-nombrados. Entre componentes y en historias se usan rutas directas para evitar ciclos.
+nombrados. Entre componentes se usan rutas directas para evitar ciclos.
 El barril no lleva `"use client"`; la frontera permanece en cada componente interactivo.
 
 ## Una carpeta define una URL

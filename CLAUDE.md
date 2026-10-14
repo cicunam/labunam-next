@@ -43,17 +43,15 @@ historial de conversaciones. El README contiene los procedimientos completos.
 nvm use
 npm ci
 npm run dev                 # portal: http://localhost:3000
-npm run storybook           # componentes: http://localhost:6006
 npm run fotos:revisar       # revisión local: http://127.0.0.1:8767
 npm run lint
 npm test
 npm run build
 npm run test:e2e
-npm run build-storybook
 ```
 
 `npm ci` se necesita al preparar el entorno o cambiar el lockfile, no en cada
-turno. La portada y el catálogo necesitan MySQL; Storybook y unitarias no.
+turno. La portada y el catálogo necesitan MySQL; las unitarias no.
 Si Playwright no tiene Chromium, instalarlo con `npx playwright install chromium`.
 Para una instancia de producción en un puerto libre:
 

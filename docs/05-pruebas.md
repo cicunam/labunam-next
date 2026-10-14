@@ -8,14 +8,12 @@
 | --- | --- | --- |
 | Comprobar una regla o transformación | Vitest | `*.test.js` junto al módulo en `src/lib/` o `src/server/` |
 | Verificar filtros, navegación, teclado o modal | Playwright | `tests/e2e/*.spec.js` |
-| Inspeccionar estados y diseño de una pieza | Storybook | Junto al componente, `*.stories.jsx` |
 | Revisar convenciones y errores de código | ESLint | Comandos de proyecto |
 
 Vitest está configurado para **Node** y recoge `src/lib/**/*.test.js` y
 `src/server/**/*.test.js`. No asumas
 que un test JSX junto al componente se ejecutará o que existe un entorno DOM.
-Storybook permite revisar componentes, pero una historia por sí sola no demuestra
-que una interacción se haya probado automáticamente.
+Los estados visuales de un componente se revisan en la página que lo usa, a los tres anchos.
 
 ## Prueba unitaria
 
@@ -61,11 +59,10 @@ Los datos ficticios compartidos viven en `tests/datosPrueba/`, igual que los SQL
 | Archivo | Forma de los datos | Lo usan |
 | --- | --- | --- |
 | `catalogo.js` | Filas como las devuelven los DAO de MySQL | Pruebas unitarias de `src/lib/` y `src/server/` |
-| `componentes.js` | Datos ya procesados, como los reciben los organismos | Historias de Storybook |
 
 Se importan con el alias `@datosPrueba/`, por ejemplo
 `import { createTestData } from "@datosPrueba/catalogo"`. El alias está configurado en
-`jsconfig.json`, `vitest.config.js` y `.storybook/main.js`. Nunca uses nombres, correos
+`jsconfig.json` y `vitest.config.js`. Nunca uses nombres, correos
 ni datos reales de personas o laboratorios.
 
 ## Prueba en navegador
@@ -124,7 +121,7 @@ npx playwright show-trace ruta/al/trace.zip
 Para código, `npm run lint` y `npm run build`, más las pruebas del comportamiento
 modificado. No hay comando de comprobación de tipos; las pruebas protegen las reglas
 y el build comprueba que la aplicación puede compilarse.
-Para cambios visuales, revisar Storybook y la página integrada a los tres anchos.
+Para cambios visuales, revisar la página integrada a los tres anchos.
 Para documentación, comprobar rutas, ejemplos y formato; no hace falta arrancar
 MySQL ni repetir toda la suite.
 

@@ -25,8 +25,7 @@ incluidos los componentes de servidor `async`.
 
 Los hooks y las funciones auxiliares pueden conservar declaraciones `function` y
 exportaciones nombradas. Los exports de Next (`metadata`, `generateMetadata`,
-`dynamic`, `GET`, etc.) conservan sus nombres y su formato requerido. Las historias
-de Storybook también conservan su metadata por defecto y sus historias nombradas.
+`dynamic`, `GET`, etc.) conservan sus nombres y su formato requerido.
 
 ## Encabezado y secciones
 
@@ -88,13 +87,12 @@ const LaboratoryCard = ({
 Sólo se incluyen las etiquetas que el archivo necesita. Los comentarios que explican
 una decisión o un comportamiento que debe conservarse siguen yendo junto al código al
 que se refieren. Todos los archivos del proyecto siguen esta plantilla: páginas, rutas, componentes,
-historias, `src/lib/`, `src/server/`, pruebas, scripts y configuración. Cada archivo nuevo
+`src/lib/`, `src/server/`, pruebas, scripts y configuración. Cada archivo nuevo
 debe nacer con ella. Las capas del encabezado son `Páginas`, `Rutas de API`, `Átomos`,
-`Moléculas`, `Organismos`, `Mecanismos`, `Historias`, `Utilidades compartidas`,
+`Moléculas`, `Organismos`, `Mecanismos`, `Utilidades compartidas`,
 `Servidor: <entidad>`, `Pruebas unitarias`, `Pruebas de navegador`, `Datos de prueba`,
 `Scripts`, `Scripts del navegador` y `Configuración`. Las pruebas usan además las
-secciones `Simulaciones` y `Pruebas`, y las historias `Configuración de la historia` e
-`Historias`.
+secciones `Simulaciones` y `Pruebas`.
 
 Los CSS, HTML, Python y shell llevan sólo el encabezado, con la sintaxis de comentario
 de cada lenguaje. En CSS:
@@ -116,7 +114,6 @@ Este ejemplo no tiene estado ni eventos y no necesita `"use client"`. Crea:
 src/components/atoms/InfoNote/
   InfoNote.jsx
   InfoNote.module.css
-  InfoNote.stories.jsx
 ```
 
 En `InfoNote.jsx`:
@@ -164,7 +161,7 @@ import { InfoNote } from "@/components";
 <InfoNote text="Selecciona una opción para continuar." />;
 ```
 
-Dentro de otro componente o de una historia, importa el archivo directamente:
+Dentro de otro componente, importa el archivo directamente:
 
 ```jsx
 import InfoNote from "@/components/atoms/InfoNote/InfoNote";
@@ -174,7 +171,7 @@ Así evitamos el ciclo componente → barril → componente. Las cargas diferida
 (`lazy`/`import()`) también conservan la ruta directa. No crees barriles por nivel
 o por componente ni añadas `"use client"` al barril central: cada componente
 interactivo declara su propia frontera. El barril sólo reexporta componentes;
-hooks, datos de prueba, historias y utilidades quedan fuera.
+hooks, datos de prueba y utilidades quedan fuera.
 
 ## Si necesita interacción
 
@@ -216,8 +213,7 @@ export default Disclosure;
 `children` es el contenido entre las etiquetas del componente. `useId` evita IDs
 duplicados cuando hay varias instancias. El botón nativo ya funciona con teclado;
 no lo sustituyas por un `div` con clic. Este ejemplo omite estilos para concentrarse
-en la interacción; un componente incorporado al proyecto debe tener su historia
-y seguir el diseño existente.
+en la interacción; un componente incorporado al proyecto debe seguir el diseño existente.
 
 Coloca `"use client"` en la frontera más pequeña que necesite interacción. Una
 página que consulta MySQL puede renderizar ese componente y pasarle datos públicos.
@@ -225,11 +221,10 @@ No conviertas toda la página a cliente sólo para manejar un botón.
 
 ## Antes de darlo por terminado
 
-1. Añadir historias de sus estados relevantes (ver [Storybook](06-storybook.md)).
-2. Probar texto largo, móvil, teclado, foco visible y estado vacío si aplica.
-3. Mantener el backend en `src/server/` y las utilidades compartidas en `src/lib/`; no consultar MySQL desde un componente cliente.
-4. Usar 150 líneas como señal para revisar responsabilidades, no como límite rígido. Nunca comprimir JSX para reducir líneas.
-5. Ejecutar lint y build; añadir pruebas cuando exista comportamiento que proteger.
+1. Probar texto largo, móvil, teclado, foco visible y estado vacío si aplica.
+2. Mantener el backend en `src/server/` y las utilidades compartidas en `src/lib/`; no consultar MySQL desde un componente cliente.
+3. Usar 150 líneas como señal para revisar responsabilidades, no como límite rígido. Nunca comprimir JSX para reducir líneas.
+4. Ejecutar lint y build; añadir pruebas cuando exista comportamiento que proteger.
 
 No hace falta una prueba que sólo compruebe que existe una etiqueta `p`. Sí hace
 falta proteger reglas, interacciones y regresiones. Para diálogos, verificar
@@ -264,8 +259,8 @@ La portada (`src/app/page.jsx`) muestra cómo componer secciones de servidor y
 pasar sólo los datos necesarios a los componentes interactivos.
 
 ESLint verifica esta convención con `npm run lint`: componentes arrow y
-`export default Nombre;` como última instrucción. Las historias de Storybook,
-los hooks, las utilidades y los endpoints quedan fuera de esta regla de componentes.
+`export default Nombre;` como última instrucción. Los hooks, las utilidades
+y los endpoints quedan fuera de esta regla de componentes.
 Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
 antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.
 

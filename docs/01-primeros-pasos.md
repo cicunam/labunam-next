@@ -48,7 +48,7 @@ se reflejan durante el desarrollo. `Ctrl+C` detiene ese proceso. Reinicia despu�
 de cambiar configuración de entorno si el proceso sigue usando valores anteriores.
 
 La portada y el catálogo requieren acceso a MySQL. Sin ese acceso puedes avanzar
-con Storybook y las pruebas unitarias. Las imágenes aplicadas no están en Git;
+con las pruebas unitarias. Las imágenes aplicadas no están en Git;
 su ausencia en un clon nuevo produce ilustraciones de respaldo.
 
 ## Desarrollo frente a producción

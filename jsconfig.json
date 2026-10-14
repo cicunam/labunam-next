@@ -6,5 +6,5 @@
       "@datosPrueba/*": ["./tests/datosPrueba/*"]
     }
   },
-  "exclude": ["node_modules", ".next", "storybook-static"]
+  "exclude": ["node_modules", ".next"]
 }

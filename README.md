@@ -20,8 +20,7 @@ conocen React pero todavía no han trabajado con Next.js:
 - [Crear componentes](docs/03-componentes.md).
 - [Consultar la base de datos](docs/04-base-de-datos.md).
 - [Crear y ejecutar pruebas](docs/05-pruebas.md).
-- [Trabajar con Storybook](docs/06-storybook.md).
-- [Imágenes y entrega de cambios](docs/07-imagenes-y-entrega.md).
+- [Imágenes y entrega de cambios](docs/06-imagenes-y-entrega.md).
 
 La [guía de arquitectura](docs/02-arquitectura.md) explica cómo está dividido el
 portal. Las decisiones técnicas y las instrucciones compartidas para asistentes
@@ -41,7 +40,7 @@ npm run dev
 Abrir [el portal de desarrollo](http://localhost:3000). Configurar `.env` siguiendo
 `.env.example` y obtener el acceso a través del responsable del proyecto. Nunca
 incorporar credenciales al repositorio. La portada y el catálogo requieren MySQL;
-Storybook y las pruebas unitarias no.
+las pruebas unitarias no.
 
 | Variable | Uso |
 | --- | --- |
@@ -74,15 +73,14 @@ el sitio en la UNAM.
 | `public/` | Recursos estáticos, fuente, iconos e ilustraciones |
 | `scripts/` | Generación de imágenes y revisión editorial |
 | `tests/e2e/` | Pruebas de navegador |
-| `tests/datosPrueba/` | Datos ficticios para pruebas unitarias e historias (`@datosPrueba/`) |
-| `.storybook/` | Configuración de historias y revisión visual |
+| `tests/datosPrueba/` | Datos ficticios para pruebas unitarias (`@datosPrueba/`) |
 | `docs/` | Guías y acuerdos técnicos |
 
-Cada componente tiene su carpeta, CSS Module e historia. Los módulos de `src/lib/` y `src/server/`
+Cada componente tiene su carpeta y su CSS Module. Los módulos de `src/lib/` y `src/server/`
 agrupan su lógica y pruebas. Los CSS Modules de páginas viven junto a
 sus rutas; `src/app/globals.css` contiene tokens, reset, tipografía y retícula.
 Las páginas y layouts importan componentes desde un único barril `src/components/index.js`:
-`import { Header, Footer } from "@/components"`. Entre componentes y en historias
+`import { Header, Footer } from "@/components"`. Entre componentes
 se mantienen imports directos para evitar ciclos. Los módulos de `src/lib/` también se importan directamente.
 
 Componentes, funciones, props, variables, variantes, clases CSS y tokens se nombran en inglés; entidades y campos del catálogo,
@@ -139,7 +137,7 @@ la pestaña oculta, y desactiva el avance automático con movimiento reducido.
 Las rutas heredadas `/nacionales`, `/universitarios`, `/unidades`,
 `/internacionales` y `/buscar` tienen redirecciones 301 que conservan la búsqueda.
 
-## Pruebas y Storybook
+## Pruebas
 
 ```sh
 npm run lint
@@ -147,11 +145,9 @@ npm test
 npm run build
 npx playwright install chromium
 npm run test:e2e
-npm run storybook
-npm run build-storybook
 ```
 
-Storybook se abre en [el puerto 6006](http://localhost:6006). Vitest comprueba reglas,
+Vitest comprueba reglas,
 normalización, caché y acceso a datos mediante mocks. Playwright comprueba el portal
 a 375, 1024 y 1400 px, incluyendo filtros, historial, teclado y arrastre.
 
@@ -161,10 +157,8 @@ Para probar una instancia ya iniciada, pasar su URL:
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3007 npm run test:e2e
 ```
 
-El addon de accesibilidad permanece activo. Existe una excepción documentada de
-contraste blanco/naranja para el botón de marca; no extenderla a otros componentes.
-Storybook puede emitir avisos de empaquetado sobre `use client` y tamaño de chunks;
-no equivalen por sí solos a un fallo, pero los errores nuevos deben investigarse.
+Existe una excepción documentada de contraste blanco/naranja para el botón de marca;
+no extenderla a otros componentes.
 
 ## Imágenes
 
@@ -193,7 +187,7 @@ muestran completos, sin recorte.
 `public/fotos/` y `.revision-fotos/` están ignoradas por Git. Conservar y transferir
 estos datos mediante el procedimiento del equipo: contienen imágenes aplicadas y
 decisiones editoriales que no se recuperan al clonar. Los SVG sí están versionados.
-Ver [el procedimiento completo](docs/07-imagenes-y-entrega.md).
+Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
 
 ## Pendientes y límites conocidos
 
@@ -247,7 +241,7 @@ y pausas del carrusel. La prioridad es poder seguir el flujo del código sin
 comprimirlo para cumplir un número de líneas.
 
 ESLint verifica esta convención con `npm run lint`: componentes arrow y
-`export default Nombre;` como última instrucción. Las historias de Storybook,
-los hooks, las utilidades y los endpoints quedan fuera de esta regla de componentes.
+`export default Nombre;` como última instrucción. Los hooks, las utilidades
+y los endpoints quedan fuera de esta regla de componentes.
 Los exports propios de Next, como `metadata` y `generateMetadata`, pueden aparecer
 antes del export por defecto. Prettier se encarga del formato; ESLint valida la estructura.
