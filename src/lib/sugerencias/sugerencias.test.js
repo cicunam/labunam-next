@@ -1,13 +1,11 @@
 // LabUNAM
 // Pruebas unitarias
-// interfaz.test (sugerencias, búsquedas recientes, URL del catálogo e imágenes)
+// sugerencias.test (sugerencias del buscador y búsquedas recientes)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getSearchOptions, saveRecentSearch, readRecentSearches } from "../sugerencias/sugerencias";
-import { getPhotos } from "../fotos/fotos";
-import { formatCounts, getCatalogUrl } from "../presentacion/presentacion";
+import { getSearchOptions, saveRecentSearch, readRecentSearches } from "./sugerencias";
 
 // Simulaciones
 // Cada prueba que reemplaza localStorage lo restaura al terminar.
@@ -48,25 +46,4 @@ describe("búsquedas recientes", () => {
     expect(readRecentSearches()).toEqual([]);
     expect(() => saveRecentSearch("Microscopía")).not.toThrow();
   });
-});
-it("conserva parámetros y elimina sólo el chip solicitado", () => {
-  expect(getCatalogUrl({ q: "rayos x", tipo: "nacionales" }, { tipo: "" })).toBe(
-    "/laboratorios?q=rayos+x",
-  );
-  expect(formatCounts(0, 1)).toBe("1 equipo");
-  expect(formatCounts(0, 0)).toBe("");
-});
-it("usa tres fotos como máximo y ofrece respaldo determinista", () => {
-  expect(getPhotos(7, { 7: [{ src: "/fotos/7.webp", srcset: "/fotos/7.webp 640w" }] })[0]).toEqual({
-    src: "/fotos/7.webp",
-    srcSet: "/fotos/7.webp 640w",
-    alt: "",
-  });
-  expect(getPhotos(1, {})).toHaveLength(1);
-  expect(getPhotos(1, {})).toEqual(getPhotos(1, {}));
-});
-it("ignora el respaldo fotográfico genérico anterior", () => {
-  expect(getPhotos(4, { respaldo: [{ src: "/foto-generica.webp" }] })[0].src).toBe(
-    "/assets/respaldos/general.svg",
-  );
 });

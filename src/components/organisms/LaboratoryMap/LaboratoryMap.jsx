@@ -8,7 +8,7 @@
 // Dependencias
 import { useId, useState } from "react";
 import Link from "next/link";
-import estados from "@/lib/mapa/estados.json";
+import estados from "./estados.json";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Estilos
