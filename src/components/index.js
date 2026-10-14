@@ -12,13 +12,11 @@ export { default as Badge } from "./atoms/Badge/Badge";
 export { default as Button } from "./atoms/Button/Button";
 export { default as Icon } from "./atoms/Icon/Icon";
 export { default as Input } from "./atoms/Input/Input";
-export { default as Pill } from "./atoms/Pill/Pill";
 
 // Moléculas
 export { default as ActiveChip } from "./molecules/ActiveChip/ActiveChip";
 export { default as FilterOption } from "./molecules/FilterOption/FilterOption";
 export { default as Gallery } from "./molecules/Gallery/Gallery";
-export { default as SearchField } from "./molecules/SearchField/SearchField";
 export { default as Tab } from "./molecules/Tab/Tab";
 
 // Organismos

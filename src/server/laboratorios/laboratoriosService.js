@@ -13,7 +13,7 @@ import {
 } from "../../lib/buscador/buscador";
 import { getPhotos } from "../../lib/fotos/fotos";
 import { grupos } from "../../lib/grupos/grupos";
-import { redes } from "../../lib/presentacion/presentacion";
+import { redes } from "../../lib/redes/redes";
 
 // Servicios
 import { loadCatalog } from "./laboratoriosCatalogo";

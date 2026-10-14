@@ -8,7 +8,8 @@
 // Dependencias
 import Link from "next/link";
 import { useState } from "react";
-import { formatCounts, redes } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
+import { formatCounts } from "@/lib/presentacion/presentacion";
 
 // Componentes
 import Gallery from "../../molecules/Gallery/Gallery";

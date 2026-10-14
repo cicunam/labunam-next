@@ -18,14 +18,3 @@ Si sólo vas a cambiar estilos, empieza con 1, 3 y 6. Si vas a cambiar búsqueda
 filtros, lee también 2, 4 y 5. Los fragmentos de ejemplo son didácticos: no crean
 archivos ni rutas automáticamente. Los comandos se ejecutan desde la raíz de
 `labunam-next`, salvo que se indique otra cosa.
-
-## Documentos de referencia
-
-- [README principal](../README.md): estado, decisiones, pendientes y verificaciones históricas.
-- [Decisiones técnicas](decisiones-tecnicas.md): arquitectura y criterios de desarrollo.
-- [Acuerdos de servidor](preguntas-servidor.md): lo confirmado y lo pendiente con infraestructura.
-- [Reglas compartidas](../AGENTS.md): convenciones que también deben seguir los asistentes.
-
-El formulario de contacto aún no envía solicitudes; las noticias son ejemplos.
-El despliegue y la aceptación institucional siguen pendientes. No confundir una
-pantalla terminada visualmente con una integración ya operativa.

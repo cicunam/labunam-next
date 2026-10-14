@@ -1,6 +1,6 @@
 // LabUNAM
 // Configuración
-// vitest.config (pruebas unitarias de src/lib y src/server)
+// vitest.config (pruebas unitarias de src/lib, src/server y scripts)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
@@ -13,5 +13,8 @@ export default defineConfig({
   resolve: {
     alias: { "@datosPrueba": fileURLToPath(new URL("./tests/datosPrueba", import.meta.url)) },
   },
-  test: { environment: "node", include: ["src/lib/**/*.test.js", "src/server/**/*.test.js"] },
+  test: {
+    environment: "node",
+    include: ["src/lib/**/*.test.js", "src/server/**/*.test.js", "scripts/*.test.js"],
+  },
 });

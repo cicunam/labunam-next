@@ -50,7 +50,7 @@ conserva esa directiva como primera línea y el encabezado va después.
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
-import { redes } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
 
 // Componentes
 import Icon from "../../atoms/Icon/Icon";

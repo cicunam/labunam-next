@@ -16,7 +16,7 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | --- | --- | --- |
 | `src/app/` | Páginas, layout y endpoints | `src/app/laboratorios/page.jsx` |
 | `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
-| `src/components/molecules/` | Combinaciones genéricas | `SearchField`, `Gallery` |
+| `src/components/molecules/` | Combinaciones genéricas | `Tab`, `Gallery` |
 | `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
 | `src/server/` | Backend, una carpeta por entidad | `laboratorios/`, `disciplinas/`, `fotos/`; `config/` con la conexión |
 | `src/lib/` | Funciones compartidas sin React | `texto`, `buscador`, `fotos` |

@@ -7,7 +7,8 @@
 
 // Dependencias
 import Link from "next/link";
-import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 import { normalizeText } from "@/lib/texto/texto";
 
 // Mecanismos
@@ -181,16 +182,12 @@ const SearchBar = ({
                 defaultValue={criteria.tipo ?? ""}
               >
                 <option value="">Todas las redes</option>
-                {Object.entries(redes).map(([tipo, network]) => (
+                {Object.entries(redes).map(([tipo, red]) => (
                   <option
                     key={tipo}
                     value={tipo}
                   >
-                    {tipo === "nacionales"
-                      ? "Nacionales"
-                      : tipo === "universitarios"
-                        ? "Universitarios"
-                        : network.nombre}
+                    {red.corto}
                   </option>
                 ))}
               </select>

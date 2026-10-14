@@ -55,8 +55,8 @@ Devuelve `null` si el ID es inválido o no existe. Si falla la carga sin respald
 propaga un error público. El objeto de salida contiene sólo los campos de la ficha,
 no el índice de búsqueda ni filas SQL completas.
 
-El modal, que corre en el navegador, usa `fetchLaboratorioDetails()` de
-`src/lib/ficha/ficha.js`. Esta función consulta `/api/laboratorios/[id]`.
+El modal, que corre en el navegador, usa `fetchLaboratorioDetails()`, definida en
+`LaboratoryDialog.jsx`. Esta función consulta `/api/laboratorios/[id]`.
 La ruta delega a `getDetails()` del controlador, que usa el mismo `getById()`:
 400 para ID inválido, 404 si no existe y 503 cuando falla la carga. Nunca responde
 con mensajes internos de MySQL. Contacto usa `getContactDetails()` para recibir
@@ -105,7 +105,7 @@ seleccionar un chip no provoca una consulta SQL. Las fotos se leen en
 
 1. Confirmar que el campo existe y puede mostrarse públicamente.
 2. Añadir el SELECT al DAO correspondiente, con columnas explícitas, sin `SELECT *`.
-3. Si necesita transformación, resolver nulos y valores heredados en el mapper.
+3. Si necesita transformación, resolver nulos y valores heredados en `toLaboratorio`, dentro del DAO.
 4. Exponerlo desde el servicio sólo si la pantalla lo necesita.
 5. Actualizar `tests/datosPrueba/catalogo.js` y las pruebas; después consumir el servicio desde la página o controlador.
 

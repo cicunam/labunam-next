@@ -6,7 +6,8 @@
 // Dependencias
 import Link from "next/link";
 import { getPhotos } from "@/lib/fotos/fotos";
-import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Servicios
 import { searchLaboratorios } from "@/server/laboratorios/laboratoriosService";

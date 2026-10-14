@@ -1,24 +1,7 @@
 // LabUNAM
 // Utilidades compartidas
-// presentacion (nombres de las redes, URL del catálogo y conteos visibles)
+// presentacion (URL del catálogo y conteos visibles)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
-
-// Constantes
-// Nombres visibles y tono de color de cada tipo de red.
-export const redes = {
-  nacionales: { nombre: "Laboratorios nacionales", singular: "Laboratorio nacional", tone: "red" },
-  universitarios: {
-    nombre: "Laboratorios universitarios",
-    singular: "Laboratorio universitario",
-    tone: "blue",
-  },
-  unidades: { nombre: "Unidades de apoyo", singular: "Unidad de apoyo", tone: "green" },
-  internacionales: {
-    nombre: "Laboratorios internacionales",
-    singular: "Laboratorio internacional",
-    tone: "neutral",
-  },
-};
 
 // Definición del módulo
 // URL del catálogo con los criterios no vacíos; los cambios reemplazan o quitan criterios.

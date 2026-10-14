@@ -4,7 +4,7 @@
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
-import { redes } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
 import { getCapabilities, getCapabilityExcerpt } from "@/lib/capacidades/capacidades";
 
 // Componentes

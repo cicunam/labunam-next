@@ -5,6 +5,8 @@
 
 // Dependencias
 import Link from "next/link";
+import { redes, redesPrincipales } from "@/lib/redes/redes";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Estilos
 import styles from "./Footer.module.css";
@@ -85,30 +87,16 @@ const Footer = () => {
             Vínculos rápidos
           </h2>
           <ul className={styles["footer-list"]}>
-            <li>
-              <Link
-                href="/laboratorios?tipo=nacionales"
-                className={styles["footer-link"]}
-              >
-                Laboratorios nacionales
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/laboratorios?tipo=universitarios"
-                className={styles["footer-link"]}
-              >
-                Laboratorios universitarios
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/laboratorios?tipo=unidades"
-                className={styles["footer-link"]}
-              >
-                Unidades de apoyo
-              </Link>
-            </li>
+            {redesPrincipales.map((tipo) => (
+              <li key={tipo}>
+                <Link
+                  href={getCatalogUrl({ tipo })}
+                  className={styles["footer-link"]}
+                >
+                  {redes[tipo].nombre}
+                </Link>
+              </li>
+            ))}
             <li>
               <a
                 href="https://avisos-privacidad.cic.unam.mx/"

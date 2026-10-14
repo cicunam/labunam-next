@@ -20,20 +20,20 @@ historial de conversaciones. El README contiene los procedimientos completos.
 
 | Trabajo | Archivos de entrada |
 | --- | --- |
-| Portada y noticias | `src/app/page.jsx`, organismos `LaboratoryNetworks` (textos de redes), `RecentLaboratories`, `DisciplineSection` y `NewsSection` (noticias de ejemplo) |
+| Portada y noticias | `src/app/page.jsx`, organismos `LaboratoryNetworks` (textos de redes; sus nombres en `src/lib/redes/redes.js`), `RecentLaboratories`, `DisciplineSection` y `NewsSection` (noticias de ejemplo) |
 | Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/laboratorios/laboratoriosService.js` |
 | Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/laboratorios/laboratoriosCatalogo.js` |
 | Filas SQL y modelo público | `src/server/laboratorios/LaboratorioDao.js`, `tests/datosPrueba/catalogo.js` |
 | Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
 | Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |
 | API de filtros | `src/app/api/filtros/route.js`, `src/server/laboratorios/laboratoriosController.js` |
-| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/ficha/ficha.js` |
+| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js` |
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
 | Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
 | Carrusel | `src/components/organisms/Carousel/`, `public/js/carousel.js` |
-| Selección y presentación de imágenes | `src/server/fotos/fotosService.js`, `src/lib/selectPhotos/selectPhotos.js`, `src/lib/fotos/fotos.js` |
-| Procesamiento de originales | `scripts/fotos.js` |
+| Selección y presentación de imágenes | `src/server/fotos/fotosService.js`, `src/lib/fotos/fotos.js` |
+| Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
 | Pruebas de interacción | `tests/e2e/`, `playwright.config.js` |
 

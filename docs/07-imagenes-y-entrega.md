@@ -80,5 +80,5 @@ Next no descarga ni reconstruye automáticamente esas imágenes.
   y el push con el equipo. No confundir commit local con publicación del portal.
 
 El despliegue todavía no está automatizado en este repositorio. La configuración
-de Node, PM2, Apache, rutas PHP y persistencia de imágenes se acuerda con Raúl;
-consulta [los acuerdos de servidor](preguntas-servidor.md) antes de intervenir.
+de Node, PM2, Apache, rutas PHP y persistencia de imágenes se acuerda con Raúl
+antes de intervenir.

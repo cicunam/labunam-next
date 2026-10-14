@@ -4,8 +4,8 @@
 
 - Este es el portal público Next.js de LabUNAM para la CIC/UNAM.
 - Confirmar que se trabaja en `labunam-next` antes de editar o ejecutar Git.
-- Leer `README.md` para operación y pendientes; `docs/decisiones-tecnicas.md`
-  para la arquitectura y `docs/preguntas-servidor.md` para acuerdos de infraestructura.
+- Leer `README.md` para operación y pendientes, y `docs/02-arquitectura.md` para
+  la arquitectura. Las decisiones técnicas están más abajo en este archivo.
 - Las instrucciones explícitas de Raúl tienen prioridad sobre las convenciones
   del proyecto. No convertir una preferencia técnica en una aprobación adicional.
 

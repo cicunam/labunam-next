@@ -5,14 +5,15 @@
 
 // Dependencias
 import Link from "next/link";
-import { redes, getCatalogUrl } from "@/lib/presentacion/presentacion";
+import { redes } from "@/lib/redes/redes";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Estilos
 import styles from "./LaboratoryNetworks.module.css";
 
 // Constantes
 // Cada tarjeta conserva juntos sus datos; añadir una red no depende de alinear índices.
-// El nombre de cada red sale de redes en presentacion.js.
+// El nombre de cada red sale de redes.js.
 const networks = [
   {
     tipo: "nacionales",

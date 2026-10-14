@@ -7,7 +7,7 @@
 import { readdir, stat, mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import sharp from "sharp";
-import { selectPhotos } from "../src/lib/selectPhotos/selectPhotos.js";
+import { selectPhotos } from "./selectPhotos.js";
 
 // Constantes
 // --origen= tiene prioridad sobre LABUNAM_FOTOS_ORIGEN; --solo= limita la corrida a IDs separados por comas.

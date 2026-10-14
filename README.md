@@ -23,9 +23,9 @@ conocen React pero todavía no han trabajado con Next.js:
 - [Trabajar con Storybook](docs/06-storybook.md).
 - [Imágenes y entrega de cambios](docs/07-imagenes-y-entrega.md).
 
-Las [decisiones técnicas](docs/decisiones-tecnicas.md) describen los criterios de
-arquitectura. `AGENTS.md` contiene instrucciones compartidas para asistentes;
-`CLAUDE.md` las importa y añade un mapa de archivos.
+La [guía de arquitectura](docs/02-arquitectura.md) explica cómo está dividido el
+portal. Las decisiones técnicas y las instrucciones compartidas para asistentes
+están en `AGENTS.md`; `CLAUDE.md` las importa y añade un mapa de archivos.
 
 ## Requisitos y arranque
 
@@ -92,7 +92,7 @@ OFL, sin depender de una descarga de Google.
 
 El backend sigue el recorrido **Controller → Service → DAO → MySQL**. Las páginas
 renderizadas en servidor llaman al servicio directamente. Los DAO contienen SQL;
-el mapper convierte filas y los servicios preparan datos públicos. La caché del
+`toLaboratorio` en el DAO convierte filas y los servicios preparan datos públicos. La caché del
 catálogo está separada. La conexión vive en `src/server/config/dbconnection.js`.
 La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido completo.
 
@@ -202,8 +202,7 @@ Ver [el procedimiento completo](docs/07-imagenes-y-entrega.md).
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
 - Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún
-  automatización de despliegue en este repositorio; consultar los
-  [acuerdos de servidor](docs/preguntas-servidor.md).
+  automatización de despliegue en este repositorio.
 - Resolver el presupuesto de 120 KB gzip de JS+CSS y repetir las mediciones en el
   servidor de destino. La medición del 4 de octubre de 2026 fue de 154,585 bytes;
   Lighthouse móvil dio 96, con LCP 2.64 s, TBT 23 ms y CLS 0. Es una medición de

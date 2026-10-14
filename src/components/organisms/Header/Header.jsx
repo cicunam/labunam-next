@@ -8,6 +8,8 @@
 // Dependencias
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { redes, redesPrincipales } from "@/lib/redes/redes";
+import { getCatalogUrl } from "@/lib/presentacion/presentacion";
 
 // Mecanismos
 import { useHeaderMenu } from "./useHeaderMenu";
@@ -21,12 +23,6 @@ const links = [
   { href: "/", label: "Inicio" },
   { href: "/laboratorios", label: "Laboratorios" },
   { href: "/contacto", label: "Contacto" },
-];
-
-const redes = [
-  { tipo: "nacionales", label: "Laboratorios nacionales" },
-  { tipo: "universitarios", label: "Laboratorios universitarios" },
-  { tipo: "unidades", label: "Unidades de apoyo" },
 ];
 
 // Definición del componente
@@ -149,15 +145,15 @@ const Header = () => {
           </ul>
           <hr className={styles["menu-border"]} />
           <ul className={styles["menu-list"]}>
-            {redes.map(({ tipo, label: text }) => (
+            {redesPrincipales.map((tipo) => (
               <li key={tipo}>
                 <Link
-                  href={`/laboratorios?tipo=${tipo}`}
+                  href={getCatalogUrl({ tipo })}
                   className={`${styles["menu-link"]} ${styles["menu-link-network"]}`}
                   data-type={tipo}
                   onClick={closeMenu}
                 >
-                  {text}
+                  {redes[tipo].nombre}
                 </Link>
               </li>
             ))}

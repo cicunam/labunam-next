@@ -1,5 +1,5 @@
 // LabUNAM
-// Utilidades compartidas
+// Scripts
 // selectPhotos (elección de fotografías originales por nombre de archivo)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
