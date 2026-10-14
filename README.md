@@ -198,6 +198,8 @@ Ver [el procedimiento completo](docs/07-imagenes-y-entrega.md).
 
 - Conectar el backend de solicitudes, acordar destinatarios y validar el envío.
   El formulario permanece deshabilitado y no transmite mensajes.
+- Obtener la revisión institucional del texto breve de privacidad del formulario de
+  solicitud (`PrivacyNotice`), que remite al aviso integral de la CIC.
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
 - Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún

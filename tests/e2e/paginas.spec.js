@@ -139,6 +139,9 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
     // Los nombres del formulario deben coincidir con los que acepta la validación del servidor.
     const nombres = await page.locator("form").evaluate((form) => [...new FormData(form).keys()]);
     expect(nombres.filter((nombre) => !CAMPOS_FORMULARIO.includes(nombre))).toEqual([]);
+    const aviso = page.getByRole("link", { name: /aviso de privacidad integral/ });
+    await expect(aviso).toHaveAttribute("href", "https://avisos-privacidad.cic.unam.mx/");
+    await expect(aviso).toHaveAttribute("target", "_blank");
     expect(envios).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

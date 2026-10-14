@@ -4,6 +4,7 @@ import { Button } from "../../atoms/Button/Button";
 import { RequesterFields } from "../RequesterFields/RequesterFields";
 import { OrganizationFields } from "../OrganizationFields/OrganizationFields";
 import { RequestDetailsFields } from "../RequestDetailsFields/RequestDetailsFields";
+import { PrivacyNotice } from "../PrivacyNotice/PrivacyNotice";
 import styles from "./ServiceRequestForm.module.css";
 // Mientras no exista el backend, el envío sólo confirma que el navegador aceptó los campos.
 export function ServiceRequestForm({ laboratorio = null, catalogos }) {
@@ -22,6 +23,7 @@ export function ServiceRequestForm({ laboratorio = null, catalogos }) {
     <OrganizationFields catalogos={catalogos}/>
     <RequestDetailsFields catalogos={catalogos}/>
     <div className={styles.acciones}>
+      <PrivacyNotice />
       <Button type="submit" tamano="grande">Enviar solicitud</Button>
       <p role="status" className={styles.estado}>{revisado ? "Los datos están completos. El envío se habilitará próximamente; no se envió información." : ""}</p>
     </div>
