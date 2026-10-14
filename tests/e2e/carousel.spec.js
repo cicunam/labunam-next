@@ -1,4 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// carousel.spec (avance, pausas y arrastre del carrusel de noticias)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
+
+// Pruebas
 test("avanza automáticamente con progreso amarillo y respeta las pausas", async ({ page }) => {
   test.setTimeout(45000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -6,6 +14,7 @@ test("avanza automáticamente con progreso amarillo y respeta las pausas", async
   const carousel = page.locator("[data-carousel][data-ready]");
   await carousel.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
+  // Lee el avance del indicador (0 a 1) desde la variable CSS que actualiza el carrusel.
   const progress = () =>
     carousel.evaluate((el) => Number(el.style.getPropertyValue("--carousel-progress")));
   await expect.poll(progress).toBeGreaterThan(0.1);
@@ -33,6 +42,7 @@ test("avanza automáticamente con progreso amarillo y respeta las pausas", async
   await page.waitForTimeout(300);
   expect(await progress()).toBe(0);
 });
+
 test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic", async ({
   page,
 }) => {
@@ -51,7 +61,10 @@ test("arrastra noticias, cruza ambos extremos y conserva enlaces al hacer clic",
   if (session) {
     await session.send("Emulation.setTouchEmulationEnabled", { enabled: true });
   }
-  async function swipe(direction) {
+  // Desliza la pista con touch en móvil o con el mouse en escritorio.
+  async function swipe(
+    direction, // Number - Sentido del gesto: -1 avanza a la noticia siguiente y 1 regresa a la anterior
+  ) {
     if (session) {
       await session.send("Input.dispatchTouchEvent", {
         type: "touchStart",

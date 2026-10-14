@@ -1,8 +1,20 @@
+// LabUNAM
+// Pruebas unitarias
+// laboratoriosCatalogo.test (carga, caché y armado del catálogo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { assembleCatalog } from "./laboratoriosCatalogo";
-import { createTestData, createLaboratorioRow } from "@datosPrueba/catalogo";
 import { grupos } from "../../lib/grupos/grupos";
 
+// Servicios
+import { assembleCatalog } from "./laboratoriosCatalogo";
+
+// Datos de prueba
+import { createTestData, createLaboratorioRow } from "@datosPrueba/catalogo";
+
+// Simulaciones
+// La conexión se sustituye: cada consulta responde con los datos de prueba según su tabla.
 const { queryMock } = vi.hoisted(() => ({ queryMock: vi.fn() }));
 vi.mock("../config/dbconnection.js", () => ({ query: queryMock }));
 beforeEach(() => {
@@ -24,6 +36,8 @@ afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllEnvs();
 });
+
+// Pruebas
 describe("catálogo y caché", () => {
   it("consulta laboratorios con sus relaciones y el catálogo de disciplinas", async () => {
     const { buildCatalog } = await import("./laboratoriosCatalogo");

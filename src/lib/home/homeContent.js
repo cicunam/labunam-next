@@ -1,5 +1,12 @@
+// LabUNAM
+// Utilidades compartidas
+// homeContent (textos e imágenes de las redes y noticias de la portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { redes, getCatalogUrl } from "../presentacion/presentacion";
 
+// Constantes
 // Cada tarjeta conserva juntos sus datos; añadir una red no depende de alinear índices.
 export const homeNetworks = [
   {

@@ -1,11 +1,26 @@
+// LabUNAM
+// Scripts del navegador
+// carousel (carrusel infinito de noticias con arrastre y avance automático)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
 (() => {
   // Las copias laterales permiten cruzar ambos extremos sin recorrer toda la pista.
+  // La marca global evita registrar el script dos veces si Next lo vuelve a cargar.
   if (window.labunamCarrusel) {
     return;
   }
   window.labunamCarrusel = true;
+
+  // Estado
+  // Carruseles montados y la función que libera los listeners y observadores de cada uno.
   const mounted = new Map();
-  function initialize(root) {
+
+  // Definición del módulo
+  // Prepara un carrusel: posición inicial, controles, arrastre, avance automático y limpieza.
+  function initialize(
+    root, // Element - Contenedor [data-carousel] con la pista [data-slides], las diapositivas [data-slide] y los botones [data-page] y [data-step]
+  ) {
+    // Datos
     const track = root.querySelector("[data-slides]");
     const slides = [...root.querySelectorAll("[data-slide]")];
     const pages = [...root.querySelectorAll("[data-page]")];
@@ -13,9 +28,14 @@
     if (!track || !count) {
       return;
     }
+
+    // Preparación de datos
+    // Con varias noticias, la primera original está después de las copias de la izquierda.
     const offset = count > 1 ? count : 0;
     const events = new AbortController();
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Estado
     let index = offset,
       drag = null,
       suppressClick = false,
@@ -28,13 +48,25 @@
       hovering = false,
       focused = false,
       visible = false;
+
+    // Utilidades
+    // Reinicia el reloj del avance automático y vacía la barra de progreso.
     function resetProgress() {
       elapsed = 0;
       root.style.setProperty("--carousel-progress", "0");
     }
-    const listen = (element, name, handler, options = {}) =>
-      element.addEventListener(name, handler, { ...options, signal: events.signal });
-    const position = (i) => slides[i].offsetLeft - (track.clientWidth - slides[i].offsetWidth) / 2;
+    // Registra un listener que se elimina junto con los demás al desmontar el carrusel.
+    const listen = (
+      element, // Element | Object - Destino del evento: elemento, window, document o MediaQueryList
+      name, // String - Nombre del evento
+      handler, // Function - Gestor que recibe el evento
+      options = {}, // Object Optional - Opciones de addEventListener; se les añade la señal de limpieza
+    ) => element.addEventListener(name, handler, { ...options, signal: events.signal });
+    // Calcula el desplazamiento de la pista que centra una diapositiva.
+    const position = (
+      i, // Number - Índice de la diapositiva en la pista, incluidas las copias laterales
+    ) => slides[i].offsetLeft - (track.clientWidth - slides[i].offsetWidth) / 2;
+    // Toma como actual la diapositiva más cercana al centro y sincroniza los indicadores.
     function update() {
       const previous = index % count;
       index = slides.reduce(
@@ -50,7 +82,10 @@
       slides.forEach((slide, i) => slide.toggleAttribute("data-active", i === index));
       pages.forEach((page, i) => page.setAttribute("aria-pressed", String(i === index % count)));
     }
-    function jump(i) {
+    // Centra una diapositiva sin animación; data-resetting desactiva el snap durante el salto.
+    function jump(
+      i, // Number - Índice de la diapositiva en la pista, incluidas las copias laterales
+    ) {
       cancelAnimationFrame(frame);
       track.dataset.resetting = "";
       track.scrollTo({ left: position(i), behavior: "instant" });
@@ -70,11 +105,16 @@
         jump(count + (index % count));
       }
     }
-    function show(i) {
+    // Desplaza la pista hasta una diapositiva, sin animar si se pidió movimiento reducido.
+    function show(
+      i, // Number - Índice deseado en la pista; se limita a las diapositivas existentes
+    ) {
       resetProgress();
       const target = Math.max(0, Math.min(slides.length - 1, i));
       track.scrollTo({ left: position(target), behavior: motion.matches ? "instant" : "smooth" });
     }
+
+    // Gestores de evento
     root.querySelectorAll("[data-step]").forEach((button) => {
       button.disabled = count < 2;
       listen(button, "click", () => {
@@ -142,7 +182,10 @@
       },
       { passive: false },
     );
-    function finish(event) {
+    // Termina el arrastre: avanza o retrocede si superó el umbral y, si no, vuelve a la diapositiva inicial.
+    function finish(
+      event, // Object - PointerEvent de pointerup, pointercancel o lostpointercapture; se usan pointerId y type
+    ) {
       if (!drag || event.pointerId !== drag.id) {
         return;
       }
@@ -202,7 +245,9 @@
     });
     visibility.observe(root);
     // La barra y el avance comparten reloj; las pausas conservan el tiempo restante.
-    function tick(now) {
+    function tick(
+      now, // Number - Marca de tiempo en milisegundos que entrega requestAnimationFrame
+    ) {
       const delta = now - lastTick;
       lastTick = now;
       // Sólo avanza el reloj si la noticia está centrada y el usuario no está interactuando.
@@ -227,6 +272,8 @@
       }
       autoplayFrame = requestAnimationFrame(tick);
     }
+
+    // Ejecución
     root.dataset.ready = "";
     jump(offset);
     autoplayFrame = requestAnimationFrame(tick);
@@ -245,6 +292,8 @@
       cancelAnimationFrame(autoplayFrame);
     });
   }
+
+  // Utilidades
   // Next puede reemplazar secciones sin recargar la página: desmontamos sus listeners
   // y observadores antes de inicializar los nuevos carruseles.
   function refresh() {
@@ -260,6 +309,8 @@
       }
     });
   }
+
+  // Ejecución
   new MutationObserver(refresh).observe(document.body, { childList: true, subtree: true });
   refresh();
 })();

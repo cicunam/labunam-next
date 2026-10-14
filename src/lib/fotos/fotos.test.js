@@ -1,6 +1,13 @@
+// LabUNAM
+// Pruebas unitarias
+// fotos.test (orden de fotos y logos e ilustraciones de respaldo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "vitest";
 import { getPhotos } from "./fotos";
 
+// Pruebas
 test("usa el área única y un respaldo general para varias áreas o ninguna", () => {
   expect(getPhotos(1, {}, ["quimica"])[0].src).toContain("/quimica.svg");
   expect(getPhotos(1, {}, ["quimica", "biologia"])[0].src).toContain("/general.svg");

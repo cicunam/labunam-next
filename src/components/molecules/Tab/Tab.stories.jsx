@@ -1,14 +1,27 @@
-import Tab from "./Tab";
+// LabUNAM
+// Historias
+// Tab.stories (pestañas de la ficha con navegación por teclado)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 
+// Componentes
+import Tab from "./Tab";
+
+// Configuración de la historia
 const meta = {
   title: "Moléculas/Tab",
   component: Tab,
   args: { id: "pestana", panelId: "panel", selected: true, children: "Servicios" },
 };
 export default meta;
+
+// Historias
+// Grupo de pestañas con paneles, flechas, Inicio y Fin
 const Group = {
+  // Lista de pestañas controlada por estado local, como en la ficha de laboratorio
   render: function TabGroup() {
     const [activeIndex, setActive] = useState(0);
     const names = ["Servicios", "Equipamiento", "Distinciones"];

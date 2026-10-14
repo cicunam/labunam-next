@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   LaboratoryDetails.module.css (contenido de la ficha: galería, pestañas y acciones)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .details-body {
   flex: 1 1 auto;
   min-height: 0;

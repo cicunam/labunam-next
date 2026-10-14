@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   DisciplineSection.module.css (áreas de la portada con su número de laboratorios)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .disciplines {
   padding-block: var(--space-section);
 }

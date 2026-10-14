@@ -1,3 +1,9 @@
+// LabUNAM
+// Pruebas unitarias
+// buscador.test (búsqueda, validación de criterios y conteos por eje)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { describe, expect, it } from "vitest";
 import {
   countFacet,
@@ -6,10 +12,18 @@ import {
   normalizeCriteria,
   getFacetValues,
 } from "./buscador";
+
+// Servicios
 import { assembleCatalog } from "../../server/laboratorios/laboratoriosCatalogo";
+
+// Datos de prueba
 import { createTestData } from "@datosPrueba/catalogo";
 
+// Constantes
+// Catálogo armado con las filas ficticias, sin abrir MySQL.
 const { laboratorios } = assembleCatalog(createTestData());
+
+// Pruebas
 describe("filtrar", () => {
   it("busca sin acentos y prioriza el nombre sobre las capacidades", () => {
     const resultados = filterLaboratorios(laboratorios, { q: "microscopia" });

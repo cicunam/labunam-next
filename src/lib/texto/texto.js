@@ -1,3 +1,10 @@
+// LabUNAM
+// Utilidades compartidas
+// texto (normalización, claves y formato de títulos)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Constantes
+// Vocales acentuadas y eñe con su equivalente sin acento.
 const acentos = {
   á: "a",
   é: "e",
@@ -12,6 +19,7 @@ const acentos = {
   ò: "o",
   ù: "u",
 };
+// Palabras que quedan en minúsculas dentro de un título, salvo al inicio.
 const menores = new Set([
   "de",
   "del",
@@ -32,6 +40,7 @@ const menores = new Set([
   "sobre",
   "sin",
 ]);
+// Siglas y números romanos que conservan sus mayúsculas.
 const siglas = [
   "UNAM",
   "ISO",
@@ -65,18 +74,30 @@ const siglas = [
   "XX",
   "XXI",
 ];
-export function normalizeText(texto) {
+
+// Definición del módulo
+// Texto en minúsculas, sin acentos ni espacios en los extremos, para comparar y buscar.
+export function normalizeText(
+  texto, // String - Texto original
+) {
   return texto
     .trim()
     .toLowerCase()
     .replace(/[áéíóúüñàèìòù]/g, (letra) => acentos[letra]);
 }
-export function slugify(texto) {
+// Clave para URL con letras, números y guiones.
+export function slugify(
+  texto, // String - Texto original
+) {
   return normalizeText(texto)
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
-export function toTitleCase(texto, conservar = []) {
+// Convierte a tipo título los textos escritos casi por completo en mayúsculas; respeta la escritura manual.
+export function toTitleCase(
+  texto, // String - Texto original, normalmente un nombre heredado en mayúsculas
+  conservar = [], // Array Optional - Siglas (String) adicionales que conservan sus mayúsculas
+) {
   const limpio = texto.replace(/\s+/gu, " ").trim();
   const letras = limpio.match(/\p{L}/gu)?.length ?? 0;
   const mayusculas = limpio.match(/\p{Lu}/gu)?.length ?? 0;
@@ -113,9 +134,13 @@ export function toTitleCase(texto, conservar = []) {
 }
 
 // Convierte cualquier valor de la base en texto sin espacios en los extremos.
-export const getText = (valor) => String(valor ?? "").trim();
+export const getText = (
+  valor, // String | Number - Valor de la base; null o undefined se convierten en cadena vacía
+) => String(valor ?? "").trim();
 // Quita vacíos y repetidos que sólo difieren en acentos, mayúsculas o espacios.
-export function uniqueValues(valores) {
+export function uniqueValues(
+  valores, // Array - Valores de la base (String | Number), en el orden en que llegan
+) {
   const encontrados = new Map();
   for (const valor of valores) {
     const limpio = getText(valor).replace(/\s+/gu, " ");

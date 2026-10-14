@@ -87,9 +87,26 @@ const LaboratoryCard = ({
 
 Sólo se incluyen las etiquetas que el archivo necesita. Los comentarios que explican
 una decisión o un comportamiento que debe conservarse siguen yendo junto al código al
-que se refieren. Todos los componentes de `src/components/`, sus hooks, las dos páginas principales y
-los archivos de `src/server/laboratorios/` siguen esta plantilla. El resto de páginas y de `src/server/` y
-`src/lib/` se adapta al tocarlo.
+que se refieren. Todos los archivos del proyecto siguen esta plantilla: páginas, rutas, componentes,
+historias, `src/lib/`, `src/server/`, pruebas, scripts y configuración. Cada archivo nuevo
+debe nacer con ella. Las capas del encabezado son `Páginas`, `Rutas de API`, `Átomos`,
+`Moléculas`, `Organismos`, `Mecanismos`, `Historias`, `Utilidades compartidas`,
+`Servidor: <entidad>`, `Pruebas unitarias`, `Pruebas de navegador`, `Datos de prueba`,
+`Scripts`, `Scripts del navegador` y `Configuración`. Las pruebas usan además las
+secciones `Simulaciones` y `Pruebas`, y las historias `Configuración de la historia` e
+`Historias`.
+
+Los CSS, HTML, Python y shell llevan sólo el encabezado, con la sintaxis de comentario
+de cada lenguaje. En CSS:
+
+```css
+/* LabUNAM
+   Estilos
+   LaboratoryCard.module.css (tarjeta de laboratorio en catálogo y portada)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+```
+
+Los JSON no admiten comentarios y quedan sin encabezado.
 
 ## Ejemplo completo: una nota informativa
 

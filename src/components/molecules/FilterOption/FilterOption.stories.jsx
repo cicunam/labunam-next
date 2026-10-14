@@ -1,7 +1,16 @@
-import FilterOption from "./FilterOption";
+// LabUNAM
+// Historias
+// FilterOption.stories (estados de la opción de filtro)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 
+// Componentes
+import FilterOption from "./FilterOption";
+
+// Configuración de la historia
 const meta = {
   title: "Moléculas/FilterOption",
   component: FilterOption,
@@ -15,15 +24,23 @@ const meta = {
   },
 };
 export default meta;
+
+// Historias
+// Opción disponible sin seleccionar
 const Available = {};
 export { Available };
+// Opción seleccionada
 const Selected = { args: { selected: true } };
 export { Selected };
+// Opción sin resultados, que se muestra atenuada
 const WithoutResults = { args: { total: 0 } };
 export { WithoutResults };
+// Opción seleccionada aunque ya no tenga resultados
 const SelectedWithoutResults = { args: { total: 0, selected: true } };
 export { SelectedWithoutResults };
+// Grupo de opciones con selección real y prueba de clic
 const Group = {
+  // Grupo de radios controlado por estado local, como en el diálogo de filtros
   render: function OptionGroup() {
     const [value, setValue] = useState("");
     return (

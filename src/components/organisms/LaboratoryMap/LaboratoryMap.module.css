@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   LaboratoryMap.module.css (mapa de México con laboratorios por estado)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .section {
   padding-block: var(--space-section);
 }

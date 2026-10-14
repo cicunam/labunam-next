@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   SearchBar.module.css (buscador principal con sugerencias, red y sede)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .search {
   display: flex;
   flex-direction: column;

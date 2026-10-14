@@ -1,4 +1,9 @@
 #!/bin/sh
+# LabUNAM
+# Scripts
+# fuente.sh (genera el subconjunto latino de la fuente Inter)
+# Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
 # fonttools 4.66.1 y brotli 1.2.0; conserva peso y tamaño óptico variables.
 # Ejecutar desde la raíz del proyecto con pyftsubset disponible en PATH.
 set -eu

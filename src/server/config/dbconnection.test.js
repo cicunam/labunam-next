@@ -1,10 +1,19 @@
+// LabUNAM
+// Pruebas unitarias
+// dbconnection.test (pool único y errores sin detalles de conexión)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
+// Simulaciones
+// mysql2 se sustituye para comprobar el pool sin abrir conexiones reales.
 const { createPoolMock, queryMock } = vi.hoisted(() => ({
   createPoolMock: vi.fn(),
   queryMock: vi.fn(),
 }));
 vi.mock("mysql2/promise", () => ({ createPool: createPoolMock }));
+// El pool vive en globalThis; cada prueba parte sin él y con variables ficticias.
 const proceso = globalThis;
 beforeEach(() => {
   delete proceso.poolLabunam;
@@ -20,6 +29,8 @@ afterEach(() => {
   delete proceso.poolLabunam;
   vi.unstubAllEnvs();
 });
+
+// Pruebas
 it("reutiliza un único pool incluso después de recargar el módulo", async () => {
   const { query } = await import("./dbconnection");
   expect(await query("SELECT COUNT(*) AS total FROM tabla_prueba")).toEqual([{ total: 3 }]);

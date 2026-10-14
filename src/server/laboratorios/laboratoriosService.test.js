@@ -1,8 +1,15 @@
+// LabUNAM
+// Pruebas unitarias
+// laboratoriosService.test (fichas, búsqueda, conteos y respuestas de la API)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { beforeEach, expect, it, vi } from "vitest";
+import { filterLaboratorios, getFacetValues } from "../../lib/buscador/buscador";
+
+// Servicios
 import { loadCatalog, assembleCatalog } from "./laboratoriosCatalogo";
 import { readPhotos } from "../fotos/fotosService";
-import { filterLaboratorios, getFacetValues } from "../../lib/buscador/buscador";
-import { createTestData } from "@datosPrueba/catalogo";
 import {
   getById,
   getContactDetails,
@@ -14,6 +21,11 @@ import {
 } from "./laboratoriosService";
 import { getDetails, getFilters } from "./laboratoriosController";
 
+// Datos de prueba
+import { createTestData } from "@datosPrueba/catalogo";
+
+// Simulaciones
+// El catálogo y las fotos se sustituyen por datos de prueba; armar el catálogo usa el código real.
 vi.mock("./laboratoriosCatalogo", async (importOriginal) => ({
   ...(await importOriginal()),
   loadCatalog: vi.fn(),
@@ -26,6 +38,7 @@ beforeEach(() => {
   vi.mocked(readPhotos).mockResolvedValue({ 1: [{ src: "/fotos/prueba.webp" }] });
 });
 
+// Pruebas
 it("la página y la API reciben la misma ficha y sólo campos públicos", async () => {
   const laboratorio = await getById("1");
   const response = await getDetails(null, { params: Promise.resolve({ id: "1" }) });

@@ -1,4 +1,13 @@
+// LabUNAM
+// Configuración
+// playwright.config (pruebas de navegador en 375, 1024 y 1400 px)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { defineConfig } from "@playwright/test";
+
+// Configuración
+// Con PLAYWRIGHT_BASE_URL se prueba un servidor ya iniciado; sin ella se levanta el de desarrollo.
 export default defineConfig({
   testDir: "./tests/e2e",
   use: {

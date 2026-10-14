@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   RecentLaboratories.module.css (laboratorios actualizados recientemente en la portada)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .featured {
   padding-block: var(--space-section);
 }

@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   SearchField.module.css (segmento del buscador con etiqueta y control)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .segment {
   display: flex;
   flex-direction: column;

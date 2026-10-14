@@ -1,4 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// catalogo.spec (búsqueda, filtros y ficha del catálogo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
+
+// Pruebas
 test("catálogo real, filtros vacíos y retícula adaptable", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia&tipo=nacionales");
   await expect(page.locator("[data-total]")).toHaveText("7 laboratorios");
@@ -22,6 +30,7 @@ test("catálogo real, filtros vacíos y retícula adaptable", async ({ page }) =
     page.getByRole("heading", { name: "Ningún laboratorio coincide con esta búsqueda" }),
   ).toBeVisible();
 });
+
 test("ficha solicita JSON una vez, navega pestañas y devuelve el foco", async ({ page }) => {
   let solicitudes = 0;
   page.on("request", (request) => {
@@ -46,6 +55,7 @@ test("ficha solicita JSON una vez, navega pestañas y devuelve el foco", async (
   await expect(ficha.getByRole("tab", { name: "Servicios", exact: true })).toBeVisible();
   expect(solicitudes).toBe(1);
 });
+
 test("busca con sugerencias, atajo y recientes", async ({ page }) => {
   await page.goto("/");
   await page.keyboard.press("/");
@@ -69,6 +79,7 @@ test("busca con sugerencias, atajo y recientes", async ({ page }) => {
     page.getByRole("listbox", { name: "Sugerencias" }).getByRole("option").first(),
   ).toContainText("reciente");
 });
+
 test("carrusel permite paginar y cabecera permite volver al buscador", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -95,6 +106,7 @@ test("carrusel permite paginar y cabecera permite volver al buscador", async ({ 
     await expect(page.getByRole("combobox", { name: "Qué buscas" })).toBeFocused();
   }
 });
+
 test("API sólo expone campos públicos y valida identificadores", async ({ request, page }) => {
   expect((await request.get("/api/laboratorios/invalido")).status()).toBe(400);
   expect((await request.get("/api/laboratorios/999999999")).status()).toBe(404);
@@ -119,6 +131,7 @@ test("API sólo expone campos públicos y valida identificadores", async ({ requ
     ].sort(),
   );
 });
+
 test("una ficha fallida puede reintentarse sin conservar el error", async ({ page }) => {
   let intentos = 0;
   await page.route("**/api/laboratorios/*", async (route) => {
@@ -140,6 +153,7 @@ test("una ficha fallida puede reintentarse sin conservar el error", async ({ pag
   await expect(page.getByRole("tab", { name: "Servicios", exact: true })).toBeVisible();
   expect(intentos).toBe(2);
 });
+
 test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({ page }) => {
   for (const ruta of ["/laboratorios", "/laboratorios?q=microscopia&tipo=nacionales"]) {
     await page.goto(ruta);
@@ -162,6 +176,7 @@ test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({
     await expect(page.getByLabel("Sede", { exact: true })).toHaveValue("");
   }
 });
+
 test("ancla sugerencias al campo en móvil y permite seleccionarlas", async ({ page }) => {
   for (const ruta of ["/", "/laboratorios?q=nc&tipo=&sede="]) {
     await page.goto(ruta);

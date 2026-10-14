@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   ActiveChip.module.css (filtro activo que se quita al pulsarlo)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .chip {
   display: inline-flex;
   align-items: center;

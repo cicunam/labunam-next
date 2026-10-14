@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   FilterDialog.module.css (barra de áreas y diálogo de filtros con conteos en vivo)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .strip {
   position: relative;
   display: flex;

@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Button.module.css (botón con tamaños del portal)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .button {
   display: inline-flex;
   align-items: center;

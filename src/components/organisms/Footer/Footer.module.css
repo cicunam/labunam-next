@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Footer.module.css (pie del sitio)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .footer {
   border-top: 1px solid var(--border-soft);
   background: var(--surface-soft);

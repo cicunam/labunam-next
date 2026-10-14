@@ -1,7 +1,14 @@
+// LabUNAM
+// Configuración
+// eslint.config (reglas de lint del proyecto)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import componentExport from "./eslint-rules/component-export.js";
 
+// Configuración
 export default defineConfig([
   ...nextVitals,
   {
@@ -9,6 +16,7 @@ export default defineConfig([
     rules: { "@next/next/no-img-element": "off", curly: ["error", "all"] },
   },
   {
+    // Componentes y páginas se declaran como arrow con nombre y export default al final.
     files: ["src/components/**/*.jsx", "src/app/**/*.jsx"],
     ignores: ["**/*.stories.jsx"],
     plugins: { labunam: { rules: { "component-export": componentExport } } },
@@ -21,6 +29,7 @@ export default defineConfig([
     },
   },
   {
+    // Componentes y src/lib no pueden importar el backend.
     files: ["src/components/**/*.{js,jsx}", "src/lib/**/*.js"],
     ignores: ["**/*.test.js"],
     rules: {

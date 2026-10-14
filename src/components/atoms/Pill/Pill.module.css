@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Pill.module.css (pastilla seleccionable)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .pill {
   display: inline-flex;
   align-items: center;

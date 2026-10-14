@@ -1,6 +1,13 @@
+// LabUNAM
+// Pruebas unitarias
+// texto.test (normalización, claves y tipo título)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { describe, expect, it } from "vitest";
 import { slugify, normalizeText, toTitleCase } from "./texto";
 
+// Pruebas
 describe("plano", () => {
   it.each([
     ["Microscopía Óptica", "microscopia optica"],

@@ -1,4 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// disciplinas.spec (navegación y arrastre de la franja de disciplinas)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
+
+// Pruebas
 test("recorre áreas con flechas y conserva la búsqueda al seleccionar", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/laboratorios?q=Autoclave&disciplina=biologia");
@@ -45,6 +53,7 @@ test("recorre áreas con flechas y conserva la búsqueda al seleccionar", async 
   expect(new URL(page.url()).searchParams.get("q")).toBe("Autoclave");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
 test("permite deslizar las áreas con el dedo en móvil", async ({ page }) => {
   test.skip(page.viewportSize().width !== 375);
   await page.goto("/laboratorios");
@@ -67,6 +76,7 @@ test("permite deslizar las áreas con el dedo en móvil", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Ver disciplinas anteriores" })).toBeVisible();
   await session.detach();
 });
+
 test("arrastra áreas con el cursor sin activar enlaces", async ({ page }) => {
   await page.goto("/laboratorios");
   const track = page.getByRole("navigation", { name: "Disciplina", exact: true });

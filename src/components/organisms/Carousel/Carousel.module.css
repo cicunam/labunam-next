@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Carousel.module.css (carrusel de noticias; su interacción vive en public/js/carousel.js)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .carousel {
   --carousel-width: 88%;
   --carousel-radius: 20px;

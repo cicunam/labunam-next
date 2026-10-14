@@ -1,3 +1,10 @@
+// LabUNAM
+// Utilidades compartidas
+// grupos (áreas que agrupan las disciplinas del catálogo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Constantes
+// Cada área tiene su clave de URL e ilustración, su etiqueta visible y los identificadores de sus disciplinas.
 export const grupos = [
   { clave: "biologia", etiqueta: "Biología", disciplinas: [4, 6, 20, 19, 31, 1, 38, 35] },
   { clave: "salud", etiqueta: "Salud", disciplinas: [9, 5, 28, 15, 16, 34, 29] },

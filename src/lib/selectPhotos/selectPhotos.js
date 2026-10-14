@@ -1,4 +1,14 @@
-function getPriority(nombre) {
+// LabUNAM
+// Utilidades compartidas
+// selectPhotos (elección de fotografías originales por nombre de archivo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Utilidades
+
+// Peso de una foto según su nombre: carruseles por número, luego fondo, infraestructura y antecedentes.
+function getPriority(
+  nombre, // String - Nombre del archivo original
+) {
   const n = nombre.toLowerCase();
   const carrusel = n.match(/carrusel\s*(\d+)/);
   if (carrusel) {
@@ -15,11 +25,19 @@ function getPriority(nombre) {
   }
   return 500;
 }
-function getTimestamp(archivo) {
+// Marca de tiempo en milisegundos del prefijo del nombre (segundos o milisegundos), o 0 si no tiene.
+function getTimestamp(
+  archivo, // Object - Archivo original; se lee archivo.nombre
+) {
   const marca = archivo.nombre.match(/^(\d{10,13})[_-]/)?.[1];
   return marca ? Number(marca) * (marca.length === 10 ? 1000 : 1) : 0;
 }
-export function selectPhotos(archivos) {
+
+// Definición del módulo
+// Hasta tres imágenes por prioridad; de cada carrusel repetido conserva la subida más reciente.
+export function selectPhotos(
+  archivos, // Array - Archivos originales (Object) con nombre y modificado (fecha del archivo)
+) {
   const posiciones = new Map();
   const otras = [];
   for (const archivo of archivos) {

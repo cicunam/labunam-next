@@ -1,5 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// mapa.spec (mapa de estados de la portada y su enlace al catálogo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
 
+// Pruebas
 test("el mapa selecciona estados y abre el catálogo correspondiente", async ({ page }) => {
   await page.goto("/");
   const section = page.getByRole("region", { name: "Encuentra laboratorios por estado" });

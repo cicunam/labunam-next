@@ -1,9 +1,19 @@
+// LabUNAM
+// Pruebas unitarias
+// interfaz.test (sugerencias, búsquedas recientes, URL del catálogo e imágenes)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getSearchOptions, saveRecentSearch, readRecentSearches } from "../sugerencias/sugerencias";
 import { getPhotos } from "../fotos/fotos";
 import { formatCounts, getCatalogUrl } from "../presentacion/presentacion";
 
+// Simulaciones
+// Cada prueba que reemplaza localStorage lo restaura al terminar.
 afterEach(() => vi.unstubAllGlobals());
+
+// Pruebas
 describe("búsquedas recientes", () => {
   it("completa sin acentos y no duplica recientes entre sugerencias", () => {
     expect(getSearchOptions("micro", ["Microscopía", "Microscopio"], ["microscopia"])).toEqual([

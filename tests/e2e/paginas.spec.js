@@ -1,4 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// paginas.spec (portada, catálogo, ficha, contacto y solicitud de servicio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
+
+// Pruebas
 test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({ page }) => {
   await page.goto("/");
   const redes = page.getByRole("region", { name: "Tres redes, una universidad" });
@@ -12,6 +20,7 @@ test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({
     page.getByRole("region", { name: "Recién incorporados" }).locator("[data-details]"),
   ).toHaveCount(4);
 });
+
 test("quitar el chip de rayos x recupera el catálogo completo", async ({ page }) => {
   await page.goto("/laboratorios?q=rayos%20x");
   expect(await page.locator("[data-details]").count()).toBeGreaterThan(0);
@@ -19,6 +28,7 @@ test("quitar el chip de rayos x recupera el catálogo completo", async ({ page }
   await expect(page.locator("[data-total]")).toContainText(/6\d\d laboratorios/);
   expect(await page.locator("[data-details]").count()).toBeGreaterThan(600);
 });
+
 test("filtrar por sede actualiza URL y reduce resultados", async ({ page }) => {
   await page.goto("/laboratorios");
   const inicial = await page.locator("[data-details]").count();
@@ -33,6 +43,7 @@ test("filtrar por sede actualiza URL y reduce resultados", async ({ page }) => {
   await expect(page).toHaveURL(/sede=ciudad-de-mexico/);
   expect(await page.locator("[data-details]").count()).toBeLessThan(inicial);
 });
+
 test("ficha tiene URL propia, título, metadatos y pestañas", async ({ page }) => {
   await page.goto("/laboratorios?tipo=internacionales");
   const tarjeta = page.locator("[data-details]").first();
@@ -66,6 +77,7 @@ test("ficha tiene URL propia, título, metadatos y pestañas", async ({ page }) 
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(titulo);
 });
+
 test("contacto explica el envío deshabilitado y no solicita datos", async ({ page }) => {
   await page.goto("/contacto");
   await expect(page).toHaveTitle("Contacto | LabUNAM");
@@ -79,10 +91,12 @@ test("contacto explica el envío deshabilitado y no solicita datos", async ({ pa
   ).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
 test("una ficha inexistente responde 404", async ({ request }) => {
   expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
   expect((await request.get("/laboratorios/999999999")).status()).toBe(404);
 });
+
 test("solicitud de servicio conserva el laboratorio y explica el envío pendiente", async ({
   page,
 }) => {
@@ -109,6 +123,7 @@ test("solicitud de servicio conserva el laboratorio y explica el envío pendient
   await page.getByRole("link", { name: "Volver al laboratorio" }).click();
   await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
 });
+
 test("cerrar el modal conserva posición y filtros", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia");
   const tarjeta = page.locator("[data-details]").last();

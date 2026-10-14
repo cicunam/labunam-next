@@ -1,11 +1,21 @@
+// LabUNAM
+// Configuración
+// main (configuración de Storybook)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { fileURLToPath } from "node:url";
 import { mergeConfig } from "vite";
 
+// Configuración
 const config = {
   stories: ["../src/components/**/*.stories.jsx"],
   addons: ["@storybook/addon-a11y"],
   framework: "@storybook/nextjs-vite",
-  async viteFinal(config) {
+  // Añade a Vite los mismos alias que usan Next y Vitest.
+  async viteFinal(
+    config, // Object - Configuración de Vite que prepara Storybook
+  ) {
     return mergeConfig(config, {
       resolve: {
         alias: {

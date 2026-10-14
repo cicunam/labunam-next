@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   About.module.css (sección ¿Qué es LabUNAM?, misión y visión)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .about {
   padding-block: var(--space-section);
   margin-bottom: clamp(32px, 5vw, 64px);

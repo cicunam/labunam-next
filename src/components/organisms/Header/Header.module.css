@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Header.module.css (cabecera con navegación, menú móvil y acceso al buscador)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .header {
   position: sticky;
   z-index: 1000;

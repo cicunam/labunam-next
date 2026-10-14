@@ -1,6 +1,13 @@
+// LabUNAM
+// Historias
+// SearchField.stories (campo del buscador con texto o lista)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Componentes
 import SearchField from "./SearchField";
 import Input from "../../atoms/Input/Input";
 
+// Configuración de la historia
 const meta = {
   title: "Moléculas/SearchField",
   component: SearchField,
@@ -14,6 +21,9 @@ const meta = {
   ],
 };
 export default meta;
+
+// Historias
+// Campo con entrada de texto integrada
 const Text = {
   args: {
     children: (
@@ -28,6 +38,7 @@ const Text = {
   },
 };
 export { Text };
+// Campo con lista desplegable de redes
 const Select = {
   args: {
     label: "Red",

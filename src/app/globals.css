@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   globals.css (tokens, reset, tipografía y retícula compartidos por todo el portal)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 @font-face {
   font-family: "Inter";
   src: url("/assets/fonts/Inter-latino.woff2") format("woff2");

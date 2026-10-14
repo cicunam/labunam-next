@@ -1,6 +1,18 @@
+// LabUNAM
+// Utilidades compartidas
+// fotos (imágenes de un laboratorio o su ilustración de respaldo)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { grupos } from "../grupos/grupos";
 
-export function getPhotos(id, manifiesto, areas = []) {
+// Definición del módulo
+// Hasta tres imágenes aprobadas, fotografías antes que logos; sin imágenes, la ilustración del área.
+export function getPhotos(
+  id, // Number - Identificador del laboratorio
+  manifiesto, // Object - Fotos aprobadas por idLab, leídas de los manifiestos; cada una con src, srcset y tipo
+  areas = [], // Array Optional - Claves de área del laboratorio, para elegir la ilustración
+) {
   const fotos = manifiesto[String(id)];
   if (Array.isArray(fotos) && fotos.length) {
     // Fotografías primero; orden editorial conservado dentro de cada tipo.

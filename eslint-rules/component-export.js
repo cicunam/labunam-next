@@ -1,4 +1,10 @@
-/** Exige un componente con nombre y su exportación por defecto al final del archivo. */
+// LabUNAM
+// Configuración
+// component-export (regla de eslint para declarar y exportar componentes)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Configuración
+// Exige un componente con nombre y su exportación por defecto al final del archivo.
 const componentExport = {
   meta: {
     type: "suggestion",
@@ -10,9 +16,15 @@ const componentExport = {
         "Declara el componente como const Nombre = () => { ... }; y expórtalo por defecto al final.",
     },
   },
-  create(context) {
+  // Revisa el programa completo de cada archivo al que aplica la regla.
+  create(
+    context, // Object - Contexto de eslint; context.report notifica cada problema
+  ) {
     return {
-      Program(program) {
+      // Busca el export default y la declaración local del componente.
+      Program(
+        program, // Object - Nodo raíz del archivo; program.body contiene sus sentencias
+      ) {
         const exported = program.body.find((node) => node.type === "ExportDefaultDeclaration");
         if (!exported) {
           context.report({ node: program, messageId: "missing" });

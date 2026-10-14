@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   LaboratoryNetworks.module.css (tarjetas de las redes de laboratorios en la portada)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .networks {
   padding-block: var(--space-section);
 }

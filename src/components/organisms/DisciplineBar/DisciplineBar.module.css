@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   DisciplineBar.module.css (barra horizontal de áreas del catálogo)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .strip-frame {
   position: relative;
   flex: 1 1 auto;

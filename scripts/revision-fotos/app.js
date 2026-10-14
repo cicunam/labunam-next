@@ -1,11 +1,35 @@
-const $ = id => document.getElementById(id);
+// LabUNAM
+// Scripts
+// app (interfaz local para revisar y aplicar las imágenes candidatas de cada laboratorio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Utilidades
+// Atajo para obtener un elemento de la página por su id.
+const $ = (
+  id, // String - Atributo id del elemento
+) => document.getElementById(id);
+
+// Estado
+// Candidatas por laboratorio, selecciones guardadas, posición actual y bloqueo mientras hay una operación en curso.
 let labs = [], state = {}, index = 0, busy = false;
-const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+
+// Utilidades
+// Escapa los caracteres especiales antes de insertar textos externos en el HTML.
+const escape = (
+  value, // String | Number - Texto o número que se inserta en el HTML de la revisión
+) => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+// Laboratorios que corresponden al filtro de estado elegido; no recibe parámetros.
 const visible = () => labs.filter(l => {
   const filter = $('filtro').value, status = state[l.idLab]?.estado || 'pendiente';
   return filter === 'todos' || (filter === 'con-candidatas' ? status === 'pendiente' && l.imagenes.length > 0 : status === filter);
 });
-const message = text => { $('mensaje').textContent = text; };
+// Muestra un aviso en la zona de mensajes.
+const message = (
+  text, // String - Aviso para la persona que revisa
+) => { $('mensaje').textContent = text; };
+
+// Interfaz
+// Dibuja el laboratorio actual con sus candidatas, el avance y los botones de navegación.
 function render() {
   const list = visible(); index = Math.max(0, Math.min(index, list.length - 1));
   const lab = list[index], reviewed = labs.filter(l => state[l.idLab]?.estado && state[l.idLab].estado !== 'pendiente').length;
@@ -21,13 +45,23 @@ function render() {
   $('pendiente').onclick = () => save(lab, 'pendiente');
   document.querySelectorAll('[name=principal]').forEach(r => r.onchange = () => { document.querySelector('[name=elegida][value="' + r.value + '"]').checked = true; });
 }
-async function post(path, data) {
+
+// Gestores de evento
+// Envía JSON al servidor local y lanza el mensaje de error que devuelva.
+async function post(
+  path, // String - Ruta del servidor local: /guardar o /aplicar
+  data, // Object - Cuerpo de la petición, que se envía como JSON
+) {
   const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
   const result = await response.json();
   if (!response.ok) {throw Error(result.error);}
   return result;
 }
-async function save(lab, estado) {
+// Valida y guarda la selección del laboratorio; con el filtro «todos» avanza al siguiente.
+async function save(
+  lab, // Object - Laboratorio candidato; se usa lab.idLab
+  estado, // String - Decisión de la revisión: aprobado, sin-imagen o pendiente
+) {
   if (busy) {return;}
   const elegidas = [...document.querySelectorAll('[name=elegida]:checked')].map(i => i.value);
   const principal = document.querySelector('[name=principal]:checked')?.value || (elegidas.length === 1 ? elegidas[0] : '');
@@ -47,7 +81,13 @@ $('exportar').onclick = () => {
   const link = document.createElement('a'), url = URL.createObjectURL(new Blob([JSON.stringify({ labs, state }, null, 2)], { type: 'application/json' }));
   link.href = url; link.download = 'revision-labunam.json'; link.click(); URL.revokeObjectURL(url);
 };
+
+// Estado
+// Temporizador de la siguiente consulta de progreso.
 let timer;
+
+// Gestores de evento
+// Consulta /estado y muestra el avance o el resultado de la última aplicación; no recibe parámetros.
 async function progress() {
   clearTimeout(timer);
   try {
@@ -75,6 +115,7 @@ $('aplicar').onclick = async () => {
   try { await post('/aplicar', {}); await progress(); }
   catch (error) { message(error.message); busy = false; $('aplicar').disabled = false; }
 };
+// Descarga candidatas, selecciones y progreso de búsqueda, y vuelve al primer laboratorio.
 async function load() {
   if (busy) {return;}
   try {
@@ -84,5 +125,7 @@ async function load() {
   } catch { message('No se pudo cargar la revisión. Recarga la página.'); }
 }
 $('recargar').onclick = load;
+
+// Ejecución
 await load();
 await progress();

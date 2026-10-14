@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Tab.module.css (pestaña accesible de una lista de pestañas)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .tab {
   flex: 0 0 auto;
   padding: var(--space-md) 0;

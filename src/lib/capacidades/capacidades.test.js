@@ -1,6 +1,13 @@
+// LabUNAM
+// Pruebas unitarias
+// capacidades.test (capacidades destacadas y fragmentos de texto)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "vitest";
 import { getCapabilities, getCapabilityExcerpt } from "./capacidades";
 
+// Pruebas
 test("prioriza capacidades coincidentes aunque estén al final del inventario", () => {
   expect(
     getCapabilities(["Cultivos", "Análisis"], ["Centrífuga", "Microscopio"], ["Microscopio"]),

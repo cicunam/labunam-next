@@ -1,3 +1,8 @@
+// LabUNAM
+// Componentes
+// index (barril de componentes para páginas y layouts)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
 // Punto de entrada para páginas y layouts. Sin "use client": cada componente conserva su frontera.
 // Entre componentes usamos imports directos para evitar dependencias circulares.
 

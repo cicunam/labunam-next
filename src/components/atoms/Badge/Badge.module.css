@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Badge.module.css (etiqueta corta con punto de color)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .badge {
   display: inline-flex;
   align-items: center;

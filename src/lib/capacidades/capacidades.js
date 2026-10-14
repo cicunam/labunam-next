@@ -1,6 +1,18 @@
+// LabUNAM
+// Utilidades compartidas
+// capacidades (servicios y equipos que se destacan en las tarjetas)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { normalizeText } from "../texto/texto";
 
-export function getCapabilities(servicios, equipos, coincidencias = []) {
+// Definición del módulo
+// Elige hasta dos capacidades sin repetir, preferentemente las que coinciden con la búsqueda y de tipos distintos.
+export function getCapabilities(
+  servicios, // Array - Servicios (String) del laboratorio, en el orden en que llegan
+  equipos, // Array - Equipos (String) del laboratorio, en el orden en que llegan
+  coincidencias = [], // Array Optional - Servicios o equipos (String) que coinciden con la búsqueda
+) {
   const encontrados = new Set(coincidencias.map(normalizeText));
   const vistos = new Set();
   const opciones = [
@@ -24,7 +36,10 @@ export function getCapabilities(servicios, equipos, coincidencias = []) {
   };
 }
 // Fragmento literal: acerca la palabra buscada al inicio sin inventar un resumen.
-export function getCapabilityExcerpt(texto, busqueda = "") {
+export function getCapabilityExcerpt(
+  texto, // String - Descripción completa del servicio o equipo
+  busqueda = "", // String Optional - Texto buscado; el fragmento empieza cerca de su primera palabra encontrada
+) {
   const limpio = texto.replace(/\s+/g, " ").trim();
   if (limpio.length <= 120) {
     return limpio;

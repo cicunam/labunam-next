@@ -1,7 +1,16 @@
+// LabUNAM
+// Scripts
+// fotos (genera las variantes WebP de las fotografías originales y su manifiesto)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { readdir, stat, mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import sharp from "sharp";
 import { selectPhotos } from "../src/lib/selectPhotos/selectPhotos.js";
+
+// Constantes
+// --origen= tiene prioridad sobre LABUNAM_FOTOS_ORIGEN; --solo= limita la corrida a IDs separados por comas.
 const argumentos = process.argv.slice(2);
 const origen =
   argumentos.find((a) => a.startsWith("--origen="))?.slice(9) || process.env.LABUNAM_FOTOS_ORIGEN;
@@ -10,7 +19,14 @@ const solo = argumentos
   ?.slice(7)
   .split(",");
 const destino = resolve("public/fotos");
-async function generatePhoto(original, carpeta, posicion) {
+
+// Utilidades
+// Convierte un original en WebP de 480, 960 y 1440 px sin ampliarlo y devuelve su src y srcset.
+async function generatePhoto(
+  original, // String - Ruta del archivo original
+  carpeta, // String - Identificador del laboratorio; nombra la carpeta de destino
+  posicion, // Number - Posición de la foto en la selección; numera los archivos desde 1
+) {
   const meta = await sharp(original).metadata();
   const ancho =
     meta.autoOrient?.width ??
@@ -39,6 +55,8 @@ async function generatePhoto(original, carpeta, posicion) {
     srcset: variantes.map((v) => `${v.src} ${v.ancho}w`).join(", "),
   };
 }
+// Recorre las carpetas numéricas del origen, genera sus fotos y publica el manifiesto.
+// No recibe parámetros: lee el origen y la lista --solo= de las constantes del módulo.
 async function run() {
   if (!origen || !(await stat(origen)).isDirectory()) {
     throw new Error("origen");
@@ -98,6 +116,8 @@ async function run() {
     process.exitCode = 2;
   }
 }
+
+// Ejecución
 run().catch(() => {
   console.error(
     "No se pudieron generar las fotos. Revisa la carpeta de origen y los permisos de lectura y escritura.",

@@ -1,4 +1,12 @@
+// LabUNAM
+// Pruebas de navegador
+// cimientos.spec (cabecera, pie, menú y redirects heredados)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, test } from "@playwright/test";
+
+// Pruebas
 test("cabecera, pie y menú funcionan con teclado", async ({ page }) => {
   const errores = [];
   page.on("pageerror", (error) => errores.push(error.message));
@@ -38,6 +46,7 @@ test("cabecera, pie y menú funcionan con teclado", async ({ page }) => {
   await expect(boton).toBeFocused();
   expect(errores).toEqual([]);
 });
+
 test("las rutas heredadas conservan sus parámetros en un 301", async ({ request }) => {
   for (const tipo of ["nacionales", "universitarios", "unidades", "internacionales"]) {
     const respuesta = await request.get(`/${tipo}?q=rayos%20x&sede=sonora`, { maxRedirects: 0 });

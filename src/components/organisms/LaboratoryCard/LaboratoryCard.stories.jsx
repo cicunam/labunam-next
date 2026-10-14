@@ -1,6 +1,15 @@
+// LabUNAM
+// Historias
+// LaboratoryCard.stories (estados de la tarjeta de laboratorio)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Componentes
 import LaboratoryCard from "./LaboratoryCard";
+
+// Datos de prueba
 import { laboratorio } from "@datosPrueba/componentes";
 
+// Configuración de la historia
 const meta = {
   title: "Organismos/LaboratoryCard",
   component: LaboratoryCard,
@@ -15,8 +24,12 @@ const meta = {
   ],
 };
 export default meta;
+
+// Historias
+// Tarjeta con fotografía y sede
 const Default = {};
 export { Default };
+// Tarjeta con la ilustración general de respaldo
 const WithoutPhoto = {
   args: {
     photo: {
@@ -27,8 +40,10 @@ const WithoutPhoto = {
   },
 };
 export { WithoutPhoto };
+// Tarjeta que muestra el equipo que coincide con la búsqueda
 const Match = { args: { matches: ["Microscopio"] } };
 export { Match };
+// Tarjeta de un laboratorio sin servicios ni equipos
 const WithoutCapabilities = {
   args: { laboratorio: { ...laboratorio, servicios: [], equipos: [] } },
 };

@@ -1,5 +1,12 @@
+// LabUNAM
+// Historias
+// SearchBar.stories (buscador principal con sugerencias)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Componentes
 import SearchBar from "./SearchBar";
 
+// Configuración de la historia
 const meta = {
   title: "Organismos/SearchBar",
   component: SearchBar,
@@ -12,5 +19,8 @@ const meta = {
   },
 };
 export default meta;
+
+// Historias
+// Buscador con sede, sugerencias y búsquedas frecuentes
 const Default = {};
 export { Default };

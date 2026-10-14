@@ -1,3 +1,8 @@
+/* LabUNAM
+   Estilos
+   Gallery.module.css (hasta tres imágenes de un laboratorio)
+   Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
+
 .gallery {
   width: 100%;
   display: grid;

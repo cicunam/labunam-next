@@ -1,4 +1,13 @@
+// LabUNAM
+// Configuración
+// preview (parámetros comunes de las historias)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Estilos
 import "../src/app/globals.css";
+
+// Configuración
+// Las vistas coinciden con los anchos de Playwright y a11y falla ante cualquier hallazgo.
 const preview = {
   parameters: {
     layout: "centered",

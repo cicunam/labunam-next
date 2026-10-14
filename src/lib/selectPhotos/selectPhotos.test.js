@@ -1,7 +1,20 @@
+// LabUNAM
+// Pruebas unitarias
+// selectPhotos.test (prioridad de originales y resubidas más recientes)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Dependencias
 import { expect, it } from "vitest";
 import { selectPhotos } from "./selectPhotos";
 
-const createPhoto = (nombre, modificado = 0) => ({ nombre, modificado });
+// Utilidades
+// Archivo original ficticio con la forma que recibe selectPhotos.
+const createPhoto = (
+  nombre, // String - Nombre del archivo
+  modificado = 0, // Number Optional - Fecha de modificación del archivo en milisegundos
+) => ({ nombre, modificado });
+
+// Pruebas
 it("ordena carruseles, fondo, infraestructura y antecedentes; limita a tres", () => {
   expect(
     selectPhotos([

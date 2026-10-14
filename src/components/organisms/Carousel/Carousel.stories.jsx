@@ -1,5 +1,12 @@
+// LabUNAM
+// Historias
+// Carousel.stories (carrusel de noticias de la portada)
+// Raúl Salinas <raul.teo.salinas@cic.unam.mx>
+
+// Componentes
 import Carousel from "./Carousel";
 
+// Configuración de la historia
 const meta = {
   title: "Organismos/Carousel",
   component: Carousel,
@@ -15,5 +22,8 @@ const meta = {
   },
 };
 export default meta;
+
+// Historias
+// Carrusel con tres noticias de ejemplo
 const Default = {};
 export { Default };
