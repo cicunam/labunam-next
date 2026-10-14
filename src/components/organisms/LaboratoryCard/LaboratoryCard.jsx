@@ -15,17 +15,17 @@ import styles from "./LaboratoryCard.module.css";
 
 // Definición del componente
 const LaboratoryCard = ({
-  laboratorio: lab, // Object - Laboratorio del catálogo: idLab, nombre, entidad, sedeNombre, tipo, servicios, equipos y grupos
+  laboratorio, // Object - Laboratorio del catálogo: idLab, nombre, entidad, sedeNombre, tipo, servicios, equipos y grupos
   photo, // Object - Imagen elegida por getPhotos: src, srcSet y tipo ("foto", "logo" o "illustration")
   priority = false, // Boolean Optional - Carga la imagen de inmediato; sólo la primera tarjeta visible
   matches = [], // Array Optional - Servicios o equipos que coinciden con la búsqueda; el primero sustituye a la sede
   query = "", // String Optional - Texto buscado, para acercar el fragmento a la palabra
 }) => {
   // Preparación de datos
-  const capacidades = getCapabilities(lab.servicios, lab.equipos, matches);
-  const area = lab.grupos?.length === 1 ? lab.grupos[0] : "general";
+  const capacidades = getCapabilities(laboratorio.servicios, laboratorio.equipos, matches);
+  const area = laboratorio.grupos?.length === 1 ? laboratorio.grupos[0] : "general";
   const match = capacidades.coincide ? capacidades.items[0] : undefined;
-  const detail = match ? getCapabilityExcerpt(match.texto, query) : lab.sedeNombre;
+  const detail = match ? getCapabilityExcerpt(match.texto, query) : laboratorio.sedeNombre;
 
   // Interfaz
   // El título es un botón con data-details: useLaboratoryDialog (en LaboratoryDialog) escucha
@@ -63,9 +63,9 @@ const LaboratoryCard = ({
         )}
         <span
           className={styles.badge}
-          data-type={lab.tipo}
+          data-type={laboratorio.tipo}
         >
-          {redes[lab.tipo].singular}
+          {redes[laboratorio.tipo].singular}
         </span>
         <span
           className={styles.arrow}
@@ -79,18 +79,18 @@ const LaboratoryCard = ({
           <button
             className={styles.trigger}
             type="button"
-            data-details={lab.idLab}
+            data-details={laboratorio.idLab}
             aria-haspopup="dialog"
-            title={lab.nombre}
+            title={laboratorio.nombre}
           >
-            {lab.nombre}
+            {laboratorio.nombre}
           </button>
         </h3>
         <p
           className={styles.entity}
-          title={lab.entidad}
+          title={laboratorio.entidad}
         >
-          {lab.entidad}
+          {laboratorio.entidad}
         </p>
         {detail && (
           <p

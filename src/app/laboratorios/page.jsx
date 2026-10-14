@@ -34,20 +34,13 @@ const LaboratoriesPage = async ({
   searchParams, // Promise - Resuelve al objeto con los parámetros de la URL (q, tipo, disciplina, sede…)
 }) => {
   // Datos
-  const {
-    criteria,
-    results,
-    filters: filtros,
-    total,
-    locations,
-    suggestions,
-    photos,
-  } = await searchLaboratorios(await searchParams);
+  const { criteria, results, filters, total, locations, suggestions, photos } =
+    await searchLaboratorios(await searchParams);
 
   // Preparación de datos
   const title = criteria.tipo ? redes[criteria.tipo].nombre : "Laboratorios de la UNAM";
   const labels = Object.fromEntries(
-    filtros.flatMap((filtro) =>
+    filters.flatMap((filtro) =>
       filtro.opciones.map((o) => [`${filtro.eje}:${o.clave}`, o.etiqueta]),
     ),
   );
@@ -71,7 +64,7 @@ const LaboratoriesPage = async ({
         <FilterDialog
           key={getCatalogUrl(criteria)}
           criteria={criteria}
-          filters={filtros}
+          filters={filters}
           total={total}
         >
           <DisciplineBar criteria={criteria} />

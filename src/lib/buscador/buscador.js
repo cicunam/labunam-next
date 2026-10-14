@@ -1,52 +1,106 @@
 // LabUNAM
 // Utilidades compartidas
-// buscador (búsqueda por palabras, filtros por eje y conteos sobre el catálogo en memoria)
+// buscador (los filtros del catálogo, búsqueda por palabras y conteos sobre el catálogo en memoria)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
 import { slugify, normalizeText } from "../texto/texto";
+import { redes } from "../redes/redes";
+import { grupos } from "../grupos/grupos";
 
 // Constantes
-// Ejes de filtro que aceptan la URL y el diálogo de filtros.
-export const ejes = ["tipo", "disciplina", "especialidad", "sede", "perfil", "reconocimiento"];
-// Etiquetas visibles de las actividades del laboratorio.
-export const perfiles = {
+// Etiquetas visibles de las actividades del laboratorio; las claves son los valores de lab.perfil.
+const perfiles = {
   servicios: "Presta servicios",
   docencia: "Apoya la docencia",
   basica: "Investigación básica",
   aplicada: "Investigación aplicada",
 };
 // Etiquetas visibles de los reconocimientos que se pueden filtrar.
-export const reconocimientos = {
+const reconocimientos = {
   certificacion: "Con certificación",
   acreditacion: "Con acreditación",
   micrositio: "Con micrositio en LabUNAM",
 };
+// Convierte un objeto clave → etiqueta en la lista de opciones que usa el diálogo.
+const toOptions = (
+  etiquetas, // Object - Etiqueta visible (String) por cada clave
+) => Object.entries(etiquetas).map(([clave, etiqueta]) => ({ clave, etiqueta }));
+
+// Los seis filtros del catálogo, en el orden en que los muestra el diálogo. Cada uno define:
+// - eje: el parámetro de la URL. Los nombres son heredados: "disciplina" filtra por área
+//   (las diez de grupos) y "especialidad" por cada una de las 38 disciplinas.
+// - etiqueta: el título visible de su grupo de opciones.
+// - enDialogo: si aparece en el diálogo de filtros; la red se elige en el buscador.
+// - reordenar: si sus opciones se ordenan por conteo en cada consulta (listas largas).
+// - valores: las claves que un laboratorio aporta al filtro.
+// - opciones: las que ofrece el diálogo, fijas o leídas del catálogo armado.
+export const filtros = [
+  {
+    eje: "tipo",
+    etiqueta: "Red",
+    enDialogo: false,
+    reordenar: false,
+    valores: (lab) => [lab.tipo],
+    opciones: () => Object.entries(redes).map(([clave, red]) => ({ clave, etiqueta: red.nombre })),
+  },
+  {
+    eje: "disciplina",
+    etiqueta: "Área",
+    enDialogo: true,
+    reordenar: false,
+    valores: (lab) => lab.grupos,
+    opciones: () => grupos.map((grupo) => ({ clave: grupo.clave, etiqueta: grupo.etiqueta })),
+  },
+  {
+    eje: "especialidad",
+    etiqueta: "Disciplina",
+    enDialogo: true,
+    reordenar: true,
+    valores: (lab) => lab.disciplinas.map(slugify),
+    opciones: (catalogo) => catalogo.disciplinas,
+  },
+  {
+    eje: "sede",
+    etiqueta: "Sede",
+    enDialogo: true,
+    reordenar: true,
+    valores: (lab) => [lab.sede],
+    opciones: (catalogo) => catalogo.sedes,
+  },
+  {
+    eje: "perfil",
+    etiqueta: "Actividad",
+    enDialogo: true,
+    reordenar: false,
+    valores: (lab) => lab.perfil,
+    opciones: () => toOptions(perfiles),
+  },
+  {
+    eje: "reconocimiento",
+    etiqueta: "Reconocimientos",
+    enDialogo: true,
+    reordenar: false,
+    valores: (lab) =>
+      [
+        lab.certificado ? "certificacion" : "",
+        lab.acreditado ? "acreditacion" : "",
+        lab.micrositio ? "micrositio" : "",
+      ].filter(Boolean),
+    opciones: () => toOptions(reconocimientos),
+  },
+];
+// Ejes de filtro que aceptan la URL y el diálogo de filtros.
+export const ejes = filtros.map((filtro) => filtro.eje);
+const filtrosPorEje = Object.fromEntries(filtros.map((filtro) => [filtro.eje, filtro]));
 
 // Definición del módulo
 // Valores que un laboratorio aporta a un eje, con las claves que usa la URL.
 export function getFacetValues(
-  lab, // Object - Laboratorio del catálogo; se leen tipo, sede, grupos, disciplinas, perfil, certificado, acreditado y micrositio
+  lab, // Object - Laboratorio del catálogo; se leen los campos que pide cada filtro
   eje, // String - Uno de los ejes de filtro (ver ejes)
 ) {
-  switch (eje) {
-    case "tipo":
-      return [lab.tipo];
-    case "sede":
-      return [lab.sede];
-    case "disciplina":
-      return lab.grupos;
-    case "especialidad":
-      return lab.disciplinas.map(slugify);
-    case "perfil":
-      return lab.perfil;
-    case "reconocimiento":
-      return [
-        lab.certificado ? "certificacion" : "",
-        lab.acreditado ? "acreditacion" : "",
-        lab.micrositio ? "micrositio" : "",
-      ].filter(Boolean);
-  }
+  return filtrosPorEje[eje].valores(lab);
 }
 // Conserva el texto buscado y sólo los filtros con algún laboratorio que los cumpla.
 export function normalizeCriteria(

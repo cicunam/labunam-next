@@ -21,7 +21,7 @@ import styles from "./FilterDialog.module.css";
 // Definición del componente
 const FilterDialog = ({
   criteria, // Object - Criterios aplicados en la URL; son el punto de partida del borrador
-  filters, // Array - Facetas de prepareFilters: eje, etiqueta, cualquiera y opciones con clave, etiqueta y total
+  filters, // Array - Filtros del diálogo calculados en el servidor: eje, etiqueta, cualquiera y opciones con clave, etiqueta y total
   total, // Number - Laboratorios que coinciden con los criterios aplicados
   children, // ReactNode Optional - Contenido de la barra horizontal; en el catálogo es DisciplineBar
 }) => {
@@ -110,7 +110,7 @@ const FilterDialog = ({
             />
           ))}
           <div className={styles["modal-body"]}>
-            {data.filtros.map((filtro) => (
+            {data.filters.map((filtro) => (
               <fieldset
                 key={filtro.eje}
                 className={styles["modal-group"]}

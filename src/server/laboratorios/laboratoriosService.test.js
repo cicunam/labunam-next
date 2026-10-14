@@ -103,7 +103,7 @@ it("el catálogo y la API muestran los mismos conteos y opciones", async () => {
     new Request("http://localhost/api/filtros?q=microscopia&tipo=nacionales"),
   );
   expect(response.status).toBe(200);
-  expect(await response.json()).toEqual({ total: data.total, filtros: data.filters });
+  expect(await response.json()).toEqual({ total: data.total, filters: data.filters });
   expect(data.results).toHaveLength(data.total);
   expect(data.total).toBeGreaterThan(0);
 });
@@ -146,8 +146,8 @@ it("los conteos de filtros calculan los cinco ejes respetando los otros filtros"
   const criterios = { q: "microscopia", tipo: "nacionales", disciplina: "biologia" };
   const resultado = await getFilterCounts(criterios);
   expect(resultado.total).toBe(filterLaboratorios(catalogo.laboratorios, criterios).length);
-  expect(resultado.filtros).toHaveLength(5);
-  for (const filtro of resultado.filtros) {
+  expect(resultado.filters).toHaveLength(5);
+  for (const filtro of resultado.filters) {
     for (const opcion of filtro.opciones) {
       expect(opcion.total).toBe(
         filterLaboratorios(catalogo.laboratorios, { ...criterios, [filtro.eje]: "" }).filter(

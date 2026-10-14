@@ -7,7 +7,7 @@
 
 // Dependencias
 import { useEffect, useRef, useState } from "react";
-import { getCatalogUrl } from "@/lib/presentacion/presentacion";
+import { fetchFilterCounts } from "@/lib/api/api";
 
 // Definición del mecanismo
 // La selección es un borrador: cada cambio pide a /api/filtros los conteos que resultarían,
@@ -20,7 +20,7 @@ export function useFilterDraft({
   // Referencias y estado
   const request = useRef(null);
   const [selection, setSelection] = useState(criteria);
-  const [data, setData] = useState({ filtros: filters, total });
+  const [data, setData] = useState({ filters, total });
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
 
@@ -41,16 +41,7 @@ export function useFilterDraft({
     const controller = new AbortController();
     request.current = controller;
     try {
-      const response = await fetch(
-        getCatalogUrl(nextSelection).replace("/laboratorios", "/api/filtros"),
-        {
-          signal: controller.signal,
-        },
-      );
-      if (!response.ok) {
-        throw new Error();
-      }
-      setData(await response.json());
+      setData(await fetchFilterCounts(nextSelection, controller.signal));
     } catch {
       if (!controller.signal.aborted) {
         setError("No se pudieron actualizar los conteos. Puedes aplicar los filtros.");

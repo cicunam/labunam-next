@@ -24,7 +24,7 @@ const tabs = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
 
 // Definición del componente
 const LaboratoryDetails = ({
-  laboratorio: lab, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, servicios, equipos, distinciones y galeria
+  laboratorio, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, servicios, equipos, distinciones y galeria
   isPage = false, // Boolean Optional - Usa h1 cuando la ficha es la página completa y h2 dentro del modal
 }) => {
   // Estado
@@ -33,27 +33,27 @@ const LaboratoryDetails = ({
   // Preparación de datos
   const Title = isPage ? "h1" : "h2";
   const content = [
-    lab.servicios,
-    lab.equipos,
-    lab.distinciones,
-    [lab.sedeNombre, lab.ubicacion].filter(Boolean),
+    laboratorio.servicios,
+    laboratorio.equipos,
+    laboratorio.distinciones,
+    [laboratorio.sedeNombre, laboratorio.ubicacion].filter(Boolean),
   ];
 
   // Interfaz
   return (
     <>
       <div className={styles["details-body"]}>
-        <Gallery images={lab.galeria} />
+        <Gallery images={laboratorio.galeria} />
         <div className={styles["details-header"]}>
-          <Badge tone={redes[lab.tipo].tone}>{redes[lab.tipo].singular}</Badge>
+          <Badge tone={redes[laboratorio.tipo].tone}>{redes[laboratorio.tipo].singular}</Badge>
           <Title
             id="details-title"
             className={styles["details-title"]}
           >
-            {lab.nombre}
+            {laboratorio.nombre}
           </Title>
-          <p className={styles["details-entity"]}>{lab.entidad}</p>
-          <p className={styles["details-location"]}>{lab.sedeNombre}</p>
+          <p className={styles["details-entity"]}>{laboratorio.entidad}</p>
+          <p className={styles["details-location"]}>{laboratorio.sedeNombre}</p>
         </div>
         <div
           className={styles["details-tabs"]}
@@ -108,10 +108,10 @@ const LaboratoryDetails = ({
             ) : (
               <p className={styles["details-empty"]}>Sin información registrada todavía.</p>
             )}
-            {i === 3 && lab.mapa && (
+            {i === 3 && laboratorio.mapa && (
               <a
                 className={styles["details-mapa"]}
-                href={lab.mapa}
+                href={laboratorio.mapa}
                 target="_blank"
                 rel="noopener"
               >
@@ -123,13 +123,13 @@ const LaboratoryDetails = ({
       </div>
       <footer className={styles["details-footer"]}>
         <p className={styles["details-footer-note"]}>
-          {formatCounts(lab.servicios.length, lab.equipos.length)}
+          {formatCounts(laboratorio.servicios.length, laboratorio.equipos.length)}
         </p>
         <div className={styles["details-footer-actions"]}>
-          {lab.sitio && (
+          {laboratorio.sitio && (
             <a
               className={styles["details-mapa"]}
-              href={lab.sitio}
+              href={laboratorio.sitio}
               target="_blank"
               rel="noopener"
             >
@@ -138,7 +138,7 @@ const LaboratoryDetails = ({
           )}
           <Link
             className={styles["details-website"]}
-            href={`/contacto?laboratorio=${lab.idLab}`}
+            href={`/contacto?laboratorio=${laboratorio.idLab}`}
             prefetch={false}
           >
             Solicitar un servicio →

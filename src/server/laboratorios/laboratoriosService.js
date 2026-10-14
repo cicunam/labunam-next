@@ -7,13 +7,10 @@
 import {
   countFacet,
   filterLaboratorios,
+  filtros,
   normalizeCriteria,
-  perfiles,
-  reconocimientos,
 } from "../../lib/buscador/buscador";
 import { getPhotos } from "../../lib/fotos/fotos";
-import { grupos } from "../../lib/grupos/grupos";
-import { redes } from "../../lib/redes/redes";
 
 // Servicios
 import { loadCatalog } from "./laboratoriosCatalogo";
@@ -79,12 +76,12 @@ export async function searchLaboratorios(
   // Next puede entregar valores repetidos como arrays; sólo aceptamos criterios simples.
   const entries = Object.entries(parameters).filter(([, value]) => typeof value === "string");
   const criteria = normalizeCriteria(catalogo.laboratorios, Object.fromEntries(entries));
-  const { filtros, total } = prepareFilters(catalogo, criteria);
+  const { filters, total } = prepareFilters(catalogo, criteria);
 
   return {
     criteria,
     results: filterLaboratorios(catalogo.laboratorios, criteria),
-    filters: filtros,
+    filters,
     total,
     locations: catalogo.sedes,
     suggestions: catalogo.sugerencias,
@@ -112,13 +109,8 @@ export async function countLaboratorios() {
   const { laboratorios } = await loadCatalog();
   return {
     total: laboratorios.length,
-    tipos: countFacet(laboratorios, {}, "tipo", Object.keys(redes)),
-    areas: countFacet(
-      laboratorios,
-      {},
-      "disciplina",
-      grupos.map((grupo) => grupo.clave),
-    ),
+    tipos: countFacet(laboratorios, {}, "tipo", getOptionKeys("tipo")),
+    areas: countFacet(laboratorios, {}, "disciplina", getOptionKeys("disciplina")),
   };
 }
 
@@ -145,47 +137,47 @@ async function findLaboratorio(
   return laboratorios.find((laboratorio) => laboratorio.idLab === Number(id)) ?? null;
 }
 
-// Cada filtro cuenta sus opciones con los demás filtros aplicados, para mostrar cuántos
-// resultados daría elegir cada una.
+// Claves de las opciones fijas de un filtro (red o área), para los conteos de la portada.
+function getOptionKeys(
+  eje, // String - "tipo" o "disciplina"
+) {
+  return filtros
+    .find((filtro) => filtro.eje === eje)
+    .opciones()
+    .map((opcion) => opcion.clave);
+}
+
+// Cada filtro del diálogo cuenta sus opciones con los demás filtros aplicados, para mostrar
+// cuántos resultados daría elegir cada una.
 function prepareFilters(
   catalogo, // Object - Catálogo armado por laboratoriosCatalogo
-  criterios, // Object - Criterios ya validados con normalizeCriteria
+  criteria, // Object - Criterios ya validados con normalizeCriteria
 ) {
-  const getOptions = (opciones) =>
-    Object.entries(opciones).map(([clave, etiqueta]) => ({ clave, etiqueta, total: 0 }));
-  const definiciones = [
-    {
-      eje: "disciplina",
-      etiqueta: "Área",
-      opciones: grupos.map((g) => ({ clave: g.clave, etiqueta: g.etiqueta, total: 0 })),
-    },
-    { eje: "especialidad", etiqueta: "Disciplina", opciones: catalogo.disciplinas },
-    { eje: "sede", etiqueta: "Sede", opciones: catalogo.sedes },
-    { eje: "perfil", etiqueta: "Actividad", opciones: getOptions(perfiles) },
-    { eje: "reconocimiento", etiqueta: "Reconocimientos", opciones: getOptions(reconocimientos) },
-  ];
   return {
-    total: filterLaboratorios(catalogo.laboratorios, criterios).length,
-    filtros: definiciones.map((filtro) => {
-      const cuentas = countFacet(
-        catalogo.laboratorios,
-        criterios,
-        filtro.eje,
-        filtro.opciones.map((o) => o.clave),
-      );
-      const opciones = filtro.opciones.map((opcion) => ({
-        ...opcion,
-        total: cuentas[opcion.clave],
-      }));
-      if (["especialidad", "sede"].includes(filtro.eje)) {
-        opciones.sort((a, b) => b.total - a.total || a.etiqueta.localeCompare(b.etiqueta, "es"));
-      }
-      return {
-        ...filtro,
-        opciones,
-        cualquiera: filterLaboratorios(catalogo.laboratorios, { ...criterios, [filtro.eje]: "" })
-          .length,
-      };
-    }),
+    total: filterLaboratorios(catalogo.laboratorios, criteria).length,
+    filters: filtros
+      .filter((filtro) => filtro.enDialogo)
+      .map((filtro) => {
+        const opciones = filtro.opciones(catalogo);
+        const cuentas = countFacet(
+          catalogo.laboratorios,
+          criteria,
+          filtro.eje,
+          opciones.map((opcion) => opcion.clave),
+        );
+        const conTotales = opciones.map((opcion) => ({ ...opcion, total: cuentas[opcion.clave] }));
+        if (filtro.reordenar) {
+          conTotales.sort(
+            (a, b) => b.total - a.total || a.etiqueta.localeCompare(b.etiqueta, "es"),
+          );
+        }
+        return {
+          eje: filtro.eje,
+          etiqueta: filtro.etiqueta,
+          opciones: conTotales,
+          cualquiera: filterLaboratorios(catalogo.laboratorios, { ...criteria, [filtro.eje]: "" })
+            .length,
+        };
+      }),
   };
 }

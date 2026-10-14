@@ -93,14 +93,14 @@ const Header = () => {
             className={styles["menu-direct"]}
             aria-label="Principal"
           >
-            {links.map(({ href, label: text }) => (
+            {links.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 className={styles["menu-direct-link"]}
                 aria-current={isActive(href) ? "page" : undefined}
               >
-                {text}
+                {label}
               </Link>
             ))}
           </nav>
@@ -130,7 +130,7 @@ const Header = () => {
           inert={!open}
         >
           <ul className={styles["menu-list"]}>
-            {links.map(({ href, label: text }) => (
+            {links.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
@@ -138,7 +138,7 @@ const Header = () => {
                   aria-current={isActive(href) ? "page" : undefined}
                   onClick={closeMenu}
                 >
-                  {text}
+                  {label}
                 </Link>
               </li>
             ))}

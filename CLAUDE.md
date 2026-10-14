@@ -24,10 +24,10 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Catálogo y URL de filtros | `src/app/laboratorios/page.jsx`, `src/server/laboratorios/laboratoriosService.js` |
 | Consultas SQL y caché | `src/server/config/dbconnection.js`, `src/server/laboratorios/LaboratorioDao.js`, `src/server/laboratorios/laboratoriosCatalogo.js` |
 | Filas SQL y modelo público | `src/server/laboratorios/LaboratorioDao.js`, `tests/datosPrueba/catalogo.js` |
-| Búsqueda y facetas | `src/lib/buscador/buscador.js`, `src/lib/capacidades/capacidades.js` |
+| Búsqueda y filtros | `src/lib/buscador/buscador.js` (tabla `filtros` con los seis ejes), `src/lib/capacidades/capacidades.js` |
 | Sugerencias e iconos de áreas | `src/lib/sugerencias/sugerencias.js`, `src/lib/grupos/grupos.js` |
-| API de filtros | `src/app/api/filtros/route.js`, `src/server/laboratorios/laboratoriosController.js` |
-| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js` |
+| API de filtros | `src/app/api/filtros/route.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/api/api.js` |
+| Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/api/api.js` |
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
 | Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
@@ -69,6 +69,9 @@ son locales y no definen la configuración del servidor de la UNAM.
 
 ## Detalles que suelen causar confusión
 
+- Los seis filtros se definen una sola vez en la tabla `filtros` de `buscador.js`. Los
+  parámetros de URL son heredados: `disciplina` filtra por área y `especialidad` por
+  cada una de las 38 disciplinas; la red (`tipo`) se elige en el buscador, no en el diálogo.
 - La búsqueda combina palabras normalizadas sobre el catálogo ya cargado; no es
   una consulta SQL nueva por cada chip. Las sugerencias proceden de disciplinas
   y equipos del catálogo. Revisar implementación y datos de prueba antes de cambiar reglas.

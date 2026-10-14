@@ -7,6 +7,7 @@
 
 // Dependencias
 import { lazy, Suspense } from "react";
+import { fetchLaboratorioDetails } from "@/lib/api/api";
 
 // Mecanismos
 import { useLaboratoryDialog } from "./useLaboratoryDialog";
@@ -19,18 +20,6 @@ import styles from "./LaboratoryDialog.module.css";
 
 // La ficha se carga sólo cuando se abre el modal; no forma parte del JavaScript inicial.
 const LaboratoryDetails = lazy(() => import("../LaboratoryDetails/LaboratoryDetails"));
-
-// Utilidades
-// Pide la ficha pública a la API y avisa con un mensaje visible si la respuesta falla.
-async function fetchLaboratorioDetails(
-  id, // Number | String - Identificador del laboratorio
-) {
-  const respuesta = await fetch(`/api/laboratorios/${id}`);
-  if (!respuesta.ok) {
-    throw new Error("No se pudo cargar la ficha. Intenta de nuevo.");
-  }
-  return respuesta.json();
-}
 
 // Definición del componente
 // Sin initialLaboratorio es un modal que se abre al pulsar cualquier elemento con data-details
