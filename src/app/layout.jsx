@@ -4,7 +4,7 @@
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Componentes
-import { Header, Footer } from "@/components";
+import { Header, Footer, FloatingContact } from "@/components";
 
 // Estilos
 import "./globals.css";
@@ -27,6 +27,7 @@ const RootLayout = ({
         <Header />
         <main id="content">{children}</main>
         <Footer />
+        <FloatingContact />
       </body>
     </html>
   );

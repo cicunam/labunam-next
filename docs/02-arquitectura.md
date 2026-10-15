@@ -18,7 +18,7 @@ MySQL sigue siendo la fuente de datos; el portal lo consulta en modo de sólo le
 | `src/components/atoms/` | Elementos básicos | `Button`, `Input`, `Icon` |
 | `src/components/molecules/` | Combinaciones genéricas | `Tab`, `Gallery` |
 | `src/components/organisms/` | Secciones y comportamiento del portal | `LaboratoryDialog`, `SearchBar` |
-| `src/server/` | Backend, una carpeta por entidad | `laboratorios/`, `disciplinas/`, `fotos/`; `config/` con la conexión |
+| `src/server/` | Backend, una carpeta por entidad | `laboratorios/`, `disciplinas/`, `fotos/`, `solicitudes/`; `config/` con la conexión |
 | `src/lib/` | Funciones compartidas sin React | `texto`, `buscador`, `fotos` |
 | `public/` | Archivos servidos por URL | `public/assets/…` se usa como `/assets/…` |
 | `scripts/` | Herramientas que se ejecutan por comando | Generación y revisión de fotos |
@@ -41,6 +41,7 @@ El barril no lleva `"use client"`; la frontera permanece en cada componente inte
 | `src/app/laboratorios/page.jsx` | `/laboratorios` |
 | `src/app/laboratorios/[id]/page.jsx` | `/laboratorios/70`, con `id = "70"` |
 | `src/app/contacto/page.jsx` | `/contacto` |
+| `src/app/solicitud/page.jsx` | `/solicitud` |
 | `src/app/api/laboratorios/[id]/route.js` | Endpoint que devuelve JSON |
 | `src/app/layout.jsx` | Envoltura común: estructura HTML, cabecera y pie |
 

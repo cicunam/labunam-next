@@ -138,7 +138,7 @@ const LaboratoryDetails = ({
           )}
           <Link
             className={styles["details-website"]}
-            href={`/contacto?laboratorio=${laboratorio.idLab}`}
+            href={`/solicitud?laboratorio=${laboratorio.idLab}`}
             prefetch={false}
           >
             Solicitar un servicio →

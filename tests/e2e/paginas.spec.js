@@ -5,6 +5,7 @@
 
 // Dependencias
 import { expect, test } from "@playwright/test";
+import { FORM_FIELDS } from "../../src/lib/validacionSolicitud/validacionSolicitud.js";
 
 // Pruebas
 test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({ page }) => {
@@ -92,12 +93,130 @@ test("contacto explica el envío deshabilitado y no solicita datos", async ({ pa
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
+test("la navegación lleva a solicitud", async ({ page }) => {
+  await page.goto("/");
+  const menu = page.getByRole("navigation", { name: "Principal" });
+  await expect(menu.getByRole("link", { name: "Contacto" })).toHaveCount(0);
+  if (await menu.isVisible()) {
+    await menu.getByRole("link", { name: "Solicitud" }).click();
+  } else {
+    await page.getByRole("button", { name: "Abrir menú" }).click();
+    await page
+      .getByRole("navigation", { name: "Navegación" })
+      .getByRole("link", { name: "Solicitud" })
+      .click();
+  }
+  await expect(page).toHaveURL(/\/solicitud$/);
+  await expect(page).toHaveTitle("Solicitud | LabUNAM");
+  await expect(
+    page.getByRole("heading", { name: "Solicitud de servicio", level: 1 }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole("link", { name: "Ir a contacto" }).click();
+  await expect(page).toHaveURL(/\/contacto$/);
+});
+test("solicitud asociada a un laboratorio valida el identificador", async ({ page, request }) => {
+  await page.goto("/laboratorios?tipo=internacionales");
+  const tarjeta = page.locator("[data-details]").first();
+  const nombre = await tarjeta.textContent();
+  const id = await tarjeta.getAttribute("data-details");
+  await page.goto(`/solicitud?laboratorio=${id}`);
+  await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Volver al laboratorio" }).click();
+  await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
+  expect((await request.get("/solicitud?laboratorio=no-valido")).status()).toBe(404);
+  expect((await request.get("/solicitud?laboratorio=999999999")).status()).toBe(404);
+});
+test("el sobre flotante abre contacto desde cualquier página", async ({ page }) => {
+  await page.goto("/laboratorios");
+  const sobre = page.getByRole("link", { name: "Contacto", exact: true });
+  await expect(sobre).toBeInViewport();
+  await page.mouse.wheel(0, 2000);
+  await expect(sobre).toBeInViewport();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await sobre.focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/contacto$/);
+  await expect(
+    page.getByRole("heading", { name: "Contacto", exact: true, level: 1 }),
+  ).toBeVisible();
+});
+test("el formulario de solicitud muestra campos según las opciones y no envía datos", async ({
+  page,
+}) => {
+  const envios = [];
+  page.on("request", (peticion) => {
+    if (peticion.method() !== "GET") {
+      envios.push(peticion.url());
+    }
+  });
+  await page.goto("/solicitud");
+  const enviar = page.getByRole("button", { name: "Enviar solicitud" });
+  await enviar.click();
+  await expect(page.getByLabel("Nombre(s)")).toBeFocused();
+  await page.getByLabel("Nombre(s)").fill("Persona de Prueba");
+  await page.getByLabel("Primer apellido").fill("Ejemplo");
+  await page.getByLabel("Correo electrónico").fill("persona@ejemplo.com");
+  await page.getByLabel("Teléfono").fill("5512345678");
+  await expect(page.getByLabel("Estado")).toHaveCount(0);
+  await page.getByLabel("País").fill("mexico");
+  await expect(page.getByLabel("Estado")).toBeVisible();
+  await page
+    .getByLabel("Tipo de solicitante")
+    .selectOption({ label: "Institución de educación superior" });
+  await expect(page.getByLabel("Dependencia")).toHaveCount(0);
+  await page
+    .getByRole("combobox", { name: "Institución", exact: true })
+    .fill("Universidad Nacional Autónoma de México");
+  await expect(page.getByLabel("Dependencia")).toBeVisible();
+  await page.getByLabel("Tipo de solicitante").selectOption({ label: "Empresa" });
+  await expect(page.getByRole("combobox", { name: "Institución", exact: true })).toHaveCount(0);
+  await page.getByLabel("Nombre de la empresa").fill("Empresa de Ejemplo");
+  await page.getByRole("radio", { name: "Análisis o prueba" }).check();
+  await page
+    .getByLabel("¿En cuánto tiempo necesitas el resultado?")
+    .selectOption({ label: "Más de 3 días" });
+  await expect(page.getByLabel("Cantidad de días")).toBeVisible();
+  await page.getByLabel("Cantidad de días").fill("10");
+  await page
+    .getByLabel("Descripción del análisis o prueba")
+    .fill("Análisis de una muestra ficticia.");
+  await page.getByLabel("País").fill("Pais inexistente");
+  await enviar.click();
+  await expect(page.getByLabel("País")).toBeFocused();
+  await expect(page.getByRole("status")).toHaveText("");
+  await page.getByLabel("País").fill("España");
+  await expect(page.getByLabel("Estado")).toHaveCount(0);
+  await enviar.click();
+  await expect(page.getByRole("status")).toContainText("no se envió información");
+  // Los nombres del formulario deben coincidir con los que acepta la validación del servidor.
+  const nombres = await page.locator("form").evaluate((form) => [...new FormData(form).keys()]);
+  expect(nombres.filter((nombre) => !FORM_FIELDS.includes(nombre))).toEqual([]);
+  const aviso = page.getByRole("link", { name: /aviso de privacidad integral/ });
+  await expect(aviso).toHaveAttribute("href", "https://avisos-privacidad.cic.unam.mx/");
+  await expect(aviso).toHaveAttribute("target", "_blank");
+  expect(envios).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({
+  request,
+}) => {
+  const unam = await (await request.get("/api/solicitudes/instituciones?q=unam")).json();
+  expect(unam.instituciones[0]).toMatchObject({
+    nombre: "Universidad Nacional Autonoma de Mexico",
+    siglas: "UNAM",
+  });
+  expect(unam.instituciones.length).toBeLessThanOrEqual(15);
+  expect(
+    (await (await request.get("/api/solicitudes/instituciones?q=u")).json()).instituciones,
+  ).toEqual([]);
+});
 test("una ficha inexistente responde 404", async ({ request }) => {
   expect((await request.get("/laboratorios/no-valido")).status()).toBe(404);
   expect((await request.get("/laboratorios/999999999")).status()).toBe(404);
 });
 
-test("solicitud de servicio conserva el laboratorio y explica el envío pendiente", async ({
+test("solicitud de servicio conserva el laboratorio y explica que el formulario está pendiente", async ({
   page,
 }) => {
   await page.goto("/laboratorios?tipo=internacionales");
@@ -106,24 +225,21 @@ test("solicitud de servicio conserva el laboratorio y explica el envío pendient
   const id = await tarjeta.getAttribute("data-details");
   await tarjeta.click();
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
-  await expect(page).toHaveURL(new RegExp(`/contacto\\?laboratorio=${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
   await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
-  await expect(page.getByLabel("Servicio de interés")).toBeDisabled();
-  await expect(page.getByRole("button", { name: "Envío no disponible" })).toBeDisabled();
   await expect(
-    page.getByText("No se enviará información al laboratorio.", { exact: false }),
+    page.getByText("El envío de solicitudes aún no está disponible", { exact: false }),
   ).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.goBack();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
-  await expect(page).toHaveURL(new RegExp(`/contacto\\?laboratorio=${id}$`));
+  await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
   await page.reload();
   await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
   await page.getByRole("link", { name: "Volver al laboratorio" }).click();
   await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
 });
-
 test("cerrar el modal conserva posición y filtros", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia");
   const tarjeta = page.locator("[data-details]").last();

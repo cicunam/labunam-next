@@ -26,6 +26,7 @@ export { default as Contact } from "./organisms/Contact/Contact";
 export { default as DisciplineBar } from "./organisms/DisciplineBar/DisciplineBar";
 export { default as DisciplineSection } from "./organisms/DisciplineSection/DisciplineSection";
 export { default as FilterDialog } from "./organisms/FilterDialog/FilterDialog";
+export { default as FloatingContact } from "./organisms/FloatingContact/FloatingContact";
 export { default as Footer } from "./organisms/Footer/Footer";
 export { default as Header } from "./organisms/Header/Header";
 export { default as LaboratoryCard } from "./organisms/LaboratoryCard/LaboratoryCard";
@@ -36,3 +37,4 @@ export { default as LaboratoryNetworks } from "./organisms/LaboratoryNetworks/La
 export { default as NewsSection } from "./organisms/NewsSection/NewsSection";
 export { default as RecentLaboratories } from "./organisms/RecentLaboratories/RecentLaboratories";
 export { default as SearchBar } from "./organisms/SearchBar/SearchBar";
+export { default as ServiceRequest } from "./organisms/ServiceRequest/ServiceRequest";

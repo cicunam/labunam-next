@@ -22,7 +22,7 @@ import styles from "./Header.module.css";
 const links = [
   { href: "/", label: "Inicio" },
   { href: "/laboratorios", label: "Laboratorios" },
-  { href: "/contacto", label: "Contacto" },
+  { href: "/solicitud", label: "Solicitud" },
 ];
 
 // Definición del componente

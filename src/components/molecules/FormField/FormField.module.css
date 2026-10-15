@@ -1,0 +1,25 @@
+/* LabUNAM
+   Estilos
+   FormField.module.css (etiqueta, control y ayuda de un campo de formulario)
+   Ángelo M */
+
+.field {
+  display: grid;
+  gap: var(--space-sm);
+  min-width: 0;
+  align-content: start;
+}
+.wide {
+  grid-column: 1 / -1;
+}
+.label {
+  font: var(--font-medium-semibold);
+  color: var(--color-black);
+}
+.mark {
+  color: var(--color-type-nacionales);
+}
+.hint {
+  font: var(--font-small-regular);
+  color: var(--color-neutral-dark);
+}

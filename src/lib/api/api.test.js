@@ -5,7 +5,7 @@
 
 // Dependencias
 import { afterEach, expect, it, vi } from "vitest";
-import { fetchFilterCounts, fetchLaboratorioDetails } from "./api";
+import { fetchFilterCounts, fetchInstitutions, fetchLaboratorioDetails } from "./api";
 
 // Simulaciones
 // fetch se sustituye para comprobar la URL pedida sin levantar el servidor.
@@ -40,4 +40,14 @@ it("avisa cuando los conteos no responden bien", async () => {
   await expect(fetchFilterCounts({}, new AbortController().signal)).rejects.toThrow(
     "No se pudieron actualizar los conteos.",
   );
+});
+it("pide instituciones con el texto codificado y avisa si la respuesta falla", async () => {
+  fetchMock.mockResolvedValue({
+    ok: true,
+    json: async () => ({ instituciones: [{ clave: "1" }] }),
+  });
+  expect(await fetchInstitutions("a & b")).toEqual([{ clave: "1" }]);
+  expect(fetchMock.mock.calls[0][0]).toBe("/api/solicitudes/instituciones?q=a%20%26%20b");
+  fetchMock.mockResolvedValue({ ok: false });
+  await expect(fetchInstitutions("ab")).rejects.toThrow("No se pudieron cargar las instituciones.");
 });

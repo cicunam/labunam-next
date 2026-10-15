@@ -101,10 +101,13 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 | `/` | Portada, redes, incorporaciones, áreas, noticias e información institucional |
 | `/laboratorios` | Catálogo y filtros compartibles por URL |
 | `/laboratorios/[id]` | Ficha individual del laboratorio |
-| `/contacto` | Presentación del flujo de contacto |
-| `/contacto?laboratorio=[id]` | Solicitud asociada a un laboratorio |
+| `/contacto` | Contacto rápido; se abre desde el sobre flotante de todas las páginas |
+| `/contacto?laboratorio=[id]` | Variante anterior de solicitud; la ficha ya enlaza a `/solicitud` |
+| `/solicitud` | Formulario de solicitud de servicio con catálogos reales; todavía no envía datos |
+| `/solicitud?laboratorio=[id]` | Solicitud asociada a un laboratorio |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
+| `/api/solicitudes/instituciones?q=` | Hasta 15 instituciones vigentes que coinciden con el texto |
 
 La portada incluye un mapa por estado (`LaboratoryMap`) entre las disciplinas y
 las noticias. Recibe sólo los conteos de `catalogo.sedes`; seleccionar
@@ -116,6 +119,13 @@ El catálogo se renderiza en servidor. `loadCatalog()` combina dos consultas de
 sólo lectura (laboratorios con sus relaciones y disciplinas) y reutiliza una caché en memoria. Las peticiones concurrentes comparten
 la carga; si una actualización falla, se conserva la última copia válida.
 Cada proceso Node tiene su propia caché.
+
+El formulario de `/solicitud` usa `loadRequestCatalogs()`
+(`src/server/solicitudes/`), con la misma política de caché, para siete catálogos
+de sólo lectura. Países, estados de México y EUA,
+dependencias vigentes, cargos y tipos de muestra y colaboración viajan con la
+página; las instituciones vigentes (miles) se quedan en el servidor y se buscan
+desde `/api/solicitudes/instituciones`.
 
 La búsqueda normaliza acentos y combina palabras para buscar en nombres y
 capacidades. Las sugerencias proceden de disciplinas y equipos. El navegador no
@@ -193,6 +203,8 @@ Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
 
 - Conectar el backend de solicitudes, acordar destinatarios y validar el envío.
   El formulario permanece deshabilitado y no transmite mensajes.
+- Obtener la revisión institucional del texto breve de privacidad del formulario de
+  solicitud (`PrivacyNotice`), que remite al aviso integral de la CIC.
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
 - Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún
