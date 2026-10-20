@@ -62,12 +62,12 @@ export const FORM_FIELDS = [
 // es válido, trae exactamente las columnas por insertar.
 export function validateRequest(
   input, // Object - Campos recibidos, por ejemplo Object.fromEntries(formData)
-  catalogs, // Object - { publicos, instituciones } de loadRequestCatalogs
+  catalogs, // Object - { publicos, instituciones } de loadRequestCatalogs y laboratorios { idLab } del catálogo
 ) {
   const errors = {};
   const read = createReader(input ?? {}, errors);
   const data = Object.fromEntries(COLUMNS.map((column) => [column, null]));
-  const { publicos, instituciones } = catalogs;
+  const { publicos, instituciones, laboratorios } = catalogs;
 
   data.nombre = read.text("nombre", RULES.nombre, { required: true });
   data.apellido1 = read.text("apellido1", RULES.nombre, { required: true });
@@ -80,10 +80,10 @@ export function validateRequest(
   }
   validateRequester(read, data, publicos, instituciones);
   validateDetails(read, data, publicos);
-  data.id_laboratorio_micrositio = read.integer("id_laboratorio", {
-    min: 1,
-    max: Number.MAX_SAFE_INTEGER,
-  });
+  // Vacío significa «necesito orientación»; con valor, debe ser un laboratorio del catálogo.
+  data.id_laboratorio_micrositio = toNumber(
+    read.option("id_laboratorio", new Set(laboratorios.map(({ idLab }) => String(idLab)))),
+  );
 
   const valid = Object.keys(errors).length === 0;
   return { valid, errors, data: valid ? data : null };

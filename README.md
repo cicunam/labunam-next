@@ -104,9 +104,10 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 | `/contacto` | Contacto rápido; se abre desde el sobre flotante de todas las páginas |
 | `/contacto?laboratorio=[id]` | Variante anterior de solicitud; la ficha ya enlaza a `/solicitud` |
 | `/solicitud` | Formulario de solicitud de servicio con catálogos reales; todavía no envía datos |
-| `/solicitud?laboratorio=[id]` | Solicitud asociada a un laboratorio |
+| `/solicitud?laboratorio=[id]` | Solicitud con «Laboratorio de interés» ya elegido; se puede cambiar |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
+| `/api/laboratorios/sugerencias?q=` | Hasta 15 laboratorios (id, nombre y entidad) para «Laboratorio de interés» |
 | `/api/solicitudes/instituciones?q=` | Hasta 15 instituciones vigentes que coinciden con el texto |
 
 La portada incluye un mapa por estado (`LaboratoryMap`) entre las disciplinas y

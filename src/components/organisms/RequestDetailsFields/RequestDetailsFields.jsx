@@ -16,6 +16,7 @@ import ChoiceGroup from "../../molecules/ChoiceGroup/ChoiceGroup";
 import Select from "../../atoms/Select/Select";
 import TextArea from "../../atoms/TextArea/TextArea";
 import AnalysisFields from "../AnalysisFields/AnalysisFields";
+import LaboratoryField from "../LaboratoryField/LaboratoryField";
 
 // Constantes
 // Cada tipo de solicitud guarda su texto principal en la misma columna `descripcion`.
@@ -27,6 +28,7 @@ const DESCRIPTION_LABELS = {
 
 // Definición del componente
 const RequestDetailsFields = ({
+  laboratorio = null, // Object Optional - Laboratorio inicial de ?laboratorio: idLab, nombre y entidad
   catalogos, // Object - Catálogos públicos: tiposMuestra y tiposColaboracion
 }) => {
   // Referencias y estado
@@ -38,6 +40,7 @@ const RequestDetailsFields = ({
   // Interfaz
   return (
     <FormSection title="Datos de la solicitud">
+      <LaboratoryField laboratorio={laboratorio} />
       <ChoiceGroup
         legend="Tipo de solicitud"
         name="id_tipo_solicitud"

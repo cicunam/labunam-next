@@ -4,7 +4,7 @@
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Servicios
-import { getById, getFilterCounts, isValidId } from "./laboratoriosService";
+import { getById, getFilterCounts, isValidId, suggestLaboratorios } from "./laboratoriosService";
 
 // Definición del controlador
 // Las páginas llaman al servicio directamente; estas funciones sólo atienden al navegador.
@@ -41,5 +41,18 @@ export async function getFilters(
     return Response.json(await getFilterCounts(parameters));
   } catch {
     return Response.json({ error: "No se pudieron actualizar los conteos." }, { status: 503 });
+  }
+}
+
+// GET /api/laboratorios/sugerencias?q=: laboratorios para el campo «Laboratorio de interés».
+export async function getSuggestions(
+  request, // Request - Petición HTTP; q es el texto escrito
+) {
+  // El texto se recorta para no procesar entradas arbitrariamente largas.
+  const text = (new URL(request.url).searchParams.get("q") ?? "").slice(0, 100);
+  try {
+    return Response.json({ laboratorios: await suggestLaboratorios(text) });
+  } catch {
+    return Response.json({ error: "No se pudieron cargar los laboratorios." }, { status: 503 });
   }
 }

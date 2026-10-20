@@ -76,3 +76,10 @@ export function createRequestCatalogRows() {
     tiposColaboracion: [{ clave: 1, nombre: "Estancia" }],
   };
 }
+
+// Laboratorios con la forma que devuelve la ruta de sugerencias; dos comparten nombre.
+export const laboratoriosEjemplo = [
+  { idLab: 18, nombre: "Laboratorio de Microscopía", entidad: "Instituto de Demostración" },
+  { idLab: 25, nombre: "Laboratorio de Difracción", entidad: "Instituto de Demostración" },
+  { idLab: 26, nombre: "Laboratorio de Difracción", entidad: "Facultad de Ejemplo" },
+];

@@ -12,7 +12,7 @@ import styles from "./ServiceRequest.module.css";
 
 // Definición del componente
 const ServiceRequest = ({
-  laboratorio = null, // Object Optional - Laboratorio asociado: idLab, nombre, entidad y sitio
+  laboratorio = null, // Object Optional - Laboratorio inicial de ?laboratorio: idLab, nombre y entidad
   catalogos, // Object - Catálogos públicos del formulario de loadRequestCatalogs
 }) => {
   // Interfaz
@@ -29,52 +29,27 @@ const ServiceRequest = ({
         </p>
       </header>
       <div className={styles.columns}>
+        {/* El laboratorio elegido se muestra en el campo «Laboratorio de interés», que se actualiza
+            al cambiarlo; aquí sólo queda la orientación general. */}
         <aside
           className={styles.information}
-          aria-label={laboratorio ? "Laboratorio seleccionado" : "Antes de empezar"}
+          aria-label="Antes de empezar"
         >
-          {laboratorio ? (
-            <>
-              <h2>{laboratorio.nombre}</h2>
-              <p>{laboratorio.entidad}</p>
-              <p>
-                Describe el servicio que te interesa, el tipo de muestra o análisis y los plazos de
-                tu proyecto.
-              </p>
-              <AppLink href={`/laboratorios/${laboratorio.idLab}`}>← Volver al laboratorio</AppLink>
-              {laboratorio.sitio && (
-                <p>
-                  <a
-                    href={laboratorio.sitio}
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Consultar el sitio del laboratorio ↗
-                  </a>
-                </p>
-              )}
-            </>
-          ) : (
-            <>
-              <h2>¿Ya sabes qué laboratorio te interesa?</h2>
-              <p>
-                Abre su ficha en el catálogo y elige «Solicitar un servicio» para que tu solicitud
-                quede asociada a ese laboratorio.
-              </p>
-              <AppLink href="/laboratorios">Explorar laboratorios →</AppLink>
-              <h2>¿Sólo quieres enviarnos un mensaje, comentario o duda?</h2>
-              <p>
-                Si no necesitas registrar una solicitud de servicio y prefieres escribirnos
-                directamente, usa la sección de contacto.
-              </p>
-              <AppLink href="/contacto">Ir a contacto →</AppLink>
-            </>
-          )}
+          <p>
+            Indica en «Laboratorio de interés» el laboratorio que buscas. Si todavía no lo sabes,
+            déjalo vacío y te orientaremos, o{" "}
+            <AppLink href="/laboratorios">explora el catálogo</AppLink>.
+          </p>
+          <h2>¿Sólo quieres enviarnos un mensaje, comentario o duda?</h2>
+          <p>
+            Si no necesitas registrar una solicitud de servicio y prefieres escribirnos
+            directamente, usa la sección de contacto.
+          </p>
+          <AppLink href="/contacto">Ir a contacto →</AppLink>
         </aside>
         <div className={styles.form}>
-          {/* Al formulario sólo viaja el id: el resto del laboratorio se queda en el servidor. */}
           <ServiceRequestForm
-            laboratorio={laboratorio ? { idLab: laboratorio.idLab } : null}
+            laboratorio={laboratorio}
             catalogos={catalogos}
           />
         </div>

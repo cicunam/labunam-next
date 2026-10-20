@@ -56,7 +56,7 @@ propaga un error público. El objeto de salida contiene sólo los campos de la f
 no el índice de búsqueda ni filas SQL completas.
 
 El modal, que corre en el navegador, usa `fetchLaboratorioDetails()` de
-`src/lib/api/api.js`, que reúne las dos llamadas a la API. Esta función consulta `/api/laboratorios/[id]`.
+`src/lib/api/api.js`, que reúne las llamadas del navegador a la API. Esta función consulta `/api/laboratorios/[id]`.
 La ruta delega a `getDetails()` del controlador, que usa el mismo `getById()`:
 400 para ID inválido, 404 si no existe y 503 cuando falla la carga. Nunca responde
 con mensajes internos de MySQL. Contacto usa `getContactDetails()` para recibir

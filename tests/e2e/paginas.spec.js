@@ -115,15 +115,26 @@ test("la navegación lleva a solicitud", async ({ page }) => {
   await page.getByRole("link", { name: "Ir a contacto" }).click();
   await expect(page).toHaveURL(/\/contacto$/);
 });
-test("solicitud asociada a un laboratorio valida el identificador", async ({ page, request }) => {
+test("solicitud asociada a un laboratorio llega con el laboratorio de interés y valida el identificador", async ({
+  page,
+  request,
+}) => {
   await page.goto("/laboratorios?tipo=internacionales");
   const tarjeta = page.locator("[data-details]").first();
   const nombre = await tarjeta.textContent();
   const id = await tarjeta.getAttribute("data-details");
   await page.goto(`/solicitud?laboratorio=${id}`);
-  await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
-  await page.getByRole("link", { name: "Volver al laboratorio" }).click();
-  await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
+  const campo = page.getByRole("combobox", { name: "Laboratorio de interés" });
+  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
+  await expect(page.locator('input[name="id_laboratorio"]')).toHaveValue(id);
+  await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveAttribute(
+    "href",
+    `/laboratorios/${id}`,
+  );
+  // Vacío significa «necesito orientación»: no viaja ningún laboratorio.
+  await campo.fill("");
+  await expect(page.locator('input[name="id_laboratorio"]')).toHaveValue("");
+  await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveCount(0);
   expect((await request.get("/solicitud?laboratorio=no-valido")).status()).toBe(404);
   expect((await request.get("/solicitud?laboratorio=999999999")).status()).toBe(404);
 });
@@ -198,6 +209,42 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
   expect(envios).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+test("laboratorio de interés sugiere con entidad y sólo acepta un laboratorio de la lista", async ({
+  page,
+  request,
+}) => {
+  const { laboratorios } = await (
+    await request.get("/api/laboratorios/sugerencias?q=microscop")
+  ).json();
+  expect(laboratorios.length).toBeGreaterThan(0);
+  expect(laboratorios.length).toBeLessThanOrEqual(15);
+  expect(Object.keys(laboratorios[0]).sort()).toEqual(["entidad", "idLab", "nombre"]);
+  expect(
+    (await (await request.get("/api/laboratorios/sugerencias?q=m")).json()).laboratorios,
+  ).toEqual([]);
+
+  await page.goto("/solicitud");
+  const campo = page.getByRole("combobox", { name: "Laboratorio de interés" });
+  const oculto = page.locator('input[name="id_laboratorio"]');
+  await campo.fill("microscop");
+  const sugerencia = `${laboratorios[0].nombre} — ${laboratorios[0].entidad}`;
+  await expect(page.locator("#request-laboratorio-options option").first()).toHaveAttribute(
+    "value",
+    /—/,
+  );
+  await campo.fill(sugerencia);
+  await expect(oculto).toHaveValue(String(laboratorios[0].idLab));
+  await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveAttribute(
+    "href",
+    `/laboratorios/${laboratorios[0].idLab}`,
+  );
+  // Un texto que no corresponde a ninguna sugerencia bloquea el envío en ese campo.
+  await campo.fill("Laboratorio que no existe");
+  await expect(oculto).toHaveValue("");
+  expect(await campo.evaluate((input) => input.validationMessage)).toBe(
+    "Elige un laboratorio de la lista o deja el campo vacío.",
+  );
+});
 test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({
   request,
 }) => {
@@ -223,10 +270,11 @@ test("solicitud de servicio conserva el laboratorio y explica que el formulario 
   const tarjeta = page.locator("[data-details]").first();
   const nombre = await tarjeta.textContent();
   const id = await tarjeta.getAttribute("data-details");
+  const campo = page.getByRole("combobox", { name: "Laboratorio de interés" });
   await tarjeta.click();
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
   await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
-  await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
+  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
   await expect(
     page.getByText("El envío de solicitudes aún no está disponible", { exact: false }),
   ).toBeVisible();
@@ -236,9 +284,7 @@ test("solicitud de servicio conserva el laboratorio y explica que el formulario 
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
   await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
   await page.reload();
-  await expect(page.getByRole("heading", { name: nombre, exact: true })).toBeVisible();
-  await page.getByRole("link", { name: "Volver al laboratorio" }).click();
-  await expect(page).toHaveURL(new RegExp(`/laboratorios/${id}$`));
+  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
 });
 test("cerrar el modal conserva posición y filtros", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia");

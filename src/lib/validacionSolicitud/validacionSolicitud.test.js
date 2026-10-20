@@ -6,10 +6,18 @@
 // Dependencias
 import { describe, expect, it } from "vitest";
 import { FORM_FIELDS, validateRequest } from "./validacionSolicitud";
-import { catalogosEjemplo, institucionesEjemplo } from "@datosPrueba/solicitudes";
+import {
+  catalogosEjemplo,
+  institucionesEjemplo,
+  laboratoriosEjemplo,
+} from "@datosPrueba/solicitudes";
 
 // Pruebas
-const catalogos = { publicos: catalogosEjemplo, instituciones: institucionesEjemplo };
+const catalogos = {
+  publicos: catalogosEjemplo,
+  instituciones: institucionesEjemplo,
+  laboratorios: laboratoriosEjemplo,
+};
 // Solicitud mínima válida: persona física que pide una capacitación.
 const base = {
   nombre: "Persona",
@@ -75,7 +83,8 @@ describe("reglas de campos", () => {
     ["descripcion", "x".repeat(256), "Debe tener entre 2 y 255 caracteres."],
     ["id_pais", "ZZZ", "Elige una opción válida."],
     ["id_tipo_solicitante", "9", "Elige una opción válida."],
-    ["id_laboratorio", "-3", "Escribe un número entero entre 1 y 9007199254740991."],
+    ["id_laboratorio", "-3", "Elige una opción válida."],
+    ["id_laboratorio", "999", "Elige una opción válida."],
   ])("rechaza %s = %j", (campo, valor, mensaje) => {
     expect(validar({ [campo]: valor }).errors[campo]).toBe(mensaje);
   });

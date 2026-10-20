@@ -39,3 +39,17 @@ export async function fetchInstitutions(
   }
   return (await response.json()).instituciones;
 }
+
+// Pide los laboratorios que coinciden con lo escrito en «Laboratorio de interés».
+export async function fetchLaboratorioSuggestions(
+  text, // String - Texto escrito por la persona
+  signal, // AbortSignal Optional - Cancela la petición si la persona sigue escribiendo
+) {
+  const response = await fetch(`/api/laboratorios/sugerencias?q=${encodeURIComponent(text)}`, {
+    signal,
+  });
+  if (!response.ok) {
+    throw new Error("No se pudieron cargar los laboratorios.");
+  }
+  return (await response.json()).laboratorios;
+}

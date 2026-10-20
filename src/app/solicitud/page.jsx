@@ -37,11 +37,14 @@ const ServiceRequestPage = async ({
     notFound();
   }
 
+  // Al navegador sólo viajan los campos que muestra «Laboratorio de interés».
+  const selected = lab && { idLab: lab.idLab, nombre: lab.nombre, entidad: lab.entidad };
+
   // Interfaz
   return (
     <ServiceRequest
       catalogos={publicos}
-      laboratorio={lab}
+      laboratorio={selected}
     />
   );
 };

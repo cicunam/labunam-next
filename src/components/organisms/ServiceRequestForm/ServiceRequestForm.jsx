@@ -21,7 +21,7 @@ import styles from "./ServiceRequestForm.module.css";
 // Definición del componente
 // Mientras no exista el backend, el envío sólo confirma que el navegador aceptó los campos.
 const ServiceRequestForm = ({
-  laboratorio = null, // Object Optional - Laboratorio asociado: idLab
+  laboratorio = null, // Object Optional - Laboratorio inicial de ?laboratorio: idLab, nombre y entidad
   catalogos, // Object - Catálogos públicos: paises, estados, dependencias, cargos, tiposMuestra y tiposColaboracion
 }) => {
   // Referencias y estado
@@ -60,16 +60,12 @@ const ServiceRequestForm = ({
           <span className={styles.hidden}>asterisco</span> son obligatorios.
         </p>
       </div>
-      {laboratorio && (
-        <input
-          type="hidden"
-          name="id_laboratorio"
-          value={laboratorio.idLab}
-        />
-      )}
       <RequesterFields />
       <OrganizationFields catalogos={catalogos} />
-      <RequestDetailsFields catalogos={catalogos} />
+      <RequestDetailsFields
+        laboratorio={laboratorio}
+        catalogos={catalogos}
+      />
       <div className={styles.actions}>
         <PrivacyNotice />
         <Button

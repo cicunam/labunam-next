@@ -11,6 +11,7 @@ import {
   normalizeCriteria,
 } from "../../lib/buscador/buscador";
 import { getPhotos } from "../../lib/fotos/fotos";
+import { searchByName } from "../../lib/coincidencias/coincidencias";
 
 // Servicios
 import { loadCatalog } from "./laboratoriosCatalogo";
@@ -65,6 +66,19 @@ export async function getContactDetails(
     servicios: laboratorio.servicios,
     sitio: laboratorio.sitio,
   };
+}
+
+// Sugerencias del campo «Laboratorio de interés» de la solicitud. Sólo viajan id, nombre y
+// entidad de las coincidencias: el catálogo completo se queda en el servidor.
+export async function suggestLaboratorios(
+  text, // String - Texto escrito por la persona
+) {
+  const { laboratorios } = await loadCatalog();
+  return searchByName(laboratorios, text).map(({ idLab, nombre, entidad }) => ({
+    idLab,
+    nombre,
+    entidad,
+  }));
 }
 
 // Resultados y filtros de la página del catálogo, calculados sobre la misma copia

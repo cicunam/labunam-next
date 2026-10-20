@@ -8,7 +8,7 @@
 // Dependencias
 import { useEffect, useState } from "react";
 import { findOption, isUnam } from "@/lib/solicitudes/solicitudes";
-import { MIN_SEARCH_LENGTH } from "@/lib/instituciones/instituciones";
+import { MIN_SEARCH_LENGTH } from "@/lib/coincidencias/coincidencias";
 import { fetchInstitutions } from "@/lib/api/api";
 
 // Componentes

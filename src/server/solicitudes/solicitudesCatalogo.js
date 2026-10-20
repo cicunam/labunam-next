@@ -5,7 +5,7 @@
 
 // Dependencias
 import { toTitleCase } from "../../lib/texto/texto";
-import { searchInstitutions } from "../../lib/instituciones/instituciones";
+import { searchByName } from "../../lib/coincidencias/coincidencias";
 
 // Servicios
 import CatalogoSolicitudDao from "./CatalogoSolicitudDao";
@@ -82,7 +82,7 @@ export async function findInstitutions(
   text, // String - Texto escrito por la persona
 ) {
   const { instituciones } = await loadRequestCatalogs();
-  return searchInstitutions(instituciones, text);
+  return searchByName(instituciones, text);
 }
 
 // Utilidades
