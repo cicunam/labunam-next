@@ -40,7 +40,6 @@ El barril no lleva `"use client"`; la frontera permanece en cada componente inte
 | `src/app/page.jsx` | `/` |
 | `src/app/laboratorios/page.jsx` | `/laboratorios` |
 | `src/app/laboratorios/[id]/page.jsx` | `/laboratorios/70`, con `id = "70"` |
-| `src/app/contacto/page.jsx` | `/contacto` |
 | `src/app/solicitud/page.jsx` | `/solicitud` |
 | `src/app/api/laboratorios/[id]/route.js` | Endpoint que devuelve JSON |
 | `src/app/layout.jsx` | Envoltura común: estructura HTML, cabecera y pie |

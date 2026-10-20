@@ -101,8 +101,7 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 | `/` | Portada, redes, incorporaciones, áreas, noticias e información institucional |
 | `/laboratorios` | Catálogo y filtros compartibles por URL |
 | `/laboratorios/[id]` | Ficha individual del laboratorio |
-| `/contacto` | Contacto rápido; se abre desde el sobre flotante de todas las páginas |
-| `/contacto?laboratorio=[id]` | Variante anterior de solicitud; la ficha ya enlaza a `/solicitud` |
+| `/contacto` | Redirección 301 a `/solicitud`; conserva `?laboratorio` |
 | `/solicitud` | Formulario de solicitud de servicio con catálogos reales; todavía no envía datos |
 | `/solicitud?laboratorio=[id]` | Solicitud con «Laboratorio de interés» ya elegido; se puede cambiar |
 | `/api/filtros` | Facetas y conteos para los controles |
@@ -152,6 +151,10 @@ la pestaña oculta, y desactiva el avance automático con movimiento reducido.
 
 Las rutas heredadas `/nacionales`, `/universitarios`, `/unidades`,
 `/internacionales` y `/buscar` tienen redirecciones 301 que conservan la búsqueda.
+`/contacto` también redirige con 301 a `/solicitud`: el contacto rápido es ahora el
+diálogo `ContactDialog`, que se abre desde el sobre flotante de todas las páginas
+salvo `/solicitud` (ahí tapaba el formulario en móvil) y desde la columna de orientación
+de la solicitud. Su formulario sigue deshabilitado hasta acordar un buzón.
 
 ## Pruebas
 

@@ -6,6 +6,7 @@
 // Componentes
 import AppLink from "../../atoms/AppLink/AppLink";
 import ServiceRequestForm from "../ServiceRequestForm/ServiceRequestForm";
+import ContactLink from "../ContactLink/ContactLink";
 
 // Estilos
 import styles from "./ServiceRequest.module.css";
@@ -43,9 +44,9 @@ const ServiceRequest = ({
           <h2>¿Sólo quieres enviarnos un mensaje, comentario o duda?</h2>
           <p>
             Si no necesitas registrar una solicitud de servicio y prefieres escribirnos
-            directamente, usa la sección de contacto.
+            directamente, usa el formulario de contacto.
           </p>
-          <AppLink href="/contacto">Ir a contacto →</AppLink>
+          <ContactLink>Ir a contacto →</ContactLink>
         </aside>
         <div className={styles.form}>
           <ServiceRequestForm

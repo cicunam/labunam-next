@@ -30,7 +30,8 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Ficha pública y API | `src/app/laboratorios/[id]/page.jsx`, `src/app/api/laboratorios/[id]/route.js`, `src/server/laboratorios/laboratoriosService.js`, `src/server/laboratorios/laboratoriosController.js`, `src/lib/api/api.js` |
 | Modal, historial y contenido de ficha | `src/components/organisms/LaboratoryDialog/`, `src/components/organisms/LaboratoryDetails/` |
 | Tarjetas y filtros visuales | `src/components/organisms/LaboratoryCard/`, `src/components/organisms/FilterDialog/` |
-| Solicitud de servicios | `src/app/contacto/page.jsx`, `src/components/organisms/Contact/` |
+| Solicitud de servicios | `src/app/solicitud/page.jsx`, organismos `ServiceRequest`, `ServiceRequestForm` y sus secciones (`*Fields`), `src/server/solicitudes/`, `src/lib/solicitudes/` y `src/lib/validacionSolicitud/` |
+| Contacto rápido | `src/components/organisms/ContactDialog/`, `FloatingContact` y `ContactLink`, `src/lib/contacto/contacto.js` |
 | Carrusel | `src/components/organisms/Carousel/` (`useCarousel.js` tiene la interacción) |
 | Selección y presentación de imágenes | `src/server/fotos/fotosService.js`, `src/lib/fotos/fotos.js` |
 | Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
@@ -88,8 +89,8 @@ son locales y no definen la configuración del servidor de la UNAM.
   en segundo plano; el revisor muestra su estado mediante `GET /estado`.
 - Los SVG de respaldo están versionados; fotos generadas, cachés de exploración y
   selecciones editoriales no. Un clon limpio no reproduce los datos locales aprobados.
-- El backend de contacto, noticias definitivas, aceptación institucional y despliegue
-  siguen pendientes. Consultar la lista actual del README antes de planear trabajo.
+- El backend de solicitudes y de contacto, noticias definitivas, aceptación institucional
+  y despliegue siguen pendientes. Consultar la lista actual del README antes de planear trabajo.
 - La medición de rendimiento del 4 de octubre de 2026 es histórica. `docs/rendimiento.json`
   documenta el exceso del presupuesto; no usarla como medición de cambios posteriores.
 

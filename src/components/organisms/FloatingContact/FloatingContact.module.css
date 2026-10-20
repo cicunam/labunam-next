@@ -1,6 +1,6 @@
 /* LabUNAM
    Estilos
-   FloatingContact.module.css (botón flotante con el sobre que abre /contacto)
+   FloatingContact.module.css (botón flotante con el sobre que abre el diálogo de contacto)
    Ángelo M */
 
 /* Queda por debajo del menú móvil (z-index 900); los diálogos modales usan la capa superior del navegador. */
@@ -14,7 +14,10 @@
   place-items: center;
   width: 56px;
   height: 56px;
+  padding: 0;
+  border: 0;
   border-radius: var(--radius-full);
+  cursor: pointer;
   /* El naranja de marca no alcanza 3:1 con el ícono blanco; el oscuro llega a 3.7:1. */
   background: var(--color-brand-dark);
   box-shadow: var(--shadow);

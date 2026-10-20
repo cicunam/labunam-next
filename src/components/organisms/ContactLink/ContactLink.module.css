@@ -1,0 +1,23 @@
+/* LabUNAM
+   Estilos
+   ContactLink.module.css (botón con aspecto de enlace que abre el diálogo de contacto)
+   Ángelo M */
+
+.link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary-dark);
+  font: var(--font-medium-semibold);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.link:hover {
+  color: var(--color-black);
+}
+.link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}

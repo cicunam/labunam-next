@@ -14,6 +14,8 @@ const nextConfig = {
         statusCode: 301,
       })),
       { source: "/buscar", destination: "/laboratorios", statusCode: 301 },
+      // El contacto pasó a ser un diálogo; la página anterior lleva a la solicitud.
+      { source: "/contacto", destination: "/solicitud", statusCode: 301 },
     ];
   },
 };

@@ -22,7 +22,7 @@ export { default as Tab } from "./molecules/Tab/Tab";
 // Organismos
 export { default as About } from "./organisms/About/About";
 export { default as Carousel } from "./organisms/Carousel/Carousel";
-export { default as Contact } from "./organisms/Contact/Contact";
+export { default as ContactDialog } from "./organisms/ContactDialog/ContactDialog";
 export { default as DisciplineBar } from "./organisms/DisciplineBar/DisciplineBar";
 export { default as DisciplineSection } from "./organisms/DisciplineSection/DisciplineSection";
 export { default as FilterDialog } from "./organisms/FilterDialog/FilterDialog";

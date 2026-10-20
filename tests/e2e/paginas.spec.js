@@ -1,6 +1,6 @@
 // LabUNAM
 // Pruebas de navegador
-// paginas.spec (portada, catálogo, ficha, contacto y solicitud de servicio)
+// paginas.spec (portada, catálogo, ficha, diálogo de contacto y solicitud de servicio)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Dependencias
@@ -79,20 +79,6 @@ test("ficha tiene URL propia, título, metadatos y pestañas", async ({ page }) 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(titulo);
 });
 
-test("contacto explica el envío deshabilitado y no solicita datos", async ({ page }) => {
-  await page.goto("/contacto");
-  await expect(page).toHaveTitle("Contacto | LabUNAM");
-  await expect(
-    page.getByRole("heading", { name: "Contacto", exact: true, level: 1 }),
-  ).toBeVisible();
-  await expect(page.getByLabel("Correo electrónico", { exact: true })).toBeDisabled();
-  await expect(page.getByRole("button", { name: "Envío no disponible" })).toBeDisabled();
-  await expect(
-    page.getByText("El envío de mensajes aún no está disponible.", { exact: false }),
-  ).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-});
-
 test("la navegación lleva a solicitud", async ({ page }) => {
   await page.goto("/");
   const menu = page.getByRole("navigation", { name: "Principal" });
@@ -112,8 +98,10 @@ test("la navegación lleva a solicitud", async ({ page }) => {
     page.getByRole("heading", { name: "Solicitud de servicio", level: 1 }),
   ).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole("link", { name: "Ir a contacto" }).click();
-  await expect(page).toHaveURL(/\/contacto$/);
+  // En /solicitud el sobre flotante no aparece: el diálogo se abre desde la columna de orientación.
+  await expect(page.getByRole("button", { name: "Contacto", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Ir a contacto" }).click();
+  await expect(page.getByRole("dialog", { name: "Escríbenos" })).toBeVisible();
 });
 test("solicitud asociada a un laboratorio llega con el laboratorio de interés y valida el identificador", async ({
   page,
@@ -138,19 +126,38 @@ test("solicitud asociada a un laboratorio llega con el laboratorio de interés y
   expect((await request.get("/solicitud?laboratorio=no-valido")).status()).toBe(404);
   expect((await request.get("/solicitud?laboratorio=999999999")).status()).toBe(404);
 });
-test("el sobre flotante abre contacto desde cualquier página", async ({ page }) => {
+test("el sobre flotante abre el diálogo de contacto sin enviar datos", async ({ page }) => {
   await page.goto("/laboratorios");
-  const sobre = page.getByRole("link", { name: "Contacto", exact: true });
+  const sobre = page.getByRole("button", { name: "Contacto", exact: true });
+  const dialogo = page.getByRole("dialog", { name: "Escríbenos" });
   await expect(sobre).toBeInViewport();
   await page.mouse.wheel(0, 2000);
   await expect(sobre).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(dialogo).toBeHidden();
+
+  // Teclado: se abre con Enter y Escape lo cierra devolviendo el foco al sobre.
   await sobre.focus();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/contacto$/);
+  await expect(dialogo).toBeVisible();
+  await expect(page).toHaveURL(/\/laboratorios$/);
+  await expect(dialogo.getByLabel("Correo electrónico")).toBeDisabled();
+  await expect(dialogo.getByRole("button", { name: "Envío no disponible" })).toBeDisabled();
   await expect(
-    page.getByRole("heading", { name: "Contacto", exact: true, level: 1 }),
+    dialogo.getByText("El envío de mensajes aún no está disponible.", { exact: false }),
   ).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialogo).toBeHidden();
+  await expect(sobre).toBeFocused();
+
+  // El botón de cerrar y el enlace a la solicitud también cierran el diálogo.
+  await sobre.click();
+  await dialogo.getByRole("button", { name: "Cerrar contacto" }).click();
+  await expect(dialogo).toBeHidden();
+  await sobre.click();
+  await dialogo.getByRole("link", { name: "Haz una solicitud" }).click();
+  await expect(page).toHaveURL(/\/solicitud$/);
+  await expect(dialogo).toBeHidden();
 });
 test("el formulario de solicitud muestra campos según las opciones y no envía datos", async ({
   page,
@@ -162,42 +169,44 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
     }
   });
   await page.goto("/solicitud");
+  // El diálogo de contacto también tiene campos; las búsquedas se limitan al formulario de la página.
+  const main = page.getByRole("main");
   const enviar = page.getByRole("button", { name: "Enviar solicitud" });
   await enviar.click();
-  await expect(page.getByLabel("Nombre(s)")).toBeFocused();
-  await page.getByLabel("Nombre(s)").fill("Persona de Prueba");
-  await page.getByLabel("Primer apellido").fill("Ejemplo");
-  await page.getByLabel("Correo electrónico").fill("persona@ejemplo.com");
-  await page.getByLabel("Teléfono").fill("5512345678");
-  await expect(page.getByLabel("Estado")).toHaveCount(0);
-  await page.getByLabel("País").fill("mexico");
-  await expect(page.getByLabel("Estado")).toBeVisible();
+  await expect(main.getByLabel("Nombre(s)")).toBeFocused();
+  await main.getByLabel("Nombre(s)").fill("Persona de Prueba");
+  await main.getByLabel("Primer apellido").fill("Ejemplo");
+  await main.getByLabel("Correo electrónico").fill("persona@ejemplo.com");
+  await main.getByLabel("Teléfono").fill("5512345678");
+  await expect(main.getByLabel("Estado")).toHaveCount(0);
+  await main.getByLabel("País").fill("mexico");
+  await expect(main.getByLabel("Estado")).toBeVisible();
   await page
     .getByLabel("Tipo de solicitante")
     .selectOption({ label: "Institución de educación superior" });
-  await expect(page.getByLabel("Dependencia")).toHaveCount(0);
+  await expect(main.getByLabel("Dependencia")).toHaveCount(0);
   await page
     .getByRole("combobox", { name: "Institución", exact: true })
     .fill("Universidad Nacional Autónoma de México");
-  await expect(page.getByLabel("Dependencia")).toBeVisible();
-  await page.getByLabel("Tipo de solicitante").selectOption({ label: "Empresa" });
+  await expect(main.getByLabel("Dependencia")).toBeVisible();
+  await main.getByLabel("Tipo de solicitante").selectOption({ label: "Empresa" });
   await expect(page.getByRole("combobox", { name: "Institución", exact: true })).toHaveCount(0);
-  await page.getByLabel("Nombre de la empresa").fill("Empresa de Ejemplo");
+  await main.getByLabel("Nombre de la empresa").fill("Empresa de Ejemplo");
   await page.getByRole("radio", { name: "Análisis o prueba" }).check();
   await page
     .getByLabel("¿En cuánto tiempo necesitas el resultado?")
     .selectOption({ label: "Más de 3 días" });
-  await expect(page.getByLabel("Cantidad de días")).toBeVisible();
-  await page.getByLabel("Cantidad de días").fill("10");
+  await expect(main.getByLabel("Cantidad de días")).toBeVisible();
+  await main.getByLabel("Cantidad de días").fill("10");
   await page
     .getByLabel("Descripción del análisis o prueba")
     .fill("Análisis de una muestra ficticia.");
-  await page.getByLabel("País").fill("Pais inexistente");
+  await main.getByLabel("País").fill("Pais inexistente");
   await enviar.click();
-  await expect(page.getByLabel("País")).toBeFocused();
+  await expect(main.getByLabel("País")).toBeFocused();
   await expect(page.getByRole("status")).toHaveText("");
-  await page.getByLabel("País").fill("España");
-  await expect(page.getByLabel("Estado")).toHaveCount(0);
+  await main.getByLabel("País").fill("España");
+  await expect(main.getByLabel("Estado")).toHaveCount(0);
   await enviar.click();
   await expect(page.getByRole("status")).toContainText("no se envió información");
   // Los nombres del formulario deben coincidir con los que acepta la validación del servidor.
@@ -249,18 +258,20 @@ test("el formulario advierte los mismos errores de texto que valida el servidor"
   page,
 }) => {
   await page.goto("/solicitud");
+  // El diálogo de contacto también tiene campos; las búsquedas se limitan al formulario de la página.
+  const main = page.getByRole("main");
   const mensaje = (campo) => campo.evaluate((input) => input.validationMessage);
-  const correo = page.getByLabel("Correo electrónico");
+  const correo = main.getByLabel("Correo electrónico");
   await correo.fill("a@b");
   expect(await mensaje(correo)).toBe("Escribe un correo electrónico válido.");
   await correo.fill("persona@ejemplo.com");
   expect(await mensaje(correo)).toBe("");
   // La longitud se mide sin los espacios sobrantes, como en el servidor.
-  const nombre = page.getByLabel("Nombre(s)");
+  const nombre = main.getByLabel("Nombre(s)");
   await nombre.fill("  A  ");
   expect(await mensaje(nombre)).toBe("Debe tener entre 2 y 50 caracteres.");
   await page.getByRole("radio", { name: "Capacitación" }).check();
-  const descripcion = page.getByLabel("Descripción de la capacitación");
+  const descripcion = main.getByLabel("Descripción de la capacitación");
   await descripcion.fill("Más información en www.ejemplo.com");
   expect(await mensaje(descripcion)).toBe("No incluyas enlaces ni etiquetas HTML.");
   await page
