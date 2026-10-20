@@ -74,10 +74,11 @@ describe("solicitud mínima", () => {
 });
 describe("reglas de campos", () => {
   it.each([
-    ["nombre", "Ana2", "Sólo letras, espacios, puntos, apóstrofos o guiones"],
+    ["nombre", "Ana2", "Sólo letras, espacios, puntos, apóstrofos o guiones."],
     ["nombre", "A", "Debe tener entre 2 y 50 caracteres."],
-    ["telefono", "55-1234-5678", "Sólo números, entre 8 y 13 dígitos"],
+    ["telefono", "55-1234-5678", "Sólo números, entre 8 y 13 dígitos."],
     ["correo", "persona@", "Escribe un correo electrónico válido."],
+    ["correo", "a@b", "Escribe un correo electrónico válido."],
     ["descripcion", "Visita https://ejemplo.com", "No incluyas enlaces ni etiquetas HTML."],
     ["descripcion", "<b>hola</b>", "No incluyas enlaces ni etiquetas HTML."],
     ["descripcion", "x".repeat(256), "Debe tener entre 2 y 255 caracteres."],

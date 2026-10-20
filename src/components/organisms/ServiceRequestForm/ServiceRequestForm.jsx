@@ -7,6 +7,7 @@
 
 // Dependencias
 import { useState } from "react";
+import { RULES, textError } from "@/lib/solicitudes/solicitudes";
 
 // Componentes
 import Button from "../../atoms/Button/Button";
@@ -28,8 +29,30 @@ const ServiceRequestForm = ({
   const [checked, setChecked] = useState(false);
 
   // Gestores de evento
+  // Los campos con data-rule se revisan con textError, la misma función que usa el servidor,
+  // para que ambos acepten y rechacen exactamente los mismos textos.
+  function checkRule(
+    element, // Element - Campo del formulario
+  ) {
+    const rule = RULES[element.dataset?.rule];
+    if (!rule) {
+      return;
+    }
+    element.setCustomValidity(textError(element.value, rule, element.tagName === "TEXTAREA") ?? "");
+  }
+
+  function handleInput(event) {
+    checkRule(event.target);
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
+    // El autocompletado del navegador puede llenar campos sin disparar input: se revisan todos.
+    const form = event.currentTarget;
+    form.querySelectorAll("[data-rule]").forEach(checkRule);
+    if (!form.reportValidity()) {
+      return;
+    }
     setChecked(true);
   }
 
@@ -38,6 +61,7 @@ const ServiceRequestForm = ({
     <form
       className={styles.form}
       onSubmit={handleSubmit}
+      onInput={handleInput}
       onChange={() => setChecked(false)}
       aria-describedby="request-notice"
     >

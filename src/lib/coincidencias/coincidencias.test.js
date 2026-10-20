@@ -5,7 +5,7 @@
 
 // Dependencias
 import { describe, expect, it } from "vitest";
-import { searchByName } from "./coincidencias";
+import { searchByName, withSearchKeys } from "./coincidencias";
 import { institucionesEjemplo } from "@datosPrueba/solicitudes";
 
 // Pruebas
@@ -28,4 +28,17 @@ describe("búsqueda por nombre o siglas", () => {
   it("respeta el límite de sugerencias", () => {
     expect(searchByName(institucionesEjemplo, "de", 2)).toHaveLength(2);
   });
+});
+
+it("da los mismos resultados con las claves de búsqueda precalculadas", () => {
+  const precalculadas = withSearchKeys(institucionesEjemplo);
+  expect(precalculadas[0]).toMatchObject({
+    searchName: "universidad nacional autonoma de mexico",
+    searchAcronym: "unam",
+  });
+  for (const text of ["unam", "demostracion", "univer"]) {
+    expect(searchByName(precalculadas, text).map((item) => item.clave)).toEqual(
+      searchByName(institucionesEjemplo, text).map((item) => item.clave),
+    );
+  }
 });

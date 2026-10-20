@@ -7,7 +7,7 @@
 
 // Dependencias
 import { useState } from "react";
-import { RULES, TIPOS_SOLICITUD, sectionFor } from "@/lib/solicitudes/solicitudes";
+import { TIPOS_SOLICITUD, sectionFor } from "@/lib/solicitudes/solicitudes";
 
 // Componentes
 import FormSection from "../../molecules/FormSection/FormSection";
@@ -85,7 +85,7 @@ const RequestDetailsFields = ({
             id="request-descripcion"
             name="descripcion"
             required
-            {...RULES.descripcion}
+            data-rule="descripcion"
           />
         </FormField>
       )}

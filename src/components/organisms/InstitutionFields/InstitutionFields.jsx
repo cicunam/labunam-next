@@ -7,7 +7,7 @@
 
 // Dependencias
 import { useEffect, useState } from "react";
-import { findOption, isUnam } from "@/lib/solicitudes/solicitudes";
+import { RULES, findOption, isUnam, textError } from "@/lib/solicitudes/solicitudes";
 import { MIN_SEARCH_LENGTH } from "@/lib/coincidencias/coincidencias";
 import { fetchInstitutions } from "@/lib/api/api";
 
@@ -25,7 +25,7 @@ const InstitutionFields = ({
   // Referencias y estado
   const [institucionText, setInstitucionText] = useState("");
   const [dependenciaText, setDependenciaText] = useState("");
-  const [suggestions, setSuggestions] = useState({ text: "", options: [] });
+  const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
     const text = institucionText.trim();
     if (text.length < MIN_SEARCH_LENGTH) {
@@ -34,10 +34,10 @@ const InstitutionFields = ({
     const controller = new AbortController();
     const timer = setTimeout(() => {
       loadInstitutions(text, controller.signal)
-        .then((options) => setSuggestions({ text, options }))
+        .then(setSuggestions)
         .catch(() => {
           if (!controller.signal.aborted) {
-            setSuggestions({ text, options: [] });
+            setSuggestions([]);
           }
         });
     }, 250);
@@ -51,10 +51,12 @@ const InstitutionFields = ({
   const options =
     institucionText.trim().length < MIN_SEARCH_LENGTH
       ? []
-      : suggestions.options.map((option) => ({ ...option, detail: option.siglas }));
+      : suggestions.map((option) => ({ ...option, detail: option.siglas }));
   const institucion = findOption(options, institucionText);
   const dependencia = findOption(catalogos.dependencias, dependenciaText);
   const unam = isUnam(institucion?.nombre);
+  // Una institución escrita a mano se guarda como texto libre y sigue la regla de organización.
+  const freeTextError = institucion ? null : textError(institucionText, RULES.organizacion);
 
   // Interfaz
   return (
@@ -70,6 +72,8 @@ const InstitutionFields = ({
           setDependenciaText("");
         }}
         required
+        valid={!freeTextError}
+        message={freeTextError ?? undefined}
         wide
         placeholder="Escribe al menos dos letras"
         hint="Elige una sugerencia; si no aparece, escribe su nombre completo."

@@ -70,9 +70,22 @@ describe("catálogos de la solicitud", () => {
       { clave: "011", nombre: "CCH Plantel de Ejemplo" },
     ]);
     expect(publicos).not.toHaveProperty("instituciones");
+    // Las instituciones guardan sus claves de búsqueda normalizadas para no recalcularlas.
     expect(instituciones).toEqual([
-      { clave: "1", nombre: "Universidad de Demostracion", siglas: "UDD" },
-      { clave: "2", nombre: "Instituto de Ejemplo", siglas: "" },
+      {
+        clave: "1",
+        nombre: "Universidad de Demostracion",
+        siglas: "UDD",
+        searchName: "universidad de demostracion",
+        searchAcronym: "udd",
+      },
+      {
+        clave: "2",
+        nombre: "Instituto de Ejemplo",
+        siglas: "",
+        searchName: "instituto de ejemplo",
+        searchAcronym: "",
+      },
     ]);
   });
   it("comparte una carga concurrente y reutiliza la copia mientras no vence", async () => {
@@ -85,7 +98,9 @@ describe("catálogos de la solicitud", () => {
   });
   it("busca instituciones sobre la copia en caché", async () => {
     const { findInstitutions } = await import("./solicitudesCatalogo");
-    expect((await findInstitutions("udd")).map((institucion) => institucion.clave)).toEqual(["1"]);
+    expect(await findInstitutions("udd")).toEqual([
+      { clave: "1", nombre: "Universidad de Demostracion", siglas: "UDD" },
+    ]);
     expect(await findInstitutions("u")).toEqual([]);
   });
   it("sirve la copia anterior si falla la base y oculta el error interno si no hay copia", async () => {

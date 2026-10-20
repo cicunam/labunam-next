@@ -13,14 +13,13 @@ import {
   TIPOS_SOLICITANTE,
   TIPOS_SOLICITUD,
   isUnam,
+  normalizeTextValue,
   requiresState,
   sectionFor,
+  textError,
 } from "../solicitudes/solicitudes";
 
 // Constantes
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u;
-// Igual que la versión anterior: los textos libres no admiten enlaces ni etiquetas HTML.
-const FORBIDDEN = /[<>]|https?:\/\/|www\./iu;
 const DIGITS = /^[0-9]+$/;
 // Columnas de la tabla de solicitudes que llena el formulario; lo no aplicable queda en null.
 const COLUMNS = [
@@ -72,7 +71,7 @@ export function validateRequest(
   data.nombre = read.text("nombre", RULES.nombre, { required: true });
   data.apellido1 = read.text("apellido1", RULES.nombre, { required: true });
   data.apellido2 = read.text("apellido2", RULES.nombre);
-  data.correo = read.email("correo");
+  data.correo = read.text("correo", RULES.correo, { required: true });
   data.telefono = read.text("telefono", RULES.telefono, { required: true });
   data.id_pais = read.option("id_pais", ids(publicos.paises), { required: true });
   if (data.id_pais && requiresState(data.id_pais)) {
@@ -177,40 +176,14 @@ function createReader(
   };
   return {
     isEmpty: (field) => !raw(field).trim(),
+    // Mismas reglas y misma normalización que el formulario (textError de solicitudes).
     text(field, rule, { required = false, multiline = false } = {}) {
-      const value = multiline
-        ? raw(field).replace(/\r\n?/gu, "\n").trim()
-        : raw(field).replace(/\s+/gu, " ").trim();
-      const length = [...value].length;
+      const value = normalizeTextValue(raw(field), multiline);
       if (!value) {
         return required ? fail(field, "Este campo es obligatorio.") : null;
       }
-      if (
-        (rule.minLength && length < rule.minLength) ||
-        (rule.maxLength && length > rule.maxLength)
-      ) {
-        return fail(
-          field,
-          `Debe tener entre ${rule.minLength ?? 1} y ${rule.maxLength} caracteres.`,
-        );
-      }
-      if (FORBIDDEN.test(value)) {
-        return fail(field, "No incluyas enlaces ni etiquetas HTML.");
-      }
-      if (rule.pattern && !new RegExp(`^(?:${rule.pattern})$`, "v").test(value)) {
-        return fail(field, rule.title ?? "Contiene caracteres no permitidos.");
-      }
-      return value;
-    },
-    email(field) {
-      const value = raw(field).trim();
-      if (!value) {
-        return fail(field, "Este campo es obligatorio.");
-      }
-      if (value.length > RULES.correo.maxLength || !EMAIL.test(value)) {
-        return fail(field, "Escribe un correo electrónico válido.");
-      }
-      return value;
+      const error = textError(value, rule, multiline);
+      return error ? fail(field, error) : value;
     },
     option(field, allowed, { required = false } = {}) {
       const value = raw(field).trim();

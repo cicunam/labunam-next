@@ -245,6 +245,35 @@ test("laboratorio de interés sugiere con entidad y sólo acepta un laboratorio 
     "Elige un laboratorio de la lista o deja el campo vacío.",
   );
 });
+test("el formulario advierte los mismos errores de texto que valida el servidor", async ({
+  page,
+}) => {
+  await page.goto("/solicitud");
+  const mensaje = (campo) => campo.evaluate((input) => input.validationMessage);
+  const correo = page.getByLabel("Correo electrónico");
+  await correo.fill("a@b");
+  expect(await mensaje(correo)).toBe("Escribe un correo electrónico válido.");
+  await correo.fill("persona@ejemplo.com");
+  expect(await mensaje(correo)).toBe("");
+  // La longitud se mide sin los espacios sobrantes, como en el servidor.
+  const nombre = page.getByLabel("Nombre(s)");
+  await nombre.fill("  A  ");
+  expect(await mensaje(nombre)).toBe("Debe tener entre 2 y 50 caracteres.");
+  await page.getByRole("radio", { name: "Capacitación" }).check();
+  const descripcion = page.getByLabel("Descripción de la capacitación");
+  await descripcion.fill("Más información en www.ejemplo.com");
+  expect(await mensaje(descripcion)).toBe("No incluyas enlaces ni etiquetas HTML.");
+  await page
+    .getByLabel("Tipo de solicitante")
+    .selectOption({ label: "Institución de educación superior" });
+  const institucion = page.getByRole("combobox", { name: "Institución", exact: true });
+  await institucion.fill("Universidad <b>Nueva</b>");
+  await expect.poll(() => mensaje(institucion)).toBe("No incluyas enlaces ni etiquetas HTML.");
+  // Al enviar, el primer campo con error recibe el foco y no se anuncia ningún envío.
+  await page.getByRole("button", { name: "Enviar solicitud" }).click();
+  await expect(nombre).toBeFocused();
+  await expect(page.getByRole("status")).toHaveText("");
+});
 test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({
   request,
 }) => {

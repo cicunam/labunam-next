@@ -3,9 +3,6 @@
 // RequesterFields (datos de contacto de quien hace la solicitud)
 // Ángelo M
 
-// Dependencias
-import { RULES } from "@/lib/solicitudes/solicitudes";
-
 // Componentes
 import FormSection from "../../molecules/FormSection/FormSection";
 import FormField from "../../molecules/FormField/FormField";
@@ -28,7 +25,7 @@ const RequesterFields = () => {
           name="nombre"
           required
           autoComplete="given-name"
-          {...RULES.nombre}
+          data-rule="nombre"
         />
       </FormField>
       <FormField
@@ -41,7 +38,7 @@ const RequesterFields = () => {
           name="apellido1"
           required
           autoComplete="family-name"
-          {...RULES.nombre}
+          data-rule="nombre"
         />
       </FormField>
       <FormField
@@ -52,7 +49,7 @@ const RequesterFields = () => {
           id="request-apellido2"
           name="apellido2"
           autoComplete="off"
-          {...RULES.nombre}
+          data-rule="nombre"
         />
       </FormField>
       <FormField
@@ -69,7 +66,7 @@ const RequesterFields = () => {
           autoComplete="email"
           placeholder="nombre@ejemplo.com"
           aria-describedby="request-correo-hint"
-          {...RULES.correo}
+          data-rule="correo"
         />
       </FormField>
       <FormField
@@ -86,7 +83,7 @@ const RequesterFields = () => {
           required
           autoComplete="tel"
           aria-describedby="request-telefono-hint"
-          {...RULES.telefono}
+          data-rule="telefono"
         />
       </FormField>
     </FormSection>

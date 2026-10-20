@@ -12,7 +12,8 @@ const LIMIT = 15;
 
 // Definición del módulo
 // Sirve para instituciones y laboratorios. Las coincidencias exactas y por inicio aparecen
-// primero para que el nombre completo siempre esté entre las sugerencias.
+// primero para que el nombre completo siempre esté entre las sugerencias. Si los elementos traen
+// searchName y searchAcronym (de withSearchKeys) se usan sin volver a normalizar.
 export function searchByName(
   items, // Array - Elementos con nombre y siglas (instituciones o laboratorios)
   text, // String - Texto escrito por la persona
@@ -24,8 +25,8 @@ export function searchByName(
   }
   const matches = [];
   for (const item of items) {
-    const nombre = normalizeText(item.nombre);
-    const siglas = normalizeText(item.siglas ?? "");
+    const nombre = item.searchName ?? normalizeText(item.nombre);
+    const siglas = item.searchAcronym ?? normalizeText(item.siglas ?? "");
     let rank = -1;
     if (nombre === wanted || siglas === wanted) {
       rank = 0;
@@ -45,4 +46,16 @@ export function searchByName(
     )
     .slice(0, limit)
     .map(({ item }) => item);
+}
+
+// Precalcula las claves de búsqueda de una lista que se consulta muchas veces, como las miles de
+// instituciones en caché.
+export function withSearchKeys(
+  items, // Array - Elementos con nombre y siglas
+) {
+  return items.map((item) => ({
+    ...item,
+    searchName: normalizeText(item.nombre),
+    searchAcronym: normalizeText(item.siglas ?? ""),
+  }));
 }

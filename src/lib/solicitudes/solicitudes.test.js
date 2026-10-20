@@ -9,12 +9,14 @@ import {
   RULES,
   TIPOS_SOLICITANTE,
   TIPOS_SOLICITUD,
+  findLaboratorio,
   findOption,
   isUnam,
+  laboratorioLabel,
+  normalizeTextValue,
   requiresState,
   sectionFor,
-  findLaboratorio,
-  laboratorioLabel,
+  textError,
 } from "./solicitudes";
 import { catalogosEjemplo, laboratoriosEjemplo } from "@datosPrueba/solicitudes";
 
@@ -80,5 +82,31 @@ describe("laboratorio de interés", () => {
   it("acepta sólo el nombre cuando no se repite", () => {
     expect(findLaboratorio(laboratoriosEjemplo, "laboratorio de microscopia")?.idLab).toBe(18);
     expect(findLaboratorio(laboratoriosEjemplo, "")).toBeNull();
+  });
+});
+describe("textos", () => {
+  it("normaliza igual que el servidor: una línea colapsa espacios y un texto largo conserva saltos", () => {
+    expect(normalizeTextValue("  Ana   María ")).toBe("Ana María");
+    expect(normalizeTextValue(" uno\r\ndos ", true)).toBe("uno\ndos");
+  });
+  it("mide la longitud sobre el valor normalizado y en caracteres", () => {
+    // Con espacios sobrantes el texto crudo tiene 3 caracteres, pero el normalizado sólo 1.
+    expect(textError(" A ", RULES.nombre)).toBe("Debe tener entre 2 y 50 caracteres.");
+    expect(textError("ñ".repeat(255), RULES.descripcion, true)).toBeNull();
+  });
+  it("exige dominio con extensión en el correo y no lo trata como texto libre", () => {
+    expect(textError("a@b", RULES.correo)).toBe("Escribe un correo electrónico válido.");
+    expect(textError("www.persona@ejemplo.com", RULES.correo)).toBeNull();
+  });
+  it("rechaza enlaces y etiquetas en textos libres", () => {
+    expect(textError("Ver www.ejemplo.com", RULES.descripcion)).toBe(
+      "No incluyas enlaces ni etiquetas HTML.",
+    );
+    expect(textError("Empresa <b>", RULES.organizacion)).toBe(
+      "No incluyas enlaces ni etiquetas HTML.",
+    );
+  });
+  it("no marca error en un campo vacío", () => {
+    expect(textError("   ", RULES.nombre)).toBeNull();
   });
 });

@@ -8,7 +8,6 @@
 // Dependencias
 import { useState } from "react";
 import {
-  RULES,
   TAMANOS_EMPRESA,
   TIPOS_SOLICITANTE,
   findOption,
@@ -119,7 +118,7 @@ const OrganizationFields = ({
               name="organizacion"
               required
               autoComplete="organization"
-              {...RULES.organizacion}
+              data-rule="organizacion"
             />
           </FormField>
           <ChoiceGroup
@@ -141,7 +140,7 @@ const OrganizationFields = ({
             name="organizacion"
             required
             autoComplete="organization"
-            {...RULES.organizacion}
+            data-rule="organizacion"
           />
         </FormField>
       )}
@@ -157,7 +156,7 @@ const OrganizationFields = ({
             id="request-tipo-otro"
             name="tipo_solicitante_otro"
             required
-            {...RULES.organizacion}
+            data-rule="organizacion"
           />
         </FormField>
       )}

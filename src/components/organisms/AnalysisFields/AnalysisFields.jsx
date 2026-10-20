@@ -41,7 +41,7 @@ const AnalysisFields = ({
           id="request-descripcion"
           name="descripcion"
           required
-          {...RULES.descripcion}
+          data-rule="descripcion"
         />
       </FormField>
       <FormField
@@ -71,7 +71,7 @@ const AnalysisFields = ({
         <Input
           id="request-norma"
           name="norma_lineamiento"
-          {...RULES.norma}
+          data-rule="norma"
         />
       </FormField>
       <FormField
@@ -119,7 +119,7 @@ const AnalysisFields = ({
         <TextArea
           id="request-objetivos"
           name="objetivos"
-          {...RULES.descripcion}
+          data-rule="descripcion"
         />
       </FormField>
       <ChoiceGroup
@@ -135,7 +135,7 @@ const AnalysisFields = ({
         <TextArea
           id="request-equipo"
           name="equipo_especifico"
-          {...RULES.descripcion}
+          data-rule="descripcion"
         />
       </FormField>
     </>

@@ -5,7 +5,7 @@
 
 // Dependencias
 import { toTitleCase } from "../../lib/texto/texto";
-import { searchByName } from "../../lib/coincidencias/coincidencias";
+import { searchByName, withSearchKeys } from "../../lib/coincidencias/coincidencias";
 
 // Servicios
 import CatalogoSolicitudDao from "./CatalogoSolicitudDao";
@@ -62,7 +62,7 @@ export async function buildRequestCatalogs() {
     ]);
   return {
     // Las instituciones se quedan en el servidor: son miles y se buscan por texto desde su ruta API.
-    instituciones: toOptions(instituciones),
+    instituciones: withSearchKeys(toOptions(instituciones)),
     publicos: {
       paises: toOptions(paises),
       estados: {
@@ -82,7 +82,12 @@ export async function findInstitutions(
   text, // String - Texto escrito por la persona
 ) {
   const { instituciones } = await loadRequestCatalogs();
-  return searchByName(instituciones, text);
+  // Las claves de búsqueda precalculadas no viajan al navegador.
+  return searchByName(instituciones, text).map(({ clave, nombre, siglas }) => ({
+    clave,
+    nombre,
+    siglas,
+  }));
 }
 
 // Utilidades

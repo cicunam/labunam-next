@@ -128,6 +128,11 @@ dependencias vigentes, cargos y tipos de muestra y colaboración viajan con la
 página; las instituciones vigentes (miles) se quedan en el servidor y se buscan
 desde `/api/solicitudes/instituciones`.
 
+Los textos del formulario se validan con `textError()` (`src/lib/solicitudes/`) tanto en
+el navegador como en `validateRequest()`: misma normalización, longitud en caracteres,
+formato de correo y rechazo de enlaces o HTML. Así el servidor no devuelve errores que el
+formulario no haya advertido.
+
 La búsqueda normaliza acentos y combina palabras para buscar en nombres y
 capacidades. Las sugerencias proceden de disciplinas y equipos. El navegador no
 recibe el catálogo completo de servicios y equipos para filtrar.
