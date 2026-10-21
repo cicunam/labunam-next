@@ -46,6 +46,7 @@ export async function getById(
     equipos: laboratorio.equipos,
     distinciones: laboratorio.distinciones,
     sitio: laboratorio.sitio,
+    micrositio: laboratorio.micrositio,
     galeria: getPhotos(laboratorio.idLab, photos, laboratorio.grupos),
   };
 }

@@ -57,6 +57,7 @@ it("la página y la API reciben la misma ficha y sólo campos públicos", async 
       "equipos",
       "distinciones",
       "sitio",
+      "micrositio",
       "galeria",
     ].sort(),
   );

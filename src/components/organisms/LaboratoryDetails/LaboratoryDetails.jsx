@@ -24,7 +24,7 @@ const tabs = ["Servicios", "Equipamiento", "Distinciones", "Ubicación"];
 
 // Definición del componente
 const LaboratoryDetails = ({
-  laboratorio, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, servicios, equipos, distinciones y galeria
+  laboratorio, // Object - Ficha de getById: idLab, nombre, tipo, entidad, sedeNombre, ubicacion, mapa, sitio, micrositio, servicios, equipos, distinciones y galeria
   isPage = false, // Boolean Optional - Usa h1 cuando la ficha es la página completa y h2 dentro del modal
 }) => {
   // Estado
@@ -126,6 +126,14 @@ const LaboratoryDetails = ({
           {formatCounts(laboratorio.servicios.length, laboratorio.equipos.length)}
         </p>
         <div className={styles["details-footer-actions"]}>
+          {laboratorio.micrositio && (
+            <Link
+              className={styles["details-mapa"]}
+              href={`/laboratorios/${laboratorio.idLab}/micrositio`}
+            >
+              Ver micrositio
+            </Link>
+          )}
           {laboratorio.sitio && (
             <a
               className={styles["details-mapa"]}
