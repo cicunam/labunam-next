@@ -247,7 +247,9 @@ incluso en condiciones de una sola instrucción.
 La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
 textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
 las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
-junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar,
+junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar
+(historial y atajo `/`; la lista y el teclado vienen de `useAutocomplete` en la molécula
+`Autocomplete`, que también usarán los campos con sugerencias de la solicitud),
 `useHeaderMenu` / `useCompactSearch` en Header, `useLaboratoryDialog` en LaboratoryDialog
 (apertura, carga e historial del modal y el contrato `data-details`), `useFilterDraft` en
 FilterDialog (borrador de filtros con conteos en vivo), `useDragScroll` en DisciplineBar
