@@ -3,12 +3,13 @@
    FloatingContact.module.css (botón flotante con el sobre que abre el diálogo de contacto)
    Ángelo M */
 
-/* Queda por debajo del menú móvil (z-index 900); los diálogos modales usan la capa superior del navegador. */
+/* Queda por debajo del menú móvil (z-index 900); los diálogos modales usan la capa superior del navegador.
+   Esquina inferior derecha, la posición habitual de los botones flotantes; el margen inferior
+   suma la zona segura de iOS para no quedar bajo la barra de inicio. */
 .button {
   position: fixed;
-  top: 50%;
   right: var(--space-base);
-  translate: 0 -50%;
+  bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0px));
   z-index: 800;
   display: grid;
   place-items: center;
@@ -37,5 +38,6 @@
 @media (min-width: 1128px) {
   .button {
     right: var(--space-xl);
+    bottom: calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
   }
 }
