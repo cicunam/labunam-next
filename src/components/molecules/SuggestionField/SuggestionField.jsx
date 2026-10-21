@@ -2,25 +2,31 @@
 
 // LabUNAM
 // Moléculas
-// SuggestionField (campo de texto con sugerencias nativas del navegador)
+// SuggestionField (campo de formulario con sugerencias del autocompletado del portal)
 // Ángelo M
 
 // Dependencias
 import { useEffect, useRef } from "react";
+import { filterByName } from "@/lib/coincidencias/coincidencias";
 
 // Componentes
 import FormField from "../FormField/FormField";
+import Autocomplete from "../Autocomplete/Autocomplete";
 import Input from "../../atoms/Input/Input";
+
+// Estilos
+import styles from "./SuggestionField.module.css";
 
 // Definición del componente
 // Quien lo usa decide si el texto escrito es válido; el campo sólo traduce esa decisión
 // al mensaje de validación del navegador.
 const SuggestionField = ({
   label, // String - Texto de la etiqueta
-  controlId, // String - id del campo; la lista de sugerencias usa `${controlId}-options`
-  options = [], // Array Optional - Sugerencias { clave, nombre, detail? }; detail se muestra junto al nombre
+  controlId, // String - id del campo; la lista usa `${controlId}-list`
+  options = [], // Array Optional - Sugerencias { clave, nombre, detail? }; detail se muestra debajo del nombre
+  filter = true, // Boolean Optional - Filtra options con el texto escrito; falso cuando ya llegan filtradas del servidor
   value = "", // String Optional - Texto escrito
-  onChange, // Function Optional - Recibe el texto nuevo
+  onChange, // Function Optional - Recibe el texto nuevo, al escribir o al elegir una sugerencia
   required = false, // Boolean Optional - Exige escribir algo
   valid = true, // Boolean Optional - Si es falso, el navegador bloquea el envío con message
   message = "Elige una opción de la lista.", // String Optional - Mensaje cuando valid es falso
@@ -34,6 +40,13 @@ const SuggestionField = ({
     field.current?.setCustomValidity(valid ? "" : message);
   }, [valid, message]);
 
+  // Preparación de datos
+  const visibleOptions = (filter ? filterByName(options, value) : options).map((option) => ({
+    key: option.clave,
+    label: option.nombre,
+    detail: option.detail,
+  }));
+
   // Interfaz
   return (
     <FormField
@@ -43,26 +56,23 @@ const SuggestionField = ({
       hint={hint}
       wide={wide}
     >
-      <Input
-        ref={field}
-        id={controlId}
-        list={`${controlId}-options`}
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        required={required}
-        placeholder={placeholder}
-        autoComplete="off"
-        aria-describedby={hint ? `${controlId}-hint` : undefined}
-      />
-      <datalist id={`${controlId}-options`}>
-        {options.map(({ clave, nombre, detail }) => (
-          <option
-            key={clave}
-            value={nombre}
-            label={detail || undefined}
-          />
-        ))}
-      </datalist>
+      {/* La lista se ancla debajo del campo y no debajo de la ayuda. */}
+      <div className={styles.control}>
+        <Autocomplete
+          inputComponent={Input}
+          inputRef={field}
+          id={controlId}
+          options={visibleOptions}
+          query={value}
+          onSelect={(option) => onChange?.(option.label)}
+          listLabel={`Sugerencias de ${label.toLowerCase()}`}
+          value={value}
+          onChange={(event) => onChange?.(event.target.value)}
+          required={required}
+          placeholder={placeholder}
+          aria-describedby={hint ? `${controlId}-hint` : undefined}
+        />
+      </div>
     </FormField>
   );
 };

@@ -60,3 +60,27 @@ export function withSearchKeys(
     searchAcronym: normalizeText(item.siglas ?? ""),
   }));
 }
+
+// Filtra una lista corta que ya está en la página (países, estados, dependencias): sin texto
+// devuelve la lista completa para recorrerla como un selector; con texto, primero las opciones
+// que empiezan con él y luego las que lo contienen, sin distinguir acentos ni mayúsculas.
+export function filterByName(
+  items, // Array - Elementos con nombre
+  text, // String - Texto escrito
+) {
+  const wanted = normalizeText(text ?? "");
+  if (!wanted) {
+    return items;
+  }
+  const starts = [];
+  const contains = [];
+  for (const item of items) {
+    const nombre = normalizeText(item.nombre);
+    if (nombre.startsWith(wanted)) {
+      starts.push(item);
+    } else if (nombre.includes(wanted)) {
+      contains.push(item);
+    }
+  }
+  return [...starts, ...contains];
+}

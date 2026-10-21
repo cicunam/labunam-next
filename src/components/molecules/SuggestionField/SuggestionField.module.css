@@ -1,0 +1,9 @@
+/* LabUNAM
+   Estilos
+   SuggestionField.module.css (campo de formulario con sugerencias del autocompletado del portal)
+   Ángelo M */
+
+.control {
+  position: relative;
+  min-width: 0;
+}

@@ -27,23 +27,26 @@ const Autocomplete = ({
   listClassName = "", // String Optional - Clases que se suman a las de la lista (por ejemplo, su ancho)
   icon = null, // ReactNode Optional - Ícono al inicio de cada opción
   inputRef, // Object Optional - Referencia del campo cuando quien lo usa también la necesita
+  inputComponent = "input", // String | Function Optional - Campo que se dibuja; por ejemplo, el átomo Input para heredar su estilo
   onFocus, // Function Optional - Se llama al enfocar el campo, después de abrir la lista
+  onBlur, // Function Optional - Se llama al perder el foco, después de cerrar la lista
   onChange, // Function Optional - Se llama al escribir, con el evento del campo
   onKeyDown, // Function Optional - Se llama con las teclas que el combobox no atiende
   ...props // Object Optional - Resto de atributos del input (name, value, className, placeholder, required…)
 }) => {
   // Preparación de datos
+  const Field = inputComponent;
   const listId = `${id}-list`;
   const optionId = (index) => `${id}-option-${index}`;
 
   // Mecanismos
-  const { input, list, visible, activeIndex, show, restart, select, handleKeyDown } =
+  const { input, list, visible, activeIndex, show, restart, close, select, handleKeyDown } =
     useAutocomplete({ options, onSelect, optionId, inputRef });
 
   // Interfaz
   return (
     <>
-      <input
+      <Field
         autoComplete="off"
         {...props}
         ref={input}
@@ -56,6 +59,11 @@ const Autocomplete = ({
         onFocus={(event) => {
           show();
           onFocus?.(event);
+        }}
+        // Las opciones evitan robar el foco al hacer clic, así que cerrar aquí no impide elegirlas.
+        onBlur={(event) => {
+          close();
+          onBlur?.(event);
         }}
         onChange={(event) => {
           restart();

@@ -63,6 +63,7 @@ const LaboratoryField = ({
         label="Laboratorio de interés"
         controlId="request-laboratorio"
         options={options}
+        filter={false}
         value={text}
         onChange={setText}
         valid={!text.trim() || Boolean(selected)}

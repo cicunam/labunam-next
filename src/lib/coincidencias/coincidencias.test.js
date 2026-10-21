@@ -5,8 +5,8 @@
 
 // Dependencias
 import { describe, expect, it } from "vitest";
-import { searchByName, withSearchKeys } from "./coincidencias";
-import { institucionesEjemplo } from "@datosPrueba/solicitudes";
+import { filterByName, searchByName, withSearchKeys } from "./coincidencias";
+import { catalogosEjemplo, institucionesEjemplo } from "@datosPrueba/solicitudes";
 
 // Pruebas
 const nombres = (lista) => lista.map((institucion) => institucion.clave);
@@ -41,4 +41,23 @@ it("da los mismos resultados con las claves de búsqueda precalculadas", () => {
       searchByName(institucionesEjemplo, text).map((item) => item.clave),
     );
   }
+});
+
+describe("filtro de listas locales", () => {
+  const nombres = (lista) => lista.map((item) => item.nombre);
+  it("sin texto devuelve la lista completa", () => {
+    expect(filterByName(catalogosEjemplo.paises, "")).toEqual(catalogosEjemplo.paises);
+  });
+  it("pone primero las que empiezan con el texto y no distingue acentos", () => {
+    expect(nombres(filterByName(catalogosEjemplo.paises, "a"))).toEqual([
+      "Argentina",
+      "Canadá",
+      "España",
+      "Estados Unidos",
+    ]);
+    expect(nombres(filterByName(catalogosEjemplo.paises, "mexi"))).toEqual(["México"]);
+  });
+  it("con una sola letra ya filtra, a diferencia de la búsqueda remota", () => {
+    expect(nombres(filterByName(catalogosEjemplo.paises, "c"))).toEqual(["Canadá", "México"]);
+  });
 });

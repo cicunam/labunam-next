@@ -66,6 +66,7 @@ const InstitutionFields = ({
         label="Institución"
         controlId="request-institucion"
         options={options}
+        filter={false}
         value={institucionText}
         onChange={(text) => {
           setInstitucionText(text);

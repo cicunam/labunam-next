@@ -10,7 +10,8 @@ import { useEffect, useRef, useState } from "react";
 
 // Definición del mecanismo
 // Patrón de combobox de la WAI: el foco se queda en el campo y la opción activa se anuncia
-// con aria-activedescendant. Flechas para recorrer, Enter para elegir, Escape o Tab para cerrar.
+// con aria-activedescendant. Flechas para recorrer, Enter para elegir; Escape, Tab, un clic
+// fuera o perder el foco la cierran.
 export function useAutocomplete({
   options, // Array - Opciones visibles de la lista
   onSelect, // Function - Recibe la opción elegida
@@ -91,5 +92,5 @@ export function useAutocomplete({
     }
   }
 
-  return { input, list, visible, activeIndex, show, restart, select, handleKeyDown };
+  return { input, list, visible, activeIndex, show, restart, close, select, handleKeyDown };
 }

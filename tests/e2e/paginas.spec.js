@@ -178,17 +178,17 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
   await main.getByLabel("Primer apellido").fill("Ejemplo");
   await main.getByLabel("Correo electrónico").fill("persona@ejemplo.com");
   await main.getByLabel("Teléfono").fill("5512345678");
-  await expect(main.getByLabel("Estado")).toHaveCount(0);
-  await main.getByLabel("País").fill("mexico");
-  await expect(main.getByLabel("Estado")).toBeVisible();
+  await expect(main.getByRole("combobox", { name: "Estado" })).toHaveCount(0);
+  await main.getByRole("combobox", { name: "País" }).fill("mexico");
+  await expect(main.getByRole("combobox", { name: "Estado" })).toBeVisible();
   await page
     .getByLabel("Tipo de solicitante")
     .selectOption({ label: "Institución de educación superior" });
-  await expect(main.getByLabel("Dependencia")).toHaveCount(0);
+  await expect(main.getByRole("combobox", { name: "Dependencia" })).toHaveCount(0);
   await page
     .getByRole("combobox", { name: "Institución", exact: true })
     .fill("Universidad Nacional Autónoma de México");
-  await expect(main.getByLabel("Dependencia")).toBeVisible();
+  await expect(main.getByRole("combobox", { name: "Dependencia" })).toBeVisible();
   await main.getByLabel("Tipo de solicitante").selectOption({ label: "Empresa" });
   await expect(page.getByRole("combobox", { name: "Institución", exact: true })).toHaveCount(0);
   await main.getByLabel("Nombre de la empresa").fill("Empresa de Ejemplo");
@@ -201,12 +201,12 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
   await page
     .getByLabel("Descripción del análisis o prueba")
     .fill("Análisis de una muestra ficticia.");
-  await main.getByLabel("País").fill("Pais inexistente");
+  await main.getByRole("combobox", { name: "País" }).fill("Pais inexistente");
   await enviar.click();
-  await expect(main.getByLabel("País")).toBeFocused();
+  await expect(main.getByRole("combobox", { name: "País" })).toBeFocused();
   await expect(page.getByRole("status")).toHaveText("");
-  await main.getByLabel("País").fill("España");
-  await expect(main.getByLabel("Estado")).toHaveCount(0);
+  await main.getByRole("combobox", { name: "País" }).fill("España");
+  await expect(main.getByRole("combobox", { name: "Estado" })).toHaveCount(0);
   await enviar.click();
   await expect(page.getByRole("status")).toContainText("no se envió información");
   // Los nombres del formulario deben coincidir con los que acepta la validación del servidor.
@@ -237,10 +237,8 @@ test("laboratorio de interés sugiere con entidad y sólo acepta un laboratorio 
   const oculto = page.locator('input[name="id_laboratorio"]');
   await campo.fill("microscop");
   const sugerencia = `${laboratorios[0].nombre} — ${laboratorios[0].entidad}`;
-  await expect(page.locator("#request-laboratorio-options option").first()).toHaveAttribute(
-    "value",
-    /—/,
-  );
+  const lista = page.getByRole("listbox", { name: "Sugerencias de laboratorio de interés" });
+  await expect(lista.getByRole("option").first()).toContainText("—");
   await campo.fill(sugerencia);
   await expect(oculto).toHaveValue(String(laboratorios[0].idLab));
   await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveAttribute(
@@ -301,6 +299,42 @@ test("laboratorio de interés sugiere los mismos laboratorios que el buscador de
   );
   expect(laboratorios.map(({ idLab }) => idLab)).toEqual(catalogo.slice(0, laboratorios.length));
   expect(laboratorios.length).toBe(Math.min(15, catalogo.length));
+});
+test("país y estado usan el autocompletado del portal con teclado y sin desbordarse", async ({
+  page,
+}) => {
+  await page.goto("/solicitud");
+  const main = page.getByRole("main");
+  const pais = main.getByRole("combobox", { name: "País" });
+  const lista = page.getByRole("listbox", { name: "Sugerencias de país" });
+  // Al enfocar sin texto se puede recorrer la lista completa, como un selector.
+  await pais.focus();
+  await expect(lista).toBeVisible();
+  expect(await lista.getByRole("option").count()).toBeGreaterThan(100);
+  // Filtra sin acentos y se elige con flechas y Enter; la clave viaja en el campo oculto.
+  await pais.fill("mexi");
+  await expect(lista.getByRole("option")).toHaveCount(1);
+  await expect(lista.getByRole("option").first().locator("mark")).toHaveText("Mexi");
+  await page.keyboard.press("ArrowDown");
+  await expect(pais).toHaveAttribute("aria-activedescendant", "request-pais-option-0");
+  await page.keyboard.press("Enter");
+  await expect(lista).toBeHidden();
+  await expect(pais).toHaveValue("Mexico");
+  await expect(main.locator('input[name="id_pais"]')).toHaveValue("MEX");
+  // La lista queda dentro de la pantalla y debajo del campo.
+  const estado = main.getByRole("combobox", { name: "Estado" });
+  await estado.fill("ja");
+  const sugerencias = page.getByRole("listbox", { name: "Sugerencias de estado" });
+  await expect(sugerencias).toBeVisible();
+  const campo = await estado.boundingBox();
+  const caja = await sugerencias.boundingBox();
+  expect(caja.y).toBeGreaterThanOrEqual(campo.y + campo.height);
+  expect(caja.x).toBeGreaterThanOrEqual(0);
+  expect(caja.x + caja.width).toBeLessThanOrEqual(page.viewportSize().width);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(sugerencias).toBeHidden();
+  await expect(estado).toBeFocused();
 });
 test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({
   request,
