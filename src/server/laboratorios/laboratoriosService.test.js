@@ -159,6 +159,19 @@ it("los conteos de filtros calculan los cinco ejes respetando los otros filtros"
   }
 });
 
+it("las sugerencias usan la búsqueda del catálogo: equipos, servicios y palabras en cualquier orden", async () => {
+  const ids = async (text) => (await suggestLaboratorios(text)).map(({ idLab }) => idLab);
+  // «Difractómetro» y «Rayos X» son equipo y servicio del laboratorio 2, no parte de su nombre.
+  expect(await ids("difractometro")).toEqual([2]);
+  expect(await ids("x rayos")).toEqual([2]);
+  expect(await ids("palabra que no existe")).toEqual([]);
+});
+
+it("una sugerencia ya elegida vuelve primero aunque otros compartan sus palabras", async () => {
+  const [primera] = await suggestLaboratorios("Centro de Imagen — Centro de Pruebas");
+  expect(primera).toEqual({ idLab: 3, nombre: "Centro de Imagen", entidad: "Centro de Pruebas" });
+});
+
 it("las sugerencias de laboratorio sólo exponen id, nombre y entidad", async () => {
   const sugerencias = await suggestLaboratorios("microscop");
   expect(sugerencias.length).toBeGreaterThan(0);

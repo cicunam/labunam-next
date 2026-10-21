@@ -27,14 +27,15 @@ const LaboratoryField = ({
   const [text, setText] = useState(laboratorio ? laboratorioLabel(laboratorio) : "");
   const [laboratorios, setLaboratorios] = useState(laboratorio ? [laboratorio] : []);
   useEffect(() => {
-    // Al elegir una sugerencia el texto incluye la entidad; se busca sólo por el nombre.
-    const name = text.split(" — ")[0].trim();
-    if (name.length < MIN_SEARCH_LENGTH) {
+    // Se envía el texto completo: el servidor busca como el catálogo y, si es una sugerencia ya
+    // elegida («Nombre — Entidad»), la devuelve primero para que el campo la siga reconociendo.
+    const query = text.trim();
+    if (query.length < MIN_SEARCH_LENGTH) {
       return;
     }
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      loadLaboratorios(name, controller.signal)
+      loadLaboratorios(query, controller.signal)
         .then(setLaboratorios)
         .catch(() => {
           if (!controller.signal.aborted) {

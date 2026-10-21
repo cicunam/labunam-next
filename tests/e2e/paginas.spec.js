@@ -285,6 +285,23 @@ test("el formulario advierte los mismos errores de texto que valida el servidor"
   await expect(nombre).toBeFocused();
   await expect(page.getByRole("status")).toHaveText("");
 });
+test("laboratorio de interés sugiere los mismos laboratorios que el buscador del catálogo", async ({
+  page,
+  request,
+}) => {
+  // «rayos x» aparece sobre todo en equipos y servicios, no sólo en nombres.
+  const { laboratorios } = await (
+    await request.get("/api/laboratorios/sugerencias?q=rayos%20x")
+  ).json();
+  await page.goto("/laboratorios?q=rayos%20x");
+  const tarjetas = page.locator("[data-details]");
+  await expect(tarjetas.first()).toBeVisible();
+  const catalogo = await tarjetas.evaluateAll((nodos) =>
+    nodos.map((nodo) => Number(nodo.getAttribute("data-details"))),
+  );
+  expect(laboratorios.map(({ idLab }) => idLab)).toEqual(catalogo.slice(0, laboratorios.length));
+  expect(laboratorios.length).toBe(Math.min(15, catalogo.length));
+});
 test("la ruta de instituciones sugiere por siglas y no busca textos cortos", async ({
   request,
 }) => {

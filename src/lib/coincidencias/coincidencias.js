@@ -11,11 +11,12 @@ export const MIN_SEARCH_LENGTH = 2;
 const LIMIT = 15;
 
 // Definición del módulo
-// Sirve para instituciones y laboratorios. Las coincidencias exactas y por inicio aparecen
+// La usan las instituciones de la solicitud (los laboratorios usan la búsqueda del catálogo,
+// filterLaboratorios). Las coincidencias exactas y por inicio aparecen
 // primero para que el nombre completo siempre esté entre las sugerencias. Si los elementos traen
 // searchName y searchAcronym (de withSearchKeys) se usan sin volver a normalizar.
 export function searchByName(
-  items, // Array - Elementos con nombre y siglas (instituciones o laboratorios)
+  items, // Array - Elementos con nombre y siglas, como las instituciones
   text, // String - Texto escrito por la persona
   limit = LIMIT, // Number Optional - Máximo de resultados
 ) {
