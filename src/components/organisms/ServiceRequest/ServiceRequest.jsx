@@ -1,10 +1,9 @@
 // LabUNAM
 // Organismos
-// ServiceRequest (sección de solicitud de servicio: orientación y formulario)
+// ServiceRequest (sección de solicitud de servicio: formulario y acceso al contacto)
 // Ángelo M
 
 // Componentes
-import AppLink from "../../atoms/AppLink/AppLink";
 import ServiceRequestForm from "../ServiceRequestForm/ServiceRequestForm";
 import ContactLink from "../ContactLink/ContactLink";
 
@@ -31,16 +30,11 @@ const ServiceRequest = ({
       </header>
       <div className={styles.columns}>
         {/* El laboratorio elegido se muestra en el campo «Laboratorio de interés», que se actualiza
-            al cambiarlo; aquí sólo queda la orientación general. */}
+            al cambiarlo; aquí sólo queda el acceso al contacto. */}
         <aside
           className={styles.information}
-          aria-label="Antes de empezar"
+          aria-label="Contacto"
         >
-          <p>
-            Indica en «Laboratorio de interés» el laboratorio que buscas. Si todavía no lo sabes,
-            déjalo vacío y te orientaremos, o{" "}
-            <AppLink href="/laboratorios">explora el catálogo</AppLink>.
-          </p>
           <h2>¿Sólo quieres enviarnos un mensaje, comentario o duda?</h2>
           <p>
             Si no necesitas registrar una solicitud de servicio y prefieres escribirnos
