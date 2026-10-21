@@ -9,16 +9,14 @@ import {
   RULES,
   TIPOS_SOLICITANTE,
   TIPOS_SOLICITUD,
-  findLaboratorio,
   findOption,
   isUnam,
-  laboratorioLabel,
   normalizeTextValue,
   requiresState,
   sectionFor,
   textError,
 } from "./solicitudes";
-import { catalogosEjemplo, laboratoriosEjemplo } from "@datosPrueba/solicitudes";
+import { catalogosEjemplo } from "@datosPrueba/solicitudes";
 
 // Pruebas
 // Reproduce cómo el navegador evalúa `pattern`: valor completo y bandera v.
@@ -63,25 +61,6 @@ describe("reglas", () => {
   it("acepta nombres de organización con signos básicos", () => {
     expect(cumple(RULES.organizacion, "Pérez & Asociados, S.A.")).toBe(true);
     expect(cumple(RULES.organizacion, "<b>Empresa</b>")).toBe(false);
-  });
-});
-describe("laboratorio de interés", () => {
-  it("usa nombre y entidad como texto de la sugerencia", () => {
-    expect(laboratorioLabel(laboratoriosEjemplo[0])).toBe(
-      "Laboratorio de Microscopía — Instituto de Demostración",
-    );
-    expect(laboratorioLabel({ nombre: "Sin entidad", entidad: "" })).toBe("Sin entidad");
-  });
-  it("distingue laboratorios con el mismo nombre por su entidad", () => {
-    expect(
-      findLaboratorio(laboratoriosEjemplo, "laboratorio de difraccion — facultad de ejemplo")
-        ?.idLab,
-    ).toBe(26);
-    expect(findLaboratorio(laboratoriosEjemplo, "Laboratorio de Difracción")).toBeNull();
-  });
-  it("acepta sólo el nombre cuando no se repite", () => {
-    expect(findLaboratorio(laboratoriosEjemplo, "laboratorio de microscopia")?.idLab).toBe(18);
-    expect(findLaboratorio(laboratoriosEjemplo, "")).toBeNull();
   });
 });
 describe("textos", () => {

@@ -167,8 +167,8 @@ it("las sugerencias usan la búsqueda del catálogo: equipos, servicios y palabr
   expect(await ids("palabra que no existe")).toEqual([]);
 });
 
-it("una sugerencia ya elegida vuelve primero aunque otros compartan sus palabras", async () => {
-  const [primera] = await suggestLaboratorios("Centro de Imagen — Centro de Pruebas");
+it("el laboratorio cuyo nombre coincide completo vuelve primero", async () => {
+  const [primera] = await suggestLaboratorios("centro de imagen");
   expect(primera).toEqual({ idLab: 3, nombre: "Centro de Imagen", entidad: "Centro de Pruebas" });
 });
 

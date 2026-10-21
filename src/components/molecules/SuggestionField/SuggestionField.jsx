@@ -27,6 +27,7 @@ const SuggestionField = ({
   filter = true, // Boolean Optional - Filtra options con el texto escrito; falso cuando ya llegan filtradas del servidor
   value = "", // String Optional - Texto escrito
   onChange, // Function Optional - Recibe el texto nuevo, al escribir o al elegir una sugerencia
+  onSelect, // Function Optional - Recibe la opción original { clave, nombre… } al elegirla de la lista
   required = false, // Boolean Optional - Exige escribir algo
   valid = true, // Boolean Optional - Si es falso, el navegador bloquea el envío con message
   message = "Elige una opción de la lista.", // String Optional - Mensaje cuando valid es falso
@@ -41,11 +42,25 @@ const SuggestionField = ({
   }, [valid, message]);
 
   // Preparación de datos
-  const visibleOptions = (filter ? filterByName(options, value) : options).map((option) => ({
+  const shown = filter ? filterByName(options, value) : options;
+  const visibleOptions = shown.map((option) => ({
     key: option.clave,
     label: option.nombre,
     detail: option.detail,
   }));
+
+  // Gestores de evento
+  // Al elegir, el campo muestra el nombre y quien lo usa recibe la opción completa (con su clave),
+  // para distinguir opciones con el mismo nombre.
+  function handleSelect(
+    selected, // Object - Opción de Autocomplete { key, label }
+  ) {
+    const option = shown.find((item) => item.clave === selected.key);
+    onChange?.(selected.label);
+    if (option) {
+      onSelect?.(option);
+    }
+  }
 
   // Interfaz
   return (
@@ -64,7 +79,7 @@ const SuggestionField = ({
           id={controlId}
           options={visibleOptions}
           query={value}
-          onSelect={(option) => onChange?.(option.label)}
+          onSelect={handleSelect}
           listLabel={`Sugerencias de ${label.toLowerCase()}`}
           value={value}
           onChange={(event) => onChange?.(event.target.value)}

@@ -142,32 +142,3 @@ export function isUnam(
 ) {
   return normalizeText(nombre ?? "") === UNAM;
 }
-
-// Hay nombres de laboratorio repetidos en distintas entidades; nombre y entidad juntos los
-// distinguen, por eso son el texto de cada sugerencia.
-export function laboratorioLabel(
-  laboratorio, // Object - Laboratorio { nombre, entidad }
-) {
-  return laboratorio.entidad
-    ? `${laboratorio.nombre} — ${laboratorio.entidad}`
-    : laboratorio.nombre;
-}
-
-// Acepta la sugerencia completa («Nombre — Entidad») o sólo el nombre si nadie más lo comparte.
-export function findLaboratorio(
-  laboratorios, // Array - Sugerencias { idLab, nombre, entidad }
-  text, // String - Texto escrito
-) {
-  const wanted = normalizeText(text ?? "");
-  if (!wanted) {
-    return null;
-  }
-  const byLabel = laboratorios.find(
-    (laboratorio) => normalizeText(laboratorioLabel(laboratorio)) === wanted,
-  );
-  if (byLabel) {
-    return byLabel;
-  }
-  const byName = laboratorios.filter((laboratorio) => normalizeText(laboratorio.nombre) === wanted);
-  return byName.length === 1 ? byName[0] : null;
-}

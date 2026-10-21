@@ -59,18 +59,19 @@
   }
 }
 
-/* Nombre y, debajo, su detalle (entidad o siglas); los textos largos se cortan con «…». */
+/* Nombre y, debajo, su detalle (entidad o siglas). Los textos largos pasan a la línea
+   siguiente en lugar de cortarse: hay nombres de laboratorio que sólo difieren al final. */
 .text {
   display: grid;
+  gap: 2px;
   flex: 1 1 auto;
   min-width: 0;
+  padding-block: var(--space-xs);
 }
 
 .label,
 .detail {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .detail {

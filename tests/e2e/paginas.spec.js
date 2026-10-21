@@ -113,7 +113,7 @@ test("solicitud asociada a un laboratorio llega con el laboratorio de interés y
   const id = await tarjeta.getAttribute("data-details");
   await page.goto(`/solicitud?laboratorio=${id}`);
   const campo = page.getByRole("combobox", { name: "Laboratorio de interés" });
-  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
+  await expect(campo).toHaveValue(nombre);
   await expect(page.locator('input[name="id_laboratorio"]')).toHaveValue(id);
   await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveAttribute(
     "href",
@@ -218,34 +218,50 @@ test("el formulario de solicitud muestra campos según las opciones y no envía 
   expect(envios).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
-test("laboratorio de interés sugiere con entidad y sólo acepta un laboratorio de la lista", async ({
+test("laboratorio de interés distingue homónimos por su entidad y guarda el elegido", async ({
   page,
   request,
 }) => {
-  const { laboratorios } = await (
-    await request.get("/api/laboratorios/sugerencias?q=microscop")
-  ).json();
-  expect(laboratorios.length).toBeGreaterThan(0);
+  const sugerir = async (q) =>
+    (await (await request.get(`/api/laboratorios/sugerencias?q=${encodeURIComponent(q)}`)).json())
+      .laboratorios;
+  const laboratorios = await sugerir("difraccion de rayos x");
   expect(laboratorios.length).toBeLessThanOrEqual(15);
   expect(Object.keys(laboratorios[0]).sort()).toEqual(["entidad", "idLab", "nombre"]);
-  expect(
-    (await (await request.get("/api/laboratorios/sugerencias?q=m")).json()).laboratorios,
-  ).toEqual([]);
+  expect(await sugerir("m")).toEqual([]);
+  // Dos laboratorios del catálogo comparten nombre y sólo los distingue su entidad.
+  const nombre = laboratorios.find(
+    (item, index) => laboratorios.findIndex((otro) => otro.nombre === item.nombre) !== index,
+  )?.nombre;
+  expect(nombre).toBeTruthy();
+  const [, segundo] = laboratorios.filter((item) => item.nombre === nombre);
 
   await page.goto("/solicitud");
   const campo = page.getByRole("combobox", { name: "Laboratorio de interés" });
   const oculto = page.locator('input[name="id_laboratorio"]');
-  await campo.fill("microscop");
-  const sugerencia = `${laboratorios[0].nombre} — ${laboratorios[0].entidad}`;
   const lista = page.getByRole("listbox", { name: "Sugerencias de laboratorio de interés" });
-  await expect(lista.getByRole("option").first()).toContainText("—");
-  await campo.fill(sugerencia);
-  await expect(oculto).toHaveValue(String(laboratorios[0].idLab));
-  await expect(page.getByRole("link", { name: /Ver la ficha del laboratorio/ })).toHaveAttribute(
-    "href",
-    `/laboratorios/${laboratorios[0].idLab}`,
+  await campo.fill("difraccion de rayos x");
+  // Cada opción muestra el nombre y, debajo, la entidad.
+  const opcion = lista.getByRole("option").filter({ hasText: segundo.entidad }).filter({
+    hasText: nombre,
+  });
+  await expect(opcion).toHaveCount(1);
+  await opcion.click();
+  await expect(lista).toBeHidden();
+  await expect(campo).toHaveValue(nombre);
+  await expect(oculto).toHaveValue(String(segundo.idLab));
+  // Bajo el campo quedan la entidad del elegido y el enlace a su ficha.
+  const ficha = page.getByRole("link", { name: /Ver la ficha del laboratorio/ });
+  await expect(ficha).toHaveAttribute("href", `/laboratorios/${segundo.idLab}`);
+  await expect(ficha.locator("..")).toContainText(segundo.entidad);
+  // Editar el texto borra la elección; un nombre repetido escrito a mano no basta.
+  await campo.fill(`${nombre} `);
+  await campo.fill(nombre);
+  await expect(oculto).toHaveValue("");
+  expect(await campo.evaluate((input) => input.validationMessage)).toBe(
+    "Elige un laboratorio de la lista o deja el campo vacío.",
   );
-  // Un texto que no corresponde a ninguna sugerencia bloquea el envío en ese campo.
+  // Un texto que no corresponde a ninguna sugerencia también bloquea el envío.
   await campo.fill("Laboratorio que no existe");
   await expect(oculto).toHaveValue("");
   expect(await campo.evaluate((input) => input.validationMessage)).toBe(
@@ -365,7 +381,7 @@ test("solicitud de servicio conserva el laboratorio y explica que el formulario 
   await tarjeta.click();
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
   await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
-  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
+  await expect(campo).toHaveValue(nombre);
   await expect(
     page.getByText("El envío de solicitudes aún no está disponible", { exact: false }),
   ).toBeVisible();
@@ -375,7 +391,7 @@ test("solicitud de servicio conserva el laboratorio y explica que el formulario 
   await page.getByRole("link", { name: "Solicitar un servicio" }).click();
   await expect(page).toHaveURL(new RegExp(`/solicitud\\?laboratorio=${id}$`));
   await page.reload();
-  await expect(campo).toHaveValue(new RegExp(`^${RegExp.escape(nombre)}`));
+  await expect(campo).toHaveValue(nombre);
 });
 test("cerrar el modal conserva posición y filtros", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia");

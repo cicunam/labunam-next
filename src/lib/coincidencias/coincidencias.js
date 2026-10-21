@@ -84,3 +84,17 @@ export function filterByName(
   }
   return [...starts, ...contains];
 }
+
+// Acepta un nombre escrito sin elegir la sugerencia sólo si ninguna otra opción lo comparte;
+// con nombres repetidos (hay laboratorios homónimos en distintas entidades) hay que elegir.
+export function findUniqueByName(
+  items, // Array - Opciones con nombre
+  text, // String - Texto escrito
+) {
+  const wanted = normalizeText(text ?? "");
+  if (!wanted) {
+    return null;
+  }
+  const matches = items.filter((item) => normalizeText(item.nombre) === wanted);
+  return matches.length === 1 ? matches[0] : null;
+}

@@ -8,7 +8,7 @@
 // Dependencias
 import { useEffect, useState } from "react";
 import { RULES, findOption, isUnam, textError } from "@/lib/solicitudes/solicitudes";
-import { MIN_SEARCH_LENGTH } from "@/lib/coincidencias/coincidencias";
+import { MIN_SEARCH_LENGTH, findUniqueByName } from "@/lib/coincidencias/coincidencias";
 import { fetchInstitutions } from "@/lib/api/api";
 
 // Componentes
@@ -26,6 +26,7 @@ const InstitutionFields = ({
   const [institucionText, setInstitucionText] = useState("");
   const [dependenciaText, setDependenciaText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [chosen, setChosen] = useState(null);
   useEffect(() => {
     const text = institucionText.trim();
     if (text.length < MIN_SEARCH_LENGTH) {
@@ -52,7 +53,8 @@ const InstitutionFields = ({
     institucionText.trim().length < MIN_SEARCH_LENGTH
       ? []
       : suggestions.map((option) => ({ ...option, detail: option.siglas }));
-  const institucion = findOption(options, institucionText);
+  // La elegida de la lista manda; sin elección, se acepta el nombre escrito si no se repite.
+  const institucion = chosen ?? findUniqueByName(suggestions, institucionText);
   const dependencia = findOption(catalogos.dependencias, dependenciaText);
   const unam = isUnam(institucion?.nombre);
   // Una institución escrita a mano se guarda como texto libre y sigue la regla de organización.
@@ -71,7 +73,15 @@ const InstitutionFields = ({
         onChange={(text) => {
           setInstitucionText(text);
           setDependenciaText("");
+          // Editar el texto después de elegir borra la elección, para que la clave oculta
+          // nunca apunte a una institución distinta de la que se ve.
+          if (chosen && text !== chosen.nombre) {
+            setChosen(null);
+          }
         }}
+        onSelect={(option) =>
+          setChosen(suggestions.find((item) => item.clave === option.clave) ?? null)
+        }
         required
         valid={!freeTextError}
         message={freeTextError ?? undefined}

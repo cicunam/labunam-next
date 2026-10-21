@@ -5,8 +5,12 @@
 
 // Dependencias
 import { describe, expect, it } from "vitest";
-import { filterByName, searchByName, withSearchKeys } from "./coincidencias";
-import { catalogosEjemplo, institucionesEjemplo } from "@datosPrueba/solicitudes";
+import { filterByName, findUniqueByName, searchByName, withSearchKeys } from "./coincidencias";
+import {
+  catalogosEjemplo,
+  institucionesEjemplo,
+  laboratoriosEjemplo,
+} from "@datosPrueba/solicitudes";
 
 // Pruebas
 const nombres = (lista) => lista.map((institucion) => institucion.clave);
@@ -59,5 +63,18 @@ describe("filtro de listas locales", () => {
   });
   it("con una sola letra ya filtra, a diferencia de la búsqueda remota", () => {
     expect(nombres(filterByName(catalogosEjemplo.paises, "c"))).toEqual(["Canadá", "México"]);
+  });
+});
+
+describe("nombre escrito sin elegir", () => {
+  it("lo acepta sin acentos ni mayúsculas si nadie más lo comparte", () => {
+    expect(findUniqueByName(laboratoriosEjemplo, "laboratorio de microscopia")?.idLab).toBe(18);
+  });
+  it("no lo acepta si dos opciones se llaman igual: hay que elegir una", () => {
+    expect(findUniqueByName(laboratoriosEjemplo, "Laboratorio de Difracción")).toBeNull();
+  });
+  it("no acepta textos vacíos ni parciales", () => {
+    expect(findUniqueByName(laboratoriosEjemplo, "")).toBeNull();
+    expect(findUniqueByName(laboratoriosEjemplo, "Laboratorio de Micro")).toBeNull();
   });
 });
