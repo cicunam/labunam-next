@@ -11,10 +11,16 @@ import {
   normalizeCriteria,
 } from "../../lib/buscador/buscador";
 import { getPhotos } from "../../lib/fotos/fotos";
+import { MIN_SEARCH_LENGTH } from "../../lib/coincidencias/coincidencias";
+import { normalizeText } from "../../lib/texto/texto";
 
 // Servicios
 import { loadCatalog } from "./laboratoriosCatalogo";
 import { readPhotos } from "../fotos/fotosService";
+
+// Constantes
+// Máximo de laboratorios sugeridos en «Laboratorio de interés».
+const SUGGESTION_LIMIT = 15;
 
 // Definición del servicio
 // Todas las funciones leen la misma copia en caché: llamarlas juntas no multiplica consultas.
@@ -65,6 +71,26 @@ export async function getContactDetails(
     servicios: laboratorio.servicios,
     sitio: laboratorio.sitio,
   };
+}
+
+// Sugerencias del campo «Laboratorio de interés» de la solicitud. Usa la misma búsqueda que el
+// catálogo (todas las palabras en nombre, entidad, disciplinas, equipos y servicios) y sólo
+// devuelve id, nombre y entidad: el catálogo completo se queda en el servidor.
+export async function suggestLaboratorios(
+  text, // String - Texto escrito por la persona
+) {
+  const wanted = normalizeText(text ?? "");
+  if (wanted.length < MIN_SEARCH_LENGTH) {
+    return [];
+  }
+  const { laboratorios } = await loadCatalog();
+  const results = filterLaboratorios(laboratorios, { q: text });
+  // Los laboratorios cuyo nombre coincide completo van primero: si otros comparten sus
+  // palabras, el que la persona eligió no queda fuera de las primeras sugerencias.
+  const isExact = (laboratorio) => normalizeText(laboratorio.nombre) === wanted;
+  return [...results.filter(isExact), ...results.filter((laboratorio) => !isExact(laboratorio))]
+    .slice(0, SUGGESTION_LIMIT)
+    .map(({ idLab, nombre, entidad }) => ({ idLab, nombre, entidad }));
 }
 
 // Resultados y filtros de la página del catálogo, calculados sobre la misma copia

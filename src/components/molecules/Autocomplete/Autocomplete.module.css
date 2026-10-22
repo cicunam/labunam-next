@@ -1,0 +1,86 @@
+/* LabUNAM
+   Estilos
+   Autocomplete.module.css (lista de sugerencias propia del portal)
+   Ángelo M */
+
+.list {
+  &[hidden] {
+    display: none;
+  }
+
+  position: absolute;
+  top: calc(100% + var(--space-sm));
+  left: 0;
+  z-index: 30;
+
+  box-sizing: border-box;
+  /* Quien usa el componente puede limitar el ancho con --autocomplete-width sin competir
+     con esta regla por especificidad ni por orden de carga. */
+  width: var(--autocomplete-width, 100%);
+  max-height: min(50vh, 380px);
+  margin: 0;
+  padding: var(--space-sm);
+  overflow-y: auto;
+  list-style: none;
+
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-high);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+
+  min-height: 48px;
+  padding: var(--space-xs) var(--space-md);
+
+  border-radius: var(--radius-sm);
+  color: var(--color-black);
+  font: var(--font-medium-regular);
+  cursor: pointer;
+
+  & > svg {
+    flex: 0 0 auto;
+    color: var(--color-neutral-dark);
+  }
+
+  & mark {
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+  }
+
+  &:hover,
+  &[aria-selected="true"] {
+    background: var(--surface-soft);
+  }
+}
+
+/* Nombre y, debajo, su detalle (entidad o siglas). Los textos largos pasan a la línea
+   siguiente en lugar de cortarse: hay nombres de laboratorio que sólo difieren al final. */
+.text {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-block: var(--space-xs);
+}
+
+.label,
+.detail {
+  overflow-wrap: anywhere;
+}
+
+.detail {
+  color: var(--color-neutral-dark);
+  font: var(--font-small-regular);
+}
+
+.note {
+  flex: 0 0 auto;
+  color: var(--color-neutral-dark);
+  font: var(--font-small-regular);
+}

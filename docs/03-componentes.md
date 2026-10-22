@@ -7,7 +7,7 @@
 - **Átomo:** una pieza básica, como botón o etiqueta.
 - **Molécula:** combina piezas genéricas; no conoce laboratorios ni MySQL.
 - **Organismo:** reúne contenido o comportamiento del dominio, como una tarjeta
-  de laboratorio, el diálogo de filtros o una sección de contacto.
+  de laboratorio, el diálogo de filtros o el formulario de solicitud.
 
 Primero busca si ya existe algo reutilizable. Los componentes, props y funciones nuevos
 se nombran en inglés; las entidades y campos del dominio, textos visibles y URLs

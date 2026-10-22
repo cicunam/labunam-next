@@ -63,4 +63,15 @@ test("las rutas heredadas conservan sus parámetros en un 301", async ({ request
   expect(destino.pathname).toBe("/laboratorios");
   expect(destino.searchParams.get("q")).toBe("microscopia");
   expect(destino.searchParams.get("tipo")).toBe("nacionales");
+  // El contacto pasó a ser un diálogo: /contacto lleva a la solicitud con o sin laboratorio.
+  for (const [origen, laboratorio] of [
+    ["/contacto", null],
+    ["/contacto?laboratorio=18", "18"],
+  ]) {
+    const redireccion = await request.get(origen, { maxRedirects: 0 });
+    expect(redireccion.status()).toBe(301);
+    const solicitud = new URL(redireccion.headers().location, "http://127.0.0.1:3000");
+    expect(solicitud.pathname).toBe("/solicitud");
+    expect(solicitud.searchParams.get("laboratorio")).toBe(laboratorio);
+  }
 });

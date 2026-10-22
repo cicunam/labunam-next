@@ -18,8 +18,9 @@ import {
   countLaboratorios,
   getRecentLaboratorios,
   getFilterCounts,
+  suggestLaboratorios,
 } from "./laboratoriosService";
-import { getDetails, getFilters } from "./laboratoriosController";
+import { getDetails, getFilters, getSuggestions } from "./laboratoriosController";
 
 // Datos de prueba
 import { createTestData } from "@datosPrueba/catalogo";
@@ -156,4 +157,36 @@ it("los conteos de filtros calculan los cinco ejes respetando los otros filtros"
       );
     }
   }
+});
+
+it("las sugerencias usan la búsqueda del catálogo: equipos, servicios y palabras en cualquier orden", async () => {
+  const ids = async (text) => (await suggestLaboratorios(text)).map(({ idLab }) => idLab);
+  // «Difractómetro» y «Rayos X» son equipo y servicio del laboratorio 2, no parte de su nombre.
+  expect(await ids("difractometro")).toEqual([2]);
+  expect(await ids("x rayos")).toEqual([2]);
+  expect(await ids("palabra que no existe")).toEqual([]);
+});
+
+it("el laboratorio cuyo nombre coincide completo vuelve primero", async () => {
+  const [primera] = await suggestLaboratorios("centro de imagen");
+  expect(primera).toEqual({ idLab: 3, nombre: "Centro de Imagen", entidad: "Centro de Pruebas" });
+});
+
+it("las sugerencias de laboratorio sólo exponen id, nombre y entidad", async () => {
+  const sugerencias = await suggestLaboratorios("microscop");
+  expect(sugerencias.length).toBeGreaterThan(0);
+  for (const sugerencia of sugerencias) {
+    expect(Object.keys(sugerencia).sort()).toEqual(["entidad", "idLab", "nombre"]);
+  }
+  expect(await suggestLaboratorios("m")).toEqual([]);
+  expect(readPhotos).not.toHaveBeenCalled();
+});
+
+it("el controlador de sugerencias responde 503 sin filtrar el error interno", async () => {
+  vi.mocked(loadCatalog).mockRejectedValue(new Error("detalle interno"));
+  const response = await getSuggestions(
+    new Request("http://localhost/api/laboratorios/sugerencias?q=micro"),
+  );
+  expect(response.status).toBe(503);
+  expect(JSON.stringify(await response.json())).not.toContain("detalle interno");
 });

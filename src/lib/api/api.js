@@ -1,6 +1,6 @@
 // LabUNAM
 // Utilidades compartidas
-// api (las dos llamadas que el navegador hace a las rutas de API del portal)
+// api (las llamadas que el navegador hace a las rutas de API del portal)
 // Raúl Salinas <raul.teo.salinas@cic.unam.mx>
 
 // Definición del módulo
@@ -25,4 +25,31 @@ export async function fetchFilterCounts(
     throw new Error("No se pudieron actualizar los conteos.");
   }
   return response.json();
+}
+// Pide las instituciones que coinciden con lo escrito en el formulario de solicitud.
+export async function fetchInstitutions(
+  text, // String - Texto escrito por la persona
+  signal, // AbortSignal Optional - Cancela la petición si la persona sigue escribiendo
+) {
+  const response = await fetch(`/api/solicitudes/instituciones?q=${encodeURIComponent(text)}`, {
+    signal,
+  });
+  if (!response.ok) {
+    throw new Error("No se pudieron cargar las instituciones.");
+  }
+  return (await response.json()).instituciones;
+}
+
+// Pide los laboratorios que coinciden con lo escrito en «Laboratorio de interés».
+export async function fetchLaboratorioSuggestions(
+  text, // String - Texto escrito por la persona
+  signal, // AbortSignal Optional - Cancela la petición si la persona sigue escribiendo
+) {
+  const response = await fetch(`/api/laboratorios/sugerencias?q=${encodeURIComponent(text)}`, {
+    signal,
+  });
+  if (!response.ok) {
+    throw new Error("No se pudieron cargar los laboratorios.");
+  }
+  return (await response.json()).laboratorios;
 }

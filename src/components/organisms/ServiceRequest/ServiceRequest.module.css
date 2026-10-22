@@ -1,0 +1,64 @@
+/* LabUNAM
+   Estilos
+   ServiceRequest.module.css (sección de solicitud de servicio: formulario y acceso al contacto)
+   Ángelo M */
+
+.request {
+  padding-block: 40px 64px;
+}
+.header {
+  max-width: 650px;
+  margin-bottom: 40px;
+}
+.header h1 {
+  font: var(--font-title-huge);
+  color: var(--color-primary-dark);
+  letter-spacing: var(--tracking-huge);
+}
+.header p {
+  margin-top: 12px;
+  color: var(--color-neutral-dark);
+}
+.columns {
+  display: grid;
+  gap: 40px;
+}
+.information,
+.form {
+  min-width: 0;
+}
+.information h2 {
+  font: var(--font-title-medium);
+  margin-bottom: 16px;
+}
+.information h2:not(:first-child) {
+  margin-top: var(--space-section);
+}
+.information p {
+  margin-bottom: 16px;
+  color: var(--color-neutral-dark);
+}
+.information a {
+  color: var(--color-primary-dark);
+  text-underline-offset: 4px;
+}
+.form {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+/* El formulario es largo: la información queda fija a la izquierda mientras se recorre. */
+@media (min-width: 1024px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .information {
+    position: sticky;
+    top: 96px;
+  }
+  .form {
+    padding: 40px;
+  }
+}

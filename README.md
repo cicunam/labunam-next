@@ -101,10 +101,13 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 | `/` | Portada, redes, incorporaciones, áreas, noticias e información institucional |
 | `/laboratorios` | Catálogo y filtros compartibles por URL |
 | `/laboratorios/[id]` | Ficha individual del laboratorio |
-| `/contacto` | Presentación del flujo de contacto |
-| `/contacto?laboratorio=[id]` | Solicitud asociada a un laboratorio |
+| `/contacto` | Redirección 301 a `/solicitud`; conserva `?laboratorio` |
+| `/solicitud` | Formulario de solicitud de servicio con catálogos reales; todavía no envía datos |
+| `/solicitud?laboratorio=[id]` | Solicitud con «Laboratorio de interés» ya elegido; se puede cambiar |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
+| `/api/laboratorios/sugerencias?q=` | Hasta 15 laboratorios (id, nombre y entidad) para «Laboratorio de interés», con la misma búsqueda que el catálogo |
+| `/api/solicitudes/instituciones?q=` | Hasta 15 instituciones vigentes que coinciden con el texto |
 
 La portada incluye un mapa por estado (`LaboratoryMap`) entre las disciplinas y
 las noticias. Recibe sólo los conteos de `catalogo.sedes`; seleccionar
@@ -116,6 +119,18 @@ El catálogo se renderiza en servidor. `loadCatalog()` combina dos consultas de
 sólo lectura (laboratorios con sus relaciones y disciplinas) y reutiliza una caché en memoria. Las peticiones concurrentes comparten
 la carga; si una actualización falla, se conserva la última copia válida.
 Cada proceso Node tiene su propia caché.
+
+El formulario de `/solicitud` usa `loadRequestCatalogs()`
+(`src/server/solicitudes/`), con la misma política de caché, para siete catálogos
+de sólo lectura. Países, estados de México y EUA,
+dependencias vigentes, cargos y tipos de muestra y colaboración viajan con la
+página; las instituciones vigentes (miles) se quedan en el servidor y se buscan
+desde `/api/solicitudes/instituciones`.
+
+Los textos del formulario se validan con `textError()` (`src/lib/solicitudes/`) tanto en
+el navegador como en `validateRequest()`: misma normalización, longitud en caracteres,
+formato de correo y rechazo de enlaces o HTML. Así el servidor no devuelve errores que el
+formulario no haya advertido.
 
 La búsqueda normaliza acentos y combina palabras para buscar en nombres y
 capacidades. Las sugerencias proceden de disciplinas y equipos. El navegador no
@@ -136,6 +151,10 @@ la pestaña oculta, y desactiva el avance automático con movimiento reducido.
 
 Las rutas heredadas `/nacionales`, `/universitarios`, `/unidades`,
 `/internacionales` y `/buscar` tienen redirecciones 301 que conservan la búsqueda.
+`/contacto` también redirige con 301 a `/solicitud`: el contacto rápido es ahora el
+diálogo `ContactDialog`, que se abre desde el sobre flotante de todas las páginas
+salvo `/solicitud` (ahí tapaba el formulario en móvil) y desde la columna de orientación
+de la solicitud. Su formulario sigue deshabilitado hasta acordar un buzón.
 
 ## Pruebas
 
@@ -193,6 +212,8 @@ Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
 
 - Conectar el backend de solicitudes, acordar destinatarios y validar el envío.
   El formulario permanece deshabilitado y no transmite mensajes.
+- Obtener la revisión institucional del texto breve de privacidad del formulario de
+  solicitud (`PrivacyNotice`), que remite al aviso integral de la CIC.
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
 - Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún
@@ -226,7 +247,9 @@ incluso en condiciones de una sola instrucción.
 La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
 textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
 las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
-junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar,
+junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar
+(historial y atajo `/`; la lista y el teclado vienen de `useAutocomplete` en la molécula
+`Autocomplete`, que también usa `SuggestionField` en los campos de la solicitud),
 `useHeaderMenu` / `useCompactSearch` en Header, `useLaboratoryDialog` en LaboratoryDialog
 (apertura, carga e historial del modal y el contrato `data-details`), `useFilterDraft` en
 FilterDialog (borrador de filtros con conteos en vivo), `useDragScroll` en DisciplineBar

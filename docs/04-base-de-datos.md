@@ -56,11 +56,11 @@ propaga un error público. El objeto de salida contiene sólo los campos de la f
 no el índice de búsqueda ni filas SQL completas.
 
 El modal, que corre en el navegador, usa `fetchLaboratorioDetails()` de
-`src/lib/api/api.js`, que reúne las dos llamadas a la API. Esta función consulta `/api/laboratorios/[id]`.
+`src/lib/api/api.js`, que reúne las llamadas del navegador a la API. Esta función consulta `/api/laboratorios/[id]`.
 La ruta delega a `getDetails()` del controlador, que usa el mismo `getById()`:
 400 para ID inválido, 404 si no existe y 503 cuando falla la carga. Nunca responde
-con mensajes internos de MySQL. Contacto usa `getContactDetails()` para recibir
-sólo sus cinco campos necesarios, sin leer fotografías.
+con mensajes internos de MySQL. La solicitud usa `getContactDetails()` para recibir
+sólo los campos necesarios del laboratorio, sin leer fotografías.
 
 ## Cómo se arma el catálogo
 
@@ -92,8 +92,8 @@ con sus relaciones y el catálogo de disciplinas; `assembleCatalog()` convierte 
 Al final están las utilidades: armar las opciones de sede y disciplina, preparar sugerencias (disciplinas y hasta 60 equipos
 presentes en al menos tres laboratorios) y renovar la caché.
 
-`laboratoriosService.js` ofrece `getById()` y `getContactDetails()` para la ficha y el
-contacto, `searchLaboratorios()` para el catálogo, `getFilterCounts()` para la API de
+`laboratoriosService.js` ofrece `getById()` y `getContactDetails()` para la ficha y la
+solicitud, `suggestLaboratorios()` para «Laboratorio de interés», `searchLaboratorios()` para el catálogo, `getFilterCounts()` para la API de
 filtros, y `getSearchOptions()`, `countLaboratorios()` y `getRecentLaboratorios()` para
 la portada. Todas leen la misma copia en caché, así que la portada puede llamarlas
 juntas sin multiplicar consultas. La búsqueda opera sobre datos normalizados:

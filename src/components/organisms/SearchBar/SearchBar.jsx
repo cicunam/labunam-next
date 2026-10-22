@@ -9,13 +9,13 @@
 import Link from "next/link";
 import { redes } from "@/lib/redes/redes";
 import { getCatalogUrl } from "@/lib/presentacion/presentacion";
-import { normalizeText } from "@/lib/texto/texto";
 
 // Mecanismos
 import { useSearchSuggestions } from "./useSearchSuggestions";
 
 // Componentes
 import Icon from "../../atoms/Icon/Icon";
+import Autocomplete from "../../molecules/Autocomplete/Autocomplete";
 
 // Estilos
 import styles from "./SearchBar.module.css";
@@ -31,15 +31,12 @@ const SearchBar = ({
   // Mecanismos
   const {
     q,
-    activeIndex,
     input,
     form,
     options,
-    visible,
     selectSuggestion,
     handleSearchChange,
     handleSearchFocus,
-    handleSuggestionKeyDown,
     clearSearch,
     handleSubmit,
   } = useSearchSuggestions({ criteria, suggestions });
@@ -80,28 +77,33 @@ const SearchBar = ({
                 Qué buscas
               </label>
               <div className={styles["search-control"]}>
-                <input
-                  ref={input}
+                <Autocomplete
+                  inputRef={input}
                   className={styles["search-input"]}
                   id="search-q"
                   name="q"
                   type="search"
                   value={q}
                   placeholder="Laboratorio, técnica o equipo"
-                  autoComplete="off"
                   autoCapitalize="off"
                   spellCheck={false}
                   enterKeyHint="search"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-expanded={visible}
-                  aria-controls="search-list"
-                  aria-activedescendant={
-                    visible && activeIndex >= 0 ? `search-option-${activeIndex}` : undefined
+                  options={options.map((option) => ({
+                    key: option.texto,
+                    label: option.texto,
+                    note: option.reciente ? "reciente" : undefined,
+                  }))}
+                  query={q}
+                  onSelect={(option) => selectSuggestion(option.label)}
+                  listClassName={styles["search-list"]}
+                  icon={
+                    <Icon
+                      name="search"
+                      size={16}
+                    />
                   }
                   onChange={handleSearchChange}
                   onFocus={handleSearchFocus}
-                  onKeyDown={handleSuggestionKeyDown}
                 />
 
                 {q && (
@@ -118,50 +120,6 @@ const SearchBar = ({
                   </button>
                 )}
               </div>
-              <ul
-                id="search-list"
-                className={styles["search-list"]}
-                role="listbox"
-                aria-label="Sugerencias"
-                hidden={!visible}
-              >
-                {options.map((option, i) => {
-                  const start = q.trim()
-                    ? normalizeText(option.texto).indexOf(normalizeText(q))
-                    : -1;
-                  return (
-                    <li
-                      id={`search-option-${i}`}
-                      key={option.texto}
-                      className={styles["search-option"]}
-                      role="option"
-                      aria-selected={activeIndex === i}
-                      onPointerDown={(event) => event.preventDefault()}
-                      onClick={() => selectSuggestion(option.texto)}
-                    >
-                      <Icon
-                        name="search"
-                        size={16}
-                      />
-
-                      <span className={styles["search-option-text"]}>
-                        {start >= 0 ? (
-                          <>
-                            {option.texto.slice(0, start)}
-                            <mark>{option.texto.slice(start, start + q.trim().length)}</mark>
-                            {option.texto.slice(start + q.trim().length)}
-                          </>
-                        ) : (
-                          option.texto
-                        )}
-                      </span>
-                      {option.reciente && (
-                        <span className={styles["search-option-note"]}>reciente</span>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
             </div>
             <span
               className={styles["search-border"]}

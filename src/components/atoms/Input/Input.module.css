@@ -24,7 +24,9 @@
 .input:disabled {
   opacity: 0.5;
 }
-.input[aria-invalid="true"] {
+/* :user-invalid marca el error sólo después de que la persona interactúa con el campo. */
+.input[aria-invalid="true"],
+.input:user-invalid {
   border-color: var(--color-type-nacionales);
 }
 .integrated {
