@@ -233,6 +233,20 @@ actualizar la documentación si cambia un procedimiento. Los commits son breves,
 en español y sin trailers de atribución. Coordinar ramas, revisión y publicación
 con el equipo; un commit o push no equivale a un despliegue.
 
+Los tickets viven en Plane, en el proyecto LabUNAM con clave `LABUN`. Cada rama y
+cada PR se relacionan con su ticket por convención, porque la integración de Plane con
+GitHub no está contratada:
+
+| Elemento | Formato | Ejemplo |
+| --- | --- | --- |
+| Rama | `LABUN-<número>-<descripción-corta>` | `LABUN-38-servidor-desarrollo` |
+| Título del PR | `[LABUN-<número>] <qué hace>` | `[LABUN-38] Configura servidor de desarrollo` |
+| Descripción del PR | Plantilla de `.github/pull_request_template.md` | Ticket con enlace, cambios, pruebas y pendientes |
+
+El flujo `.github/workflows/pr-conventions.yml` revisa cada PR. Falla si la rama o el
+título no siguen el formato, si apuntan a tickets distintos o si la descripción no
+menciona el ticket. Los estados del ticket se actualizan a mano en Plane.
+
 ## Legibilidad del código
 
 Los componentes, páginas y layouts se declaran como arrow functions con nombre y

@@ -1,0 +1,49 @@
+# Revisa que cada PR siga la convención que lo relaciona con su ticket de Plane.
+name: Convenciones de PR
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  conventions:
+    name: Rama, título y descripción
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revisar formato
+        # El título y la descripción los escribe quien abre el PR: se leen como
+        # variables de entorno para que su contenido nunca se ejecute.
+        env:
+          BRANCH: ${{ github.head_ref }}
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          failed=0
+
+          if [[ "$BRANCH" =~ ^LABUN-([0-9]+)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+            branch_ticket="${BASH_REMATCH[1]}"
+          else
+            echo "::error::La rama «$BRANCH» debe seguir el formato LABUN-<número>-<descripción-corta>, por ejemplo LABUN-38-servidor-desarrollo."
+            failed=1
+          fi
+
+          if [[ "$TITLE" =~ ^\[LABUN-([0-9]+)\]\ .+ ]]; then
+            title_ticket="${BASH_REMATCH[1]}"
+          else
+            echo "::error::El título debe seguir el formato [LABUN-<número>] <qué hace>, por ejemplo [LABUN-38] Configura servidor de desarrollo."
+            failed=1
+          fi
+
+          if [[ -n "${branch_ticket:-}" && -n "${title_ticket:-}" && "$branch_ticket" != "$title_ticket" ]]; then
+            echo "::error::La rama apunta a LABUN-$branch_ticket y el título a LABUN-$title_ticket; deben ser el mismo ticket."
+            failed=1
+          fi
+
+          if [[ -n "${title_ticket:-}" ]] && ! grep -Eq "LABUN-${title_ticket}([^0-9]|$)" <<< "$BODY"; then
+            echo "::error::La descripción debe usar la plantilla y mencionar LABUN-$title_ticket con su enlace a Plane."
+            failed=1
+          fi
+
+          exit "$failed"

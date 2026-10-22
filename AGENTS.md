@@ -104,6 +104,11 @@
   el presupuesto de 120 KB: sigue pendiente. No actualizar cifras sin medir.
 - Commits cortos en español, minúsculas, una línea y sin trailers de atribución.
   No hacer push salvo petición. Preservar cambios ajenos y datos locales ignorados.
+- Cada cambio corresponde a un ticket de Plane (`LABUN-<número>`). Ramas nuevas desde
+  master como `LABUN-38-servidor-desarrollo`: clave y descripción corta en minúsculas
+  con guiones. Título del PR `[LABUN-38] Configura servidor de desarrollo` y descripción
+  con `.github/pull_request_template.md`, completa y con el enlace al ticket. El flujo
+  `pr-conventions.yml` rechaza el PR si la rama, el título o la descripción no cumplen.
 - Actualizar README al cambiar operación o decisiones. Mantener aquí las reglas
   comunes y en CLAUDE.md la orientación específica, evitando duplicarlas.
 
