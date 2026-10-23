@@ -21,6 +21,8 @@ import styles from "./Header.module.css";
 // Constantes
 const links = [
   { href: "/", label: "Inicio" },
+  // Lleva a la sección «¿Qué es LabUNAM?» de la portada, desde cualquier página.
+  { href: "/#que-es-labunam", label: "¿Quiénes somos?" },
   { href: "/laboratorios", label: "Laboratorios" },
   { href: "/solicitud", label: "Solicitud" },
 ];

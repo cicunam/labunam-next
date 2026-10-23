@@ -11,7 +11,9 @@ import styles from "./About.module.css";
 const About = () => {
   // Interfaz
   return (
+    // El id es el destino del enlace «¿Quiénes somos?» del menú (/#que-es-labunam).
     <section
+      id="que-es-labunam"
       className={`content ${styles.about}`}
       aria-labelledby="about-title"
     >
