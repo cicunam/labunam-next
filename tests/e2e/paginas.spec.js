@@ -8,7 +8,7 @@ import { expect, test } from "@playwright/test";
 import { FORM_FIELDS } from "../../src/lib/validacionSolicitud/validacionSolicitud.js";
 
 // Pruebas
-test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({ page }) => {
+test("portada muestra tres redes con conteos", async ({ page }) => {
   await page.goto("/");
   const redes = page.getByRole("region", { name: "Tres redes, una universidad" });
   await expect(redes.getByRole("link")).toHaveCount(3);
@@ -17,9 +17,8 @@ test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({
       0,
     );
   }
-  await expect(
-    page.getByRole("region", { name: "Recién incorporados" }).locator("[data-details]"),
-  ).toHaveCount(4);
+  // «Recién incorporados» está comentado en la portada, pendiente de decidir si se elimina.
+  await expect(page.getByRole("region", { name: "Recién incorporados" })).toHaveCount(0);
 });
 
 test("quitar el chip de rayos x recupera el catálogo completo", async ({ page }) => {
@@ -101,7 +100,7 @@ test("la navegación lleva a solicitud", async ({ page }) => {
   // En /solicitud el sobre flotante no aparece: el diálogo se abre desde la columna de orientación.
   await expect(page.getByRole("button", { name: "Contacto", exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Ir a contacto" }).click();
-  await expect(page.getByRole("dialog", { name: "Escríbenos" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Contacto" })).toBeVisible();
 });
 test("solicitud asociada a un laboratorio llega con el laboratorio de interés y valida el identificador", async ({
   page,
@@ -129,7 +128,7 @@ test("solicitud asociada a un laboratorio llega con el laboratorio de interés y
 test("el sobre flotante abre el diálogo de contacto sin enviar datos", async ({ page }) => {
   await page.goto("/laboratorios");
   const sobre = page.getByRole("button", { name: "Contacto", exact: true });
-  const dialogo = page.getByRole("dialog", { name: "Escríbenos" });
+  const dialogo = page.getByRole("dialog", { name: "Contacto" });
   await expect(sobre).toBeInViewport();
   await page.mouse.wheel(0, 2000);
   await expect(sobre).toBeInViewport();

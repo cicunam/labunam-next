@@ -52,7 +52,7 @@ const ContactDialog = () => {
           id="contact-title"
           className={styles.title}
         >
-          Escríbenos
+          Contacto
         </h2>
         <button
           type="button"
@@ -117,7 +117,7 @@ const ContactDialog = () => {
           <Button disabled>Envío no disponible</Button>
         </fieldset>
         <p className={styles.request}>
-          ¿Necesitas un servicio de laboratorio?{" "}
+          Si quieres enviar una solicitud de servicio, hazlo en el siguiente enlace:{" "}
           <Link
             href="/solicitud"
             onClick={closeDialog}
