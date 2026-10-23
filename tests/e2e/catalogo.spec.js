@@ -7,10 +7,12 @@
 import { expect, test } from "@playwright/test";
 
 // Pruebas
-test("catálogo real, filtros vacíos y retícula adaptable", async ({ page }) => {
+test("catálogo con resultados, filtros vacíos y retícula adaptable", async ({ page }) => {
   await page.goto("/laboratorios?q=microscopia&tipo=nacionales");
-  await expect(page.locator("[data-total]")).toHaveText("7 laboratorios");
-  await expect(page.locator("[data-details]")).toHaveCount(7);
+  // El total anunciado coincide con las tarjetas, sea la base real o la de prueba.
+  const total = await page.locator("[data-details]").count();
+  expect(total).toBeGreaterThan(1);
+  await expect(page.locator("[data-total]")).toHaveText(`${total} laboratorios`);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.getByRole("button", { name: "Filtros", exact: true }).click();
   const modal = page.getByRole("dialog", { name: "Filtros", exact: true });
@@ -155,6 +157,8 @@ test("una ficha fallida puede reintentarse sin conservar el error", async ({ pag
 });
 
 test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({ page }) => {
+  await page.goto("/laboratorios");
+  const total = await page.locator("[data-details]").count();
   for (const ruta of ["/laboratorios", "/laboratorios?q=microscopia&tipo=nacionales"]) {
     await page.goto(ruta);
     await page.getByRole("button", { name: "Filtros", exact: true }).click();
@@ -167,10 +171,10 @@ test("limpiar todo restablece filtros pendientes y búsqueda aplicada", async ({
     for (const grupo of await modal.getByRole("group").all()) {
       await expect(grupo.getByRole("radio", { name: "Cualquiera", exact: true })).toBeChecked();
     }
-    const aplicar = modal.getByRole("button", { name: /^Ver 6\d\d laboratorios$/ });
+    const aplicar = modal.getByRole("button", { name: `Ver ${total} laboratorios`, exact: true });
     await expect(aplicar).toBeEnabled();
     await aplicar.click();
-    await expect(page.locator("[data-total]")).toContainText(/6\d\d laboratorios/);
+    await expect(page.locator("[data-total]")).toContainText(`${total} laboratorios`);
     await expect(page.getByRole("combobox", { name: "Qué buscas" })).toHaveValue("");
     await expect(page.getByLabel("Red", { exact: true })).toHaveValue("");
     await expect(page.getByLabel("Sede", { exact: true })).toHaveValue("");

@@ -14,9 +14,9 @@ LABUN-<número>: <enlace al ticket en Plane>
 
 ## Cómo se probó
 
-<!-- Lint, formato, unitarias y build los comprueba el flujo «Validación» en este PR. -->
+<!-- Lint, formato, unitarias, build y Playwright los comprueban los flujos de este PR. -->
 
-- [ ] `npm run test:e2e`, si cambia la interacción
+- [ ] Pruebas de navegador nuevas o ajustadas, si cambia la interacción
 - [ ] Revisión visual en 375, 1024 y 1400 px, si cambia la interfaz
 
 ## Pendientes o riesgos

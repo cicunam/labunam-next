@@ -109,8 +109,10 @@
   con guiones. Título del PR `[LABUN-38] Configura servidor de desarrollo` y descripción
   con `.github/pull_request_template.md`, completa y con el enlace al ticket. El flujo
   `pr-conventions.yml` rechaza el PR si la rama, el título o la descripción no cumplen,
-  y `ci.yml` si fallan lint, formato, unitarias o build. Las pruebas no deben depender
-  de `.env` ni de MySQL real: GitHub no tiene credenciales. Playwright sigue siendo local.
+  `ci.yml` si fallan lint, formato, unitarias o build, y `e2e.yml` si falla Playwright.
+  GitHub no tiene credenciales: las unitarias simulan MySQL y Playwright usa la base
+  ficticia de `tests/datosPrueba/mysql/`. Las pruebas de navegador no fijan cifras del
+  catálogo; un caso nuevo se agrega a esos datos y una columna nueva de un DAO, al esquema.
 - Actualizar README al cambiar operación o decisiones. Mantener aquí las reglas
   comunes y en CLAUDE.md la orientación específica, evitando duplicarlas.
 

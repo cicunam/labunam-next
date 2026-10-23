@@ -177,6 +177,10 @@ Para probar una instancia ya iniciada, pasar su URL:
 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3007 npm run test:e2e
 ```
 
+Las pruebas de navegador corren con la base de `.env` o con la base ficticia de
+`tests/datosPrueba/mysql/`, que es la que usa GitHub. Cómo levantarla con Docker está
+en [Crear y ejecutar pruebas](docs/05-pruebas.md#prueba-en-navegador).
+
 Existe una excepción documentada de contraste blanco/naranja para el botón de marca;
 no extenderla a otros componentes.
 
@@ -246,19 +250,20 @@ GitHub no está contratada:
 | Título del PR | `[LABUN-<número>] <qué hace>` | `[LABUN-38] Configura servidor de desarrollo` |
 | Descripción del PR | Plantilla de `.github/pull_request_template.md` | Ticket con enlace, cambios, pruebas y pendientes |
 
-Dos flujos de GitHub Actions revisan cada PR:
+Tres flujos de GitHub Actions revisan cada PR:
 
 | Flujo | Qué comprueba | Falla si |
 | --- | --- | --- |
 | `pr-conventions.yml` | Rama, título y descripción | No siguen el formato, apuntan a tickets distintos o la descripción no menciona el ticket |
 | `ci.yml` | `npm ci`, `npm run lint`, `npm run format:check`, `npm test` y `npm run build` con Node de `.nvmrc` | Falla cualquiera de esos comandos |
+| `e2e.yml` | `npm run test:e2e` en 375, 1024 y 1400 px contra la compilación de producción | Falla alguna prueba de navegador |
 
-`ci.yml` también corre en cada commit de master. No usa MySQL ni secretos: las
-unitarias simulan la base y las páginas con datos son dinámicas, así que el build no
-las consulta. Un commit nuevo en el PR cancela la corrida anterior. Las pruebas de
-navegador (`npm run test:e2e`) no corren en GitHub porque dependen de los datos reales
-del catálogo; se ejecutan en local cuando cambia la interacción. Los estados del
-ticket se actualizan a mano en Plane.
+`ci.yml` y `e2e.yml` también corren en cada commit de master, y un commit nuevo en el
+PR cancela su corrida anterior. Ninguno usa la base real ni secretos. `ci.yml` no
+necesita MySQL: las unitarias simulan la base y el build no la consulta. `e2e.yml`
+levanta un MySQL 8 desechable con el esquema y los datos ficticios de
+`tests/datosPrueba/mysql/`; si una prueba falla, sus trazas quedan como artefacto de
+la corrida. Los estados del ticket se actualizan a mano en Plane.
 
 ## Legibilidad del código
 

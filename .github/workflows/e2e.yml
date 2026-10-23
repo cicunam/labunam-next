@@ -1,0 +1,110 @@
+# Corre las pruebas de navegador en cada PR contra un MySQL propio con datos ficticios.
+# Nunca toca la base real: el esquema y los datos salen de tests/datosPrueba/mysql/.
+name: Pruebas de navegador
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+# Un commit nuevo en el PR cancela la corrida anterior; en master cada commit conserva la suya.
+concurrency:
+  group: e2e-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  e2e:
+    name: Playwright en 375, 1024 y 1400 px
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Credenciales de un contenedor desechable que sólo existe durante la corrida; no son secretos.
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: labunam_app
+          MYSQL_USER: labunam
+          MYSQL_PASSWORD: labunam
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+
+    env:
+      LABUNAM_DB_HOST: 127.0.0.1
+      LABUNAM_DB_NAME: labunam_app
+      LABUNAM_DB_USER: labunam
+      LABUNAM_DB_PASS: labunam
+      NEXT_TELEMETRY_DISABLED: 1
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias
+        id: deps
+        run: |
+          npm ci
+          echo "playwright=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      # El navegador sólo se descarga cuando cambia la versión de Playwright.
+      - name: Recuperar navegador
+        id: navegador
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.deps.outputs.playwright }}
+
+      - name: Instalar navegador
+        run: |
+          if [ "${{ steps.navegador.outputs.cache-hit }}" = "true" ]; then
+            npx playwright install-deps chromium
+          else
+            npx playwright install --with-deps chromium
+          fi
+
+      - name: Cargar esquema y datos de prueba
+        run: cat tests/datosPrueba/mysql/*.sql | mysql -h 127.0.0.1 -uroot -proot labunam_app
+
+      # Se prueba la compilación de producción, como en el servidor de desarrollo.
+      - name: Compilar
+        run: npm run build
+
+      - name: Iniciar el portal
+        run: |
+          npm start -- --hostname 127.0.0.1 --port 3000 > next.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null "$PLAYWRIGHT_BASE_URL/" && exit 0
+            sleep 2
+          done
+          echo "::error::El portal no respondió en $PLAYWRIGHT_BASE_URL."
+          cat next.log
+          exit 1
+
+      - name: Ejecutar pruebas de navegador
+        run: npm run test:e2e
+
+      # Las trazas de los fallos se abren con npx playwright show-trace.
+      - name: Guardar trazas y registro del portal
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pruebas-navegador
+          path: |
+            test-results/
+            next.log
+          retention-days: 14

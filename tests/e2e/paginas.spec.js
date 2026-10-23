@@ -23,11 +23,15 @@ test("portada muestra tres redes con conteos y cuatro incorporaciones", async ({
 });
 
 test("quitar el chip de rayos x recupera el catálogo completo", async ({ page }) => {
+  await page.goto("/laboratorios");
+  const total = await page.locator("[data-details]").count();
   await page.goto("/laboratorios?q=rayos%20x");
-  expect(await page.locator("[data-details]").count()).toBeGreaterThan(0);
+  const encontrados = await page.locator("[data-details]").count();
+  expect(encontrados).toBeGreaterThan(0);
+  expect(encontrados).toBeLessThan(total);
   await page.getByRole("link", { name: "Quitar q: rayos x" }).click();
-  await expect(page.locator("[data-total]")).toContainText(/6\d\d laboratorios/);
-  expect(await page.locator("[data-details]").count()).toBeGreaterThan(600);
+  await expect(page.locator("[data-total]")).toContainText(`${total} laboratorios`);
+  await expect(page.locator("[data-details]")).toHaveCount(total);
 });
 
 test("filtrar por sede actualiza URL y reduce resultados", async ({ page }) => {
