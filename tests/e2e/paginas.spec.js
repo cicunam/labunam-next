@@ -79,6 +79,29 @@ test("ficha tiene URL propia, título, metadatos y pestañas", async ({ page }) 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(titulo);
 });
 
+test("«¿Quiénes somos?» lleva a «¿Qué es LabUNAM?» en la portada desde cualquier página", async ({
+  page,
+}) => {
+  await page.goto("/laboratorios");
+  const menu = page.getByRole("navigation", { name: "Principal" });
+  if (await menu.isVisible()) {
+    await menu.getByRole("link", { name: "¿Quiénes somos?" }).click();
+  } else {
+    await page.getByRole("button", { name: "Abrir menú" }).click();
+    await page
+      .getByRole("navigation", { name: "Navegación" })
+      .getByRole("link", { name: "¿Quiénes somos?" })
+      .click();
+  }
+  await expect(page).toHaveURL(/\/#que-es-labunam$/);
+  const titulo = page.getByRole("heading", { name: "¿Qué es LabUNAM?" });
+  await expect(titulo).toBeInViewport();
+  // La cabecera fija no tapa el título al llegar.
+  const cabecera = await page.getByRole("banner").boundingBox();
+  await expect
+    .poll(async () => (await titulo.boundingBox()).y)
+    .toBeGreaterThanOrEqual(cabecera.y + cabecera.height);
+});
 test("la navegación lleva a solicitud", async ({ page }) => {
   await page.goto("/");
   const menu = page.getByRole("navigation", { name: "Principal" });

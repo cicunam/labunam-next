@@ -4,6 +4,8 @@
    Raúl Salinas <raul.teo.salinas@cic.unam.mx> */
 
 .about {
+  /* Al llegar desde «¿Quiénes somos?», la cabecera fija (64 px) no tapa la sección. */
+  scroll-margin-top: 64px;
   padding-block: var(--space-section);
   margin-bottom: clamp(32px, 5vw, 64px);
   background: var(--surface-tint);

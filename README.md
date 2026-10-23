@@ -105,6 +105,7 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 | `/contacto` | Redirección 301 a `/solicitud`; conserva `?laboratorio` |
 | `/solicitud` | Formulario de solicitud de servicio con catálogos reales; todavía no envía datos |
 | `/solicitud?laboratorio=[id]` | Solicitud con «Laboratorio de interés» ya elegido; se puede cambiar |
+| `/#que-es-labunam` | Sección «¿Qué es LabUNAM?» de la portada; destino de «¿Quiénes somos?» en el menú |
 | `/api/filtros` | Facetas y conteos para los controles |
 | `/api/laboratorios/[id]` | Datos públicos de una ficha |
 | `/api/laboratorios/sugerencias?q=` | Hasta 15 laboratorios (id, nombre y entidad) para «Laboratorio de interés», con la misma búsqueda que el catálogo |
