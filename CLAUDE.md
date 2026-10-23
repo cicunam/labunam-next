@@ -37,6 +37,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
 | Pruebas de interacción | `tests/e2e/`, `playwright.config.js` |
+| Servidor y despliegue | `scripts/deploy.sh`, `scripts/server-setup.sh`, `ecosystem.config.cjs`, `.github/workflows/deploy-dev.yml`, `docs/07-servidor-de-desarrollo.md` |
 
 ## Comandos cotidianos
 
@@ -90,7 +91,9 @@ son locales y no definen la configuración del servidor de la UNAM.
 - Los SVG de respaldo están versionados; fotos generadas, cachés de exploración y
   selecciones editoriales no. Un clon limpio no reproduce los datos locales aprobados.
 - El backend de solicitudes y de contacto, noticias definitivas, aceptación institucional
-  y despliegue siguen pendientes. Consultar la lista actual del README antes de planear trabajo.
+  y producción siguen pendientes. Consultar la lista actual del README antes de planear trabajo.
+- Mezclar en master despliega en el servidor de desarrollo, que es compartido con otros
+  sitios de Apache. No modificar sus sitios ni reiniciar Apache sin `apachectl configtest`.
 - La medición de rendimiento del 4 de octubre de 2026 es histórica. `docs/rendimiento.json`
   documenta el exceso del presupuesto; no usarla como medición de cambios posteriores.
 

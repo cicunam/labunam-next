@@ -79,6 +79,6 @@ Next no descarga ni reconstruye automáticamente esas imágenes.
 - Hacer un commit corto en español, minúsculas y sin trailers; coordinar la rama
   y el push con el equipo. No confundir commit local con publicación del portal.
 
-El despliegue todavía no está automatizado en este repositorio. La configuración
-de Node, PM2, Apache, rutas PHP y persistencia de imágenes se acuerda con Raúl
-antes de intervenir.
+Mezclar en master despliega en el servidor de desarrollo; ver
+[Servidor de desarrollo y despliegue](07-servidor-de-desarrollo.md). Las fotografías
+todavía no viajan al servidor.
