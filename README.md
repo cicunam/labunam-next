@@ -99,7 +99,7 @@ La [guía de datos](docs/04-base-de-datos.md) incluye ejemplos y el recorrido co
 
 | URL | Contenido |
 | --- | --- |
-| `/` | Portada, redes, incorporaciones, áreas, noticias e información institucional |
+| `/` | Portada, redes, áreas, noticias e información institucional |
 | `/laboratorios` | Catálogo y filtros compartibles por URL |
 | `/laboratorios/[id]` | Ficha individual del laboratorio |
 | `/contacto` | Redirección 301 a `/solicitud`; conserva `?laboratorio` |
@@ -261,7 +261,9 @@ Ejecutar `npm run format` antes de entregar cambios y `npm run format:check` par
 comprobar el estilo. Prettier organiza JavaScript, JSX y CSS; ESLint exige llaves
 incluso en condiciones de una sola instrucción.
 
-La portada compone organismos de redes, recientes, disciplinas y noticias. Sus
+La portada compone organismos de redes, disciplinas y noticias. «Recién incorporados»
+(`RecentLaboratories`) está comentado en `src/app/page.jsx` mientras se decide si se
+elimina su código. Sus
 textos viven en el organismo que los muestra: las redes en `LaboratoryNetworks` y
 las noticias de ejemplo en `NewsSection`. Los hooks específicos viven
 junto al componente y dejan el JSX como vista: `useSearchSuggestions` en SearchBar
