@@ -32,6 +32,8 @@ como `sislabunam` y ejecuta `scripts/deploy.sh` con el commit mezclado:
    confirma la conexión. Si no responde, regresa a la versión anterior y el flujo falla.
 6. Conserva las tres versiones más recientes.
 
+El despliegue no corre lint ni pruebas: esas comprobaciones las hace `ci.yml` en el PR
+antes de mezclar, y de nuevo sobre master en paralelo al despliegue, sin detenerlo.
 Las mezclas seguidas se despliegan en orden; ninguna cancela a la que está en curso.
 El resultado se consulta en la pestaña Actions de GitHub. Un flujo en rojo significa
 que el portal sigue en la versión anterior.

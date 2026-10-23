@@ -116,10 +116,33 @@ que la instancia esté escuchando. Las trazas de fallos se guardan en
 npx playwright show-trace ruta/al/trace.zip
 ```
 
+## Qué corre en cada PR
+
+El flujo `.github/workflows/ci.yml` ejecuta en cada PR y en cada commit de master,
+con la versión de Node de `.nvmrc`:
+
+```sh
+npm ci
+npm run lint
+npm run format:check
+npm test
+npm run build
+```
+
+No configura MySQL ni secretos. Las unitarias simulan la base, y el build no la
+consulta porque portada, catálogo, ficha y solicitud se renderizan bajo demanda.
+Si una prueba nueva necesita `.env` o una base real para pasar, fallará en GitHub:
+aíslala con un mock como en [Aislar MySQL y servicios](#aislar-mysql-y-servicios).
+
+Playwright no corre en GitHub. Sus pruebas buscan laboratorios, conteos y
+equipos del catálogo real, y el repositorio no tiene esquema ni datos ficticios para
+levantar una base propia. Ejecútalas en local cuando cambie la interacción.
+
 ## Qué ejecutar antes de entregar
 
-Para código, `npm run lint` y `npm run build`, más las pruebas del comportamiento
-modificado. No hay comando de comprobación de tipos; las pruebas protegen las reglas
+El PR repite lint, formato, unitarias y build, pero conviene correrlos antes de
+subir para no esperar al flujo. Para código, `npm run lint` y `npm run build`, más
+las pruebas del comportamiento modificado. No hay comando de comprobación de tipos; las pruebas protegen las reglas
 y el build comprueba que la aplicación puede compilarse.
 Para cambios visuales, revisar la página integrada a los tres anchos.
 Para documentación, comprobar rutas, ejemplos y formato; no hace falta arrancar

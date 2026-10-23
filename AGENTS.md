@@ -108,7 +108,9 @@
   master como `LABUN-38-servidor-desarrollo`: clave y descripción corta en minúsculas
   con guiones. Título del PR `[LABUN-38] Configura servidor de desarrollo` y descripción
   con `.github/pull_request_template.md`, completa y con el enlace al ticket. El flujo
-  `pr-conventions.yml` rechaza el PR si la rama, el título o la descripción no cumplen.
+  `pr-conventions.yml` rechaza el PR si la rama, el título o la descripción no cumplen,
+  y `ci.yml` si fallan lint, formato, unitarias o build. Las pruebas no deben depender
+  de `.env` ni de MySQL real: GitHub no tiene credenciales. Playwright sigue siendo local.
 - Actualizar README al cambiar operación o decisiones. Mantener aquí las reglas
   comunes y en CLAUDE.md la orientación específica, evitando duplicarlas.
 

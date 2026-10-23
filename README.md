@@ -246,9 +246,19 @@ GitHub no está contratada:
 | Título del PR | `[LABUN-<número>] <qué hace>` | `[LABUN-38] Configura servidor de desarrollo` |
 | Descripción del PR | Plantilla de `.github/pull_request_template.md` | Ticket con enlace, cambios, pruebas y pendientes |
 
-El flujo `.github/workflows/pr-conventions.yml` revisa cada PR. Falla si la rama o el
-título no siguen el formato, si apuntan a tickets distintos o si la descripción no
-menciona el ticket. Los estados del ticket se actualizan a mano en Plane.
+Dos flujos de GitHub Actions revisan cada PR:
+
+| Flujo | Qué comprueba | Falla si |
+| --- | --- | --- |
+| `pr-conventions.yml` | Rama, título y descripción | No siguen el formato, apuntan a tickets distintos o la descripción no menciona el ticket |
+| `ci.yml` | `npm ci`, `npm run lint`, `npm run format:check`, `npm test` y `npm run build` con Node de `.nvmrc` | Falla cualquiera de esos comandos |
+
+`ci.yml` también corre en cada commit de master. No usa MySQL ni secretos: las
+unitarias simulan la base y las páginas con datos son dinámicas, así que el build no
+las consulta. Un commit nuevo en el PR cancela la corrida anterior. Las pruebas de
+navegador (`npm run test:e2e`) no corren en GitHub porque dependen de los datos reales
+del catálogo; se ejecutan en local cuando cambia la interacción. Los estados del
+ticket se actualizan a mano en Plane.
 
 ## Legibilidad del código
 

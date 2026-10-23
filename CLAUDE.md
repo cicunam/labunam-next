@@ -37,6 +37,7 @@ historial de conversaciones. El README contiene los procedimientos completos.
 | Procesamiento de originales | `scripts/fotos.js`, `scripts/selectPhotos.js` |
 | Revisión y aplicación de imágenes web | `scripts/revision-fotos/` |
 | Pruebas de interacción | `tests/e2e/`, `playwright.config.js` |
+| Validación de PR | `.github/workflows/ci.yml`, `.github/workflows/pr-conventions.yml`, `.github/pull_request_template.md` |
 | Servidor y despliegue | `scripts/deploy.sh`, `scripts/server-setup.sh`, `ecosystem.config.cjs`, `.github/workflows/deploy-dev.yml`, `docs/07-servidor-de-desarrollo.md` |
 
 ## Comandos cotidianos

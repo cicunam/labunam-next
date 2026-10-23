@@ -1,0 +1,47 @@
+# Valida cada PR con lint, formato, pruebas unitarias y build antes de revisarlo.
+name: Validación
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+# Un commit nuevo en el PR cancela la corrida anterior; en master cada commit conserva la suya.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    name: Lint, formato, pruebas y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Revisar lint
+        run: npm run lint
+
+      - name: Revisar formato
+        run: npm run format:check
+
+      - name: Ejecutar pruebas unitarias
+        run: npm test
+
+      # Las páginas con datos son dinámicas: el build no consulta MySQL ni necesita credenciales.
+      - name: Compilar
+        run: npm run build
