@@ -4,11 +4,13 @@
 // Ivonne Aviles <daviles@cic.unam.mx>
 
 // Dependencias
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 // Servicios
 import { getById } from "@/server/laboratorios/laboratoriosService";
+
+//Componentes
+import { MicrositeNav } from "@/components";
 
 // Configuración de Next
 export const dynamic = "force-dynamic";
@@ -47,18 +49,16 @@ const MicrositeLayout = async ({
 
   // Interfaz
   return (
-    <article>
-      <p>
-        <Link href={`/laboratorios/${lab.idLab}`}>← Volver a la ficha</Link>
-      </p>
-      <h1>{lab.nombre}</h1>
-      <nav aria-label="Secciones del micrositio">
-        <Link href={`/laboratorios/${lab.idLab}/micrositio`}>Inicio</Link>
-        <Link href={`/laboratorios/${lab.idLab}/micrositio/antecedentes`}>Antecedentes</Link>
-      </nav>
-      {children}
-    </article>
-  );
+  <article className="content">
+    <MicrositeNav
+      idLab={lab.idLab}
+      nombre={lab.nombre}
+      siglas={lab.siglas}
+      tipo={lab.tipo}
+    />
+    {children}
+  </article>
+);
 };
 
 export default MicrositeLayout;

@@ -15,6 +15,10 @@ import { getPhotos } from "../../lib/fotos/fotos";
 // Servicios
 import { loadCatalog } from "./laboratoriosCatalogo";
 import { readPhotos } from "../fotos/fotosService";
+import { htmlToParagraphs } from "../../lib/micrositio/micrositio";
+import LaboratorioDao from "./LaboratorioDao";
+
+const laboratorioDao = new LaboratorioDao();
 
 // Definición del servicio
 // Todas las funciones leen la misma copia en caché: llamarlas juntas no multiplica consultas.
@@ -37,6 +41,7 @@ export async function getById(
   return {
     idLab: laboratorio.idLab,
     nombre: laboratorio.nombre,
+    siglas: laboratorio.siglas,
     tipo: laboratorio.tipo,
     entidad: laboratorio.entidad,
     sedeNombre: laboratorio.sedeNombre,
@@ -48,6 +53,22 @@ export async function getById(
     sitio: laboratorio.sitio,
     micrositio: laboratorio.micrositio,
     galeria: getPhotos(laboratorio.idLab, photos, laboratorio.grupos),
+  };
+}
+
+// Textos de la portada del micrositio. Null si el laboratorio no tiene micrositio.
+export async function getMicrositeHome(
+  id, // String - Identificador recibido en la URL
+) {
+  const laboratorio = await findLaboratorio(id);
+  if (!laboratorio || !laboratorio.micrositio) {
+    return null;
+  }
+  const html = await laboratorioDao.getHomeHtml(laboratorio.idLab);
+  return {
+    paragraphs: htmlToParagraphs(html.intro),
+    mission: htmlToParagraphs(html.mision),
+    vision: htmlToParagraphs(html.vision),
   };
 }
 

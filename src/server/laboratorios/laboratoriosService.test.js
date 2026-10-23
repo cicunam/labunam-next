@@ -48,6 +48,7 @@ it("la página y la API reciben la misma ficha y sólo campos públicos", async 
     [
       "idLab",
       "nombre",
+      "siglas",
       "tipo",
       "entidad",
       "sedeNombre",

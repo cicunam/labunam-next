@@ -67,6 +67,21 @@ class LaboratorioDao {
       WHERE s.activo = 1 AND s.idTpLab IN (1, 2, 3, 4)
       ORDER BY s.labNombre`);
   }
+  // HTML de la portada. Cada columna llega vacía si no hay fila.
+  async getHomeHtml(
+    idLab, // Number - Identificador del laboratorio
+  ) {
+    const rows = await query(
+      "SELECT intro, mision, vision FROM r_infoWeb WHERE idLab = ? LIMIT 1",
+      [idLab],
+    );
+    const row = rows[0] ?? {};
+    return {
+      intro: row.intro ?? "",
+      mision: row.mision ?? "",
+      vision: row.vision ?? "",
+    };
+  }
 }
 
 // Conversión de filas

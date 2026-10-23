@@ -33,6 +33,8 @@ export { default as LaboratoryDetails } from "./organisms/LaboratoryDetails/Labo
 export { default as LaboratoryDialog } from "./organisms/LaboratoryDialog/LaboratoryDialog";
 export { default as LaboratoryMap } from "./organisms/LaboratoryMap/LaboratoryMap";
 export { default as LaboratoryNetworks } from "./organisms/LaboratoryNetworks/LaboratoryNetworks";
+export { default as MicrositeHome } from "./organisms/MicrositeHome/MicrositeHome";
+export { default as MicrositeNav } from "./organisms/MicrositeNav/MicrositeNav";
 export { default as NewsSection } from "./organisms/NewsSection/NewsSection";
 export { default as RecentLaboratories } from "./organisms/RecentLaboratories/RecentLaboratories";
 export { default as SearchBar } from "./organisms/SearchBar/SearchBar";
