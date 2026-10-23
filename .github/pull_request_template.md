@@ -14,10 +14,9 @@ LABUN-<número>: <enlace al ticket en Plane>
 
 ## Cómo se probó
 
-- [ ] `npm run lint`
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e`, si cambia la interacción
+<!-- Lint, formato, unitarias, build y Playwright los comprueban los flujos de este PR. -->
+
+- [ ] Pruebas de navegador nuevas o ajustadas, si cambia la interacción
 - [ ] Revisión visual en 375, 1024 y 1400 px, si cambia la interfaz
 
 ## Pendientes o riesgos
