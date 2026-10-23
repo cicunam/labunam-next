@@ -21,6 +21,7 @@ conocen React pero todavía no han trabajado con Next.js:
 - [Consultar la base de datos](docs/04-base-de-datos.md).
 - [Crear y ejecutar pruebas](docs/05-pruebas.md).
 - [Imágenes y entrega de cambios](docs/06-imagenes-y-entrega.md).
+- [Servidor de desarrollo y despliegue](docs/07-servidor-de-desarrollo.md).
 
 La [guía de arquitectura](docs/02-arquitectura.md) explica cómo está dividido el
 portal. Las decisiones técnicas y las instrucciones compartidas para asistentes
@@ -57,8 +58,8 @@ npm run build
 npm start
 ```
 
-Esto inicia el servidor en el entorno donde se ejecuta; no publica automáticamente
-el sitio en la UNAM.
+Esto inicia el servidor en el entorno donde se ejecuta. El servidor de desarrollo
+se actualiza solo con cada mezcla en master; ver [el procedimiento](docs/07-servidor-de-desarrollo.md).
 
 ## Organización
 
@@ -216,8 +217,9 @@ Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
   solicitud (`PrivacyNotice`), que remite al aviso integral de la CIC.
 - Sustituir las noticias de ejemplo y completar la revisión editorial institucional.
 - Continuar la revisión de imágenes de laboratorios sin fotografía o logo adecuado.
-- Configurar despliegue, Node/PM2/Apache y persistencia de imágenes. No existe aún
-  automatización de despliegue en este repositorio.
+- Llevar las fotografías al servidor de desarrollo cuando se decida dónde se almacenan.
+  Hoy muestra las ilustraciones de respaldo.
+- Configurar el servidor de producción, el dominio y HTTPS. Desarrollo se ve sólo por IP.
 - Resolver el presupuesto de 120 KB gzip de JS+CSS y repetir las mediciones en el
   servidor de destino. La medición del 4 de octubre de 2026 fue de 154,585 bytes;
   Lighthouse móvil dio 96, con LCP 2.64 s, TBT 23 ms y CLS 0. Es una medición de
@@ -231,7 +233,8 @@ Ver [el procedimiento completo](docs/06-imagenes-y-entrega.md).
 Revisar las convenciones, ejecutar las comprobaciones adecuadas al cambio y
 actualizar la documentación si cambia un procedimiento. Los commits son breves,
 en español y sin trailers de atribución. Coordinar ramas, revisión y publicación
-con el equipo; un commit o push no equivale a un despliegue.
+con el equipo. Un commit o push a una rama no despliega nada; mezclar en master
+despliega en el [servidor de desarrollo](docs/07-servidor-de-desarrollo.md).
 
 Los tickets viven en Plane, en el proyecto LabUNAM con clave `LABUN`. Cada rama y
 cada PR se relacionan con su ticket por convención, porque la integración de Plane con
